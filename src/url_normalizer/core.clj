@@ -10,6 +10,8 @@
     [org.apache.http.client.utils URIUtils]))
 
 (defn- create-http-host
+  "Create an org.apache.http.HttpHost with the host name in lowercase.
+  Also removes the default port for the HTTP scheme."
   [uri]
   (let [scheme (.getScheme uri)
         host (su/lower-case (.getHost uri))
@@ -19,6 +21,8 @@
       (HttpHost. host port scheme))))
 
 (defn- decode
+  "Decodes percent encoded octets to their corresponding characters.
+  Only decodes unreserved characters."
   [path]
   ((comp (apply comp decode-alphanum)
          #(.replaceAll % "%2D" "-")
@@ -28,19 +32,18 @@
      path))
 
 (defn- rewrite
-  "Rewrites the URI by:
-  * Convert the host to lowercase.
-  * Possibly drop the fragment."
+  "Rewrites the URI, possibly dropping the fragment."
   [uri drop-fragment?]
   (let [host (create-http-host uri)
         rewritten (URIUtils/rewriteURI uri host drop-fragment?)]
     rewritten))
 
 (defn- resolve
-  "Resolve a URI reference against a base URI."
-  [uri]
-  (let [base (URI. (.getHost uri))]
-    (URIUtils/resolve base uri)))
+  "Resolve a URI reference against a base URI by removing dot segments."
+  ([base uri]
+    (URIUtils/resolve base uri))
+  ([uri]
+    (URIUtils/resolve (URI. (.getHost uri)) uri)))
 
 (defn normalize
   [uri & {:keys [drop-fragment?]
