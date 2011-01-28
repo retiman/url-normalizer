@@ -9,18 +9,24 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(defn- create-http-host
+(defn nil-host?
+  [uri]
+  (or (nil? uri) (nil? (.getHost uri))))
+
+(defn create-http-host
   "Create an org.apache.http.HttpHost with the host name in lowercase.
   Also removes the default port for the HTTP scheme."
   [uri]
-  (let [scheme (.getScheme uri)
-        host (su/lower-case (.getHost uri))
-        port (.getPort uri)]
-    (if (and (= scheme "http") (= port 80))
-      (HttpHost. host)
-      (HttpHost. host port scheme))))
+  (if (nil-host? uri)
+    nil
+    (let [scheme (.getScheme uri)
+          host (su/lower-case (.getHost uri))
+          port (.getPort uri)]
+      (if (and (= scheme "http") (= port 80))
+        (HttpHost. host)
+        (HttpHost. host port scheme)))))
 
-(defn- create-uri
+(defn create-uri
   [& {:keys [scheme user-info host port path query fragment]}]
   (let [buffer (StringBuilder.)]
     (if-not (nil? host)
@@ -42,7 +48,7 @@
       (.append buffer (str "#" fragment)))
     (URI. (.toString buffer))))
 
-(defn- decode
+(defn decode
   "Decodes percent encoded octets to their corresponding characters.
   Only decodes unreserved characters."
   [path]
@@ -53,33 +59,34 @@
          #(.replaceAll % "%7E" "~"))
      path))
 
-(defn- rewrite
+(defn rewrite
   "Rewrites the URI, possibly dropping the fragment."
-  [uri drop-fragment?]
-  (let [host (create-http-host uri)
-        rewritten (URIUtils/rewriteURI uri host drop-fragment?)]
-    rewritten))
+  [base uri drop-fragment?]
+  (let [host (create-http-host (if (nil-host? base) uri base))]
+    (URIUtils/rewriteURI uri host drop-fragment?)))
 
-(defn- resolve
+(defn resolve
   "Resolve a URI reference against a base URI by removing dot segments."
-  ([base uri]
-    (URIUtils/resolve base uri))
-  ([uri]
-    (URIUtils/resolve (URI. (.getHost uri)) uri)))
+  [base uri]
+    (if (nil-host? base)
+      (URIUtils/resolve uri uri)
+      (URIUtils/resolve (URI. (.getHost uri)) uri)))
 
 (defn normalize
-  [uri & {:keys [drop-fragment?]
+  [uri & {:keys [base drop-fragment?]
           :or {drop-fragment? false}}]
-  (let [rewritten (rewrite uri drop-fragment?)
-        resolved (resolve rewritten)
-        result resolved]
-    (create-uri :scheme (.getScheme result)
-                :user-info (.getRawUserInfo uri)
-                :host (.getHost result)
-                :port (.getPort result)
-                :path (decode (.getRawPath result))
-                :query (.getRawQuery result)
-                :fragment (if-not drop-fragment? (.getRawFragment result)))))
+    (let [result ((comp #(rewrite base % drop-fragment?)
+                        #(resolve base %))
+                    uri)]
+      (if (nil-host? result)
+        result
+        (create-uri :scheme (.getScheme result)
+                    :user-info (.getRawUserInfo uri)
+                    :host (.getHost result)
+                    :port (.getPort result)
+                    :path (decode (.getRawPath result))
+                    :query (.getRawQuery result)
+                    :fragment (if-not drop-fragment? (.getRawFragment result))))))
 
 (def default-port
 {

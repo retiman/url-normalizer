@@ -7,7 +7,7 @@
 
 (def
   ^{:doc "URLs mapped to true normalize to themselves."}
-  self-normalization
+  absolute-uris
   {"http://:@example.com/" false
    "http://@example.com/" false
    "http://example.com" false
@@ -33,6 +33,49 @@
    "http://example.com?q=foo" false
    "http://example.com/?q=foo" true})
 
+(def
+  ^{:doc "Tests for relative URIs."}
+  relative-uris
+  {"/foo/bar/." "/foo/bar/"
+   "/foo/bar/./" "/foo/bar/"
+   "/foo/bar/.." "/foo/"
+   "/foo/bar/../" "/foo/"
+   "/foo/bar/../baz" "/foo/baz"
+   "/foo/bar/../.." "/"
+   "/foo/bar/../../" "/"
+   "/foo/bar/../../baz" "/baz"
+   "/foo/bar/../../../baz" "/baz" ;;was: "/../baz"
+   "/foo/bar/../../../../baz" "/baz"
+   "/./foo" "/foo"
+   "/../foo" "/foo" ;;was: "/../foo"
+   "/foo." "/foo."
+   "/.foo" "/.foo"
+   "/foo.." "/foo.."
+   "/..foo" "/..foo"
+   "/./../foo" "/foo" ;;was: "/../foo"
+   "/./foo/." "/foo/"
+   "/foo/./bar" "/foo/bar"
+   "/foo/../bar" "/bar"
+   "/foo//" "/foo/"
+   "/foo///bar//" "/foo/bar/"})
+
+(comment
+        "http://www.foo.com:80/foo"     "http://www.foo.com/foo"
+        "http://www.foo.com/foo/../foo"     "http://www.foo.com/foo"
+        "http://www.foo.com:8000/foo"   "http://www.foo.com:8000/foo"
+        "http://www.foo.com./foo/bar.html" "http://www.foo.com/foo/bar.html"
+        "http://www.foo.com.:81/foo"    "http://www.foo.com:81/foo"
+        "http://www.foo.com/%7ebar"     "http://www.foo.com/~bar"
+        "http://www.foo.com/%7Ebar"     "http://www.foo.com/~bar"
+        "ftp://user:pass@ftp.foo.net/foo/bar" 
+          "ftp://user:pass@ftp.foo.net/foo/bar"
+        "http://USER:pass@www.Example.COM/foo/bar" 
+          "http://USER:pass@www.example.com/foo/bar"
+        "http://www.example.com./"      "http://www.example.com/"
+        "-"                             "-"
+        ;; not so sure about this one, the hash mark is questionable
+        "http://www.foo.com/?p=529&#038;cpage=1#comment-783" "http://www.foo.com/?p=529&")
+
 (deftest test-normalize
   (let [expected (URI. "http://clojure.org/")
         results (map #(normalize (URI. %))
@@ -48,8 +91,8 @@
     (is (= expected (normalize uri :drop-fragment? true)))
     (is (not (= expected (normalize uri))))))
 
-(deftest test-normalize-to-self
-  (doseq [[s normalize-to-self?] pace-tests]
+(deftest test-absolute-uris
+  (doseq [[s normalize-to-self?] absolute-uris]
     (let [a (URI. s)
           b (normalize a)
           x (.toString a)
@@ -57,6 +100,12 @@
       (if normalize-to-self?
         (is (= x y) (str x " was normalized to " y))
         (is (not (= x y)) (str x " was normalized to " y))))))
+
+(deftest test-relative-uris
+  (doseq [[a b] relative-uris]
+    (let [expected (URI. b)
+          result (normalize (URI. a))]
+      (is (= expected result)))))
 
 ;; mnot test suite; three tests updated for rfc2396bis.
 (def mnot-tests 
