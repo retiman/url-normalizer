@@ -27,8 +27,8 @@
       (do
         (if-not (nil? scheme)
           (.append buffer (str scheme "://")))
-        (if-not (nil? user-info)
-          (.append buffer user-info))
+        (if-not (or (nil? user-info) (= ":" user-info) (= "" user-info))
+          (.append buffer (str user-info "@")))
         (.append buffer host)
         (if (> port 0)
           (.append buffer (str ":" port)))))
@@ -74,12 +74,12 @@
         resolved (resolve rewritten)
         result resolved]
     (create-uri :scheme (.getScheme result)
-                :user-info (.getUserInfo uri)
+                :user-info (.getRawUserInfo uri)
                 :host (.getHost result)
                 :port (.getPort result)
                 :path (decode (.getRawPath result))
                 :query (.getRawQuery result)
-                :fragment (if-not drop-fragment? (.getFragment result)))))
+                :fragment (if-not drop-fragment? (.getRawFragment result)))))
 
 (def default-port
 {

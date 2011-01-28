@@ -51,10 +51,12 @@
 (deftest test-pace-tests
   (doseq [[s normalize-to-self?] pace-tests]
     (let [a (URI. s)
-          b (normalize a)]
+          b (normalize a)
+          x (.toString a)
+          y (.toString b)]
       (if normalize-to-self?
-        (is (= a b) (str a " was normalized to " b))
-        (is (not (= a b)) (str a " was normalized to " b))))))
+        (is (= x y) (str x " was normalized to " y))
+        (is (not (= x y)) (str x " was normalized to " y))))))
 
 (deftest test-url-equal?
   (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))
