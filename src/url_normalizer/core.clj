@@ -1,5 +1,7 @@
 (ns url-normalizer.core
   (:refer-clojure :exclude (resolve))
+  (:use
+    [url-normalizer.util])
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
@@ -16,13 +18,23 @@
       (HttpHost. host)
       (HttpHost. host port scheme))))
 
+(defn- decode
+  [path]
+  ((comp (apply comp decode-alphanum)
+         #(.replaceAll % "%2D" "-")
+         #(.replaceAll % "%2E" ".")
+         #(.replaceAll % "%5F" "_")
+         #(.replaceAll % "%7E" "~"))
+     path))
+
 (defn- rewrite
   "Rewrites the URI by:
   * Convert the host to lowercase.
   * Possibly drop the fragment."
   [uri drop-fragment?]
-  (let [host (create-http-host uri)]
-    (URIUtils/rewriteURI uri host drop-fragment?)))
+  (let [host (create-http-host uri)
+        rewritten (URIUtils/rewriteURI uri host drop-fragment?)]
+    rewritten))
 
 (defn- resolve
   "Resolve a URI reference against a base URI."
@@ -34,16 +46,15 @@
   [uri & {:keys [drop-fragment?]
           :or {drop-fragment? false}}]
   (let [rewritten (rewrite uri drop-fragment?)
-        resolved (resolve rewritten)]
-    resolved))
-    (comment
-    (URI. (.getScheme resolved)
+        resolved (resolve rewritten)
+        result resolved]
+    (URI. (.getScheme result)
           (.getUserInfo uri)
-          (.getHost resolved)
-          (.getPort resolved)
-          (.getRawPath resolved)
-          (.getRawQuery resolved)
-          (.getFragment resolved)))
+          (.getHost result)
+          (.getPort result)
+          (decode (.getRawPath result))
+          (.getRawQuery result)
+          (.getFragment result))))
 
 
 (def default-port
