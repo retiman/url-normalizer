@@ -7,13 +7,18 @@
 
 (deftest test-normalize
   (let [expected (URI. "http://clojure.org/")
-        results (map #(normalize (URI. %) :drop-fragment? true)
+        results (map #(normalize (URI. %))
                      (list "http://clojure.org"
                            "http://clojure.org:80"
-                           "http://Clojure.org"
-                           "http://clojure.org#foo"))]
+                           "http://Clojure.org"))]
     (doseq [result results]
       (is (= expected result)))))
+
+(deftest test-drop-fragment
+  (let [uri (URI. "http://clojure.org#foo")
+        expected (URI. "http://clojure.org/")]
+    (is (= expected (normalize uri :drop-fragment? true)))
+    (is (not (= expected (normalize uri))))))
 
 (deftest test-url-equal?
   (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))

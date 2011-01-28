@@ -57,7 +57,7 @@
           (.getPort result)
           (decode (.getRawPath result))
           (.getRawQuery result)
-          (.getFragment result))))
+          (if-not drop-fragment? (.getFragment result)))))
 
 
 (def default-port
