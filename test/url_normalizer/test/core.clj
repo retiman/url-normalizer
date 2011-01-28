@@ -5,6 +5,34 @@
   (:import
     [java.net URL URI]))
 
+(def
+  ^{:doc "URLs mapped to true normalize to themselves."}
+  pace-tests
+  {"http://:@example.com/" false
+   "http://@example.com/" false
+   "http://example.com" false
+   "HTTP://example.com/" false
+   "http://EXAMPLE.COM/" false
+   "http://example.com/%7Ejane" false
+   "http://example.com/?q=%C3%87" true
+   "http://example.com/?q=%E2%85%A0" true
+   "http://example.com/?q=%5C" true
+   "http://example.com/a/../a/b" false
+   "http://example.com/a/./b" false
+   "http://example.com:80/" false
+   "http://example.com/" true
+   "http://example.com/~jane" true
+   "http://example.com/a/b" true
+   "http://example.com:8080/" true
+   "http://user:password@example.com/" true
+   "http://www.ietf.org/rfc/rfc2396.txt" true
+   "telnet://192.0.2.16:80/" true
+   "http://127.0.0.1/" true
+   "http://127.0.0.1:80/" false
+   "http://example.com:081/" false
+   "http://example.com?q=foo" false
+   "http://example.com/?q=foo" true})
+
 (deftest test-normalize
   (let [expected (URI. "http://clojure.org/")
         results (map #(normalize (URI. %))
@@ -19,6 +47,14 @@
         expected (URI. "http://clojure.org/")]
     (is (= expected (normalize uri :drop-fragment? true)))
     (is (not (= expected (normalize uri))))))
+
+(deftest test-pace-tests
+  (doseq [[s normalize-to-self?] pace-tests]
+    (let [a (URI. s)
+          b (normalize a)]
+      (if normalize-to-self?
+        (is (= a b) (str (.toASCIIString a) " was normalized to " (.toASCIIString b)))
+        (is (not (= a b)) (str (.toASCIIString a) " was normalized to " (.toASCIIString b)))))))
 
 (deftest test-url-equal?
   (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))
@@ -36,46 +72,6 @@
                (java.net.URL. "http://jaydonnell.com")]]
     (doall (map #(is (= want (canonicalize-url %))) tests))
    ))
-
-(def pace-tests [ 
-         false "http://:@example.com/"
-         false "http://@example.com/"
-         false "http://example.com"
-         false "HTTP://example.com/"
-         false "http://EXAMPLE.COM/"
-         false "http://example.com/%7Ejane" ;; should be ~
-         true  "http://example.com/?q=%C3%87"
-         true  "http://example.com/?q=%E2%85%A0"
-         true  "http://example.com/?q=%5C"
-
-         false "http://example.com/a/../a/b"
-         false "http://example.com/a/./b"
-         false "http://example.com:80/"
-         true  "http://example.com/"
-
-         true  "http://example.com/~jane"
-         true  "http://example.com/a/b"
-         true  "http://example.com:8080/"
-         true  "http://user:password@example.com/"
-         ;; from rfc2396bis
-         true  "http://www.ietf.org/rfc/rfc2396.txt"
-         true  "telnet://192.0.2.16:80/"
-         ;; other
-         true  "http://127.0.0.1/"
-         false "http://127.0.0.1:80/"
-         false "http://example.com:081/"
-       
-         false "http://example.com?q=foo"         
-         true  "http://example.com/?q=foo"         
- ])
-
-(deftest test-pace-tests
-  (doall
-    (map 
-     (fn [[expected url]]
-       (is (= (= url (canonicalize-url url)) expected)
-           (str url " normalized incorrectly")))
-     (partition 2 pace-tests))))
 
 ;; mnot test suite; three tests updated for rfc2396bis.
 (def mnot-tests 

@@ -51,6 +51,8 @@
   (let [rewritten (rewrite uri drop-fragment?)
         resolved (resolve rewritten)
         result resolved]
+    ; Write custom create-uri fn instead of this or else your path
+    ; gets encoded twice.
     (URI. (.getScheme result)
           (.getUserInfo uri)
           (.getHost result)
