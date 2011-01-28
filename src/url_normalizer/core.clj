@@ -1,4 +1,5 @@
 (ns url-normalizer.core
+  (:refer-clojure :exclude (resolve))
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
@@ -11,6 +12,14 @@
   (if (and (= scheme "http") (= port 80))
     (HttpHost. host)
     (HttpHost. host port scheme)))
+
+(defn- resolve
+  [base uri]
+  (URIUtils/resolve base uri))
+
+(defn- rewrite
+  [uri host drop-fragment?]
+  (URIUtils/rewrite uri host drop-fragment?))
 
 (defn normalize
   [url & {:keys [drop-fragment]

@@ -1,7 +1,19 @@
-
 (ns url-normalizer.test.core
-  (:use [url-normalizer.core] :reload)
-  (:use [clojure.test]))
+  (:use
+    [url-normalizer.core]
+    [clojure.test])
+  (:import
+    [java.net URI]))
+
+(deftest test-normalize
+  (let [expected (URI. "http://clojure.org/")
+        results (map #(normalize % :drop-fragment true)
+                     (list "http://clojure.org"
+                           "http://clojure.org:80"
+                           "http://Clojure.org"
+                           "http://clojure.org#foo"))]
+    (doseq [result results]
+      (is (= expected result)))))
 
 (deftest test-url-equal?
   (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))
