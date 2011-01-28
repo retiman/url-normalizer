@@ -20,6 +20,28 @@
       (HttpHost. host)
       (HttpHost. host port scheme))))
 
+(defn- create-uri
+  [& {:keys [scheme user-info host port path query fragment]}]
+  (let [buffer (StringBuilder.)]
+    (if-not (nil? host)
+      (do
+        (if-not (nil? scheme)
+          (.append buffer (str scheme "://")))
+        (if-not (nil? user-info)
+          (.append buffer user-info))
+        (.append buffer host)
+        (if (> port 0)
+          (.append buffer (str ":" port)))))
+    (if (or (nil? path) (not (.startsWith path "/")))
+      (.append buffer "/"))
+    (if-not (nil? path)
+      (.append buffer path))
+    (if-not (nil? query)
+      (.append buffer (str "?" query)))
+    (if-not (nil? fragment)
+      (.append buffer (str "#" fragment)))
+    (URI. (.toString buffer))))
+
 (defn- decode
   "Decodes percent encoded octets to their corresponding characters.
   Only decodes unreserved characters."
@@ -51,16 +73,13 @@
   (let [rewritten (rewrite uri drop-fragment?)
         resolved (resolve rewritten)
         result resolved]
-    ; Write custom create-uri fn instead of this or else your path
-    ; gets encoded twice.
-    (URI. (.getScheme result)
-          (.getUserInfo uri)
-          (.getHost result)
-          (.getPort result)
-          (decode (.getRawPath result))
-          (.getRawQuery result)
-          (if-not drop-fragment? (.getFragment result)))))
-
+    (create-uri :scheme (.getScheme result)
+                :user-info (.getUserInfo uri)
+                :host (.getHost result)
+                :port (.getPort result)
+                :path (decode (.getRawPath result))
+                :query (.getRawQuery result)
+                :fragment (if-not drop-fragment? (.getFragment result)))))
 
 (def default-port
 {

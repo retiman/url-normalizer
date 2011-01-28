@@ -53,8 +53,8 @@
     (let [a (URI. s)
           b (normalize a)]
       (if normalize-to-self?
-        (is (= a b) (str (.toASCIIString a) " was normalized to " (.toASCIIString b)))
-        (is (not (= a b)) (str (.toASCIIString a) " was normalized to " (.toASCIIString b)))))))
+        (is (= a b) (str a " was normalized to " b))
+        (is (not (= a b)) (str a " was normalized to " b))))))
 
 (deftest test-url-equal?
   (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))
