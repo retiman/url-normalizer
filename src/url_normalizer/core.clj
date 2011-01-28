@@ -17,20 +17,23 @@
       (HttpHost. host port scheme))))
 
 (defn- rewrite
+  "Rewrites the URI by:
+  * Convert the host to lowercase.
+  * Possibly drop the fragment."
   [uri drop-fragment?]
   (let [host (create-http-host uri)]
     (URIUtils/rewriteURI uri host drop-fragment?)))
 
 (defn- resolve
+  "Resolve a URI reference against a base URI."
   [uri]
   (let [base (URI. (.getHost uri))]
     (URIUtils/resolve base uri)))
 
 (defn normalize
-  [url & {:keys [drop-fragment?]
+  [uri & {:keys [drop-fragment?]
           :or {drop-fragment? false}}]
-  (let [uri (URI. url)
-        rewritten (rewrite uri drop-fragment?)
+  (let [rewritten (rewrite uri drop-fragment?)
         resolved (resolve rewritten)]
     resolved))
     (comment

@@ -7,7 +7,7 @@
 
 (deftest test-normalize
   (let [expected (URI. "http://clojure.org/")
-        results (map #(normalize % :drop-fragment? true)
+        results (map #(normalize (URI. %) :drop-fragment? true)
                      (list "http://clojure.org"
                            "http://clojure.org:80"
                            "http://Clojure.org"
