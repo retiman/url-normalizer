@@ -78,15 +78,13 @@
     (let [result ((comp #(rewrite base % drop-fragment?)
                         #(resolve base %))
                     uri)]
-      (if (nil-host? result)
-        result
-        (create-uri :scheme (.getScheme result)
-                    :user-info (.getRawUserInfo uri)
-                    :host (.getHost result)
-                    :port (.getPort result)
-                    :path (decode (.getRawPath result))
-                    :query (.getRawQuery result)
-                    :fragment (if-not drop-fragment? (.getRawFragment result))))))
+      (create-uri :scheme (.getScheme result)
+                  :user-info (.getRawUserInfo uri)
+                  :host (.getHost result)
+                  :port (.getPort result)
+                  :path (decode (.getRawPath result))
+                  :query (.getRawQuery result)
+                  :fragment (if-not drop-fragment? (.getRawFragment result)))))
 
 (def default-port
 {
