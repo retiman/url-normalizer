@@ -1,7 +1,36 @@
-
 (ns url-normalizer.core
-  (:require [clojure.contrib.str-utils2 :as su])
-  (:import [java.net URI URL]))
+  (:require
+    [clojure.contrib.str-utils2 :as su])
+  (:import
+    [java.net URI]
+    [org.apache.http HttpHost]
+    [org.apache.http.client.utils URIUtils]))
+
+(defn- create-http-host
+  [scheme host port]
+  (if (and (= scheme "http") (= port 80))
+    (HttpHost. host)
+    (HttpHost. host port scheme)))
+
+(defn normalize
+  [url & {:keys [drop-fragment]
+          :or {drop-fragment false}}]
+  (let [uri (URI. url)
+        scheme (.getScheme uri)
+        host (su/lower-case (.getHost uri))
+        port (.getPort uri)
+        rewritten (URIUtils/rewriteURI uri http-host drop-fragment)
+        resolved (URIUtils/resolve base-uri rewritten)]
+    resolved))
+    (comment
+    (URI. (.getScheme resolved)
+          (.getUserInfo uri)
+          (.getHost resolved)
+          (.getPort resolved)
+          (.getRawPath resolved)
+          (.getRawQuery resolved)
+          (.getFragment resolved)))
+
 
 (def default-port
 {
