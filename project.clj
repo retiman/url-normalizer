@@ -1,11 +1,10 @@
-(defproject url-normalizer "0.0.4"
-  :description "url-normalizer"
+(defproject url-normalizer "0.1.0"
+  :description "Normalizes and standardizes URLs in a consistent manner."
   :dependencies [[org.clojure/clojure "1.2.0"]
-                 [org.clojure/clojure-contrib "1.2.0"]]
+                 [org.clojure/clojure-contrib "1.2.0"]
+                 [org.apache.httpcomponents/httpclient "4.1-beta1" :exclusions
+                   [org.apache.httpcomponents/httpcore
+                    commons-logging
+                    commons-codec]]]
   :dev-dependencies
-    [[lein-run "1.0.0"]
-     [swank-clojure "1.2.1"]
-     [lein-javac "1.2.1-SNAPSHOT"]
-     [robert/hooke "1.0.2"]
-     [lein-daemon "0.2.1"]]
-  )
+    [[swank-clojure "1.2.1"]])
