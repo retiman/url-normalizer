@@ -26,5 +26,5 @@
   ^{:doc "A list of functions that decode alphanumerics in a String."}
   decode-alphanum
   (concat
-    (map #(fn [s] (.replaceAll s (first %) (last %))) alpha)
-    (map #(fn [s] (.replaceAll s (first %) (last %))) digits)))
+    (map #(fn [s] (.replaceAll s (first %) (last %)))
+         (concat alpha digits))))
