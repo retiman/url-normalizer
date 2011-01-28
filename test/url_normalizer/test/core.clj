@@ -7,7 +7,7 @@
 
 (def
   ^{:doc "URLs mapped to true normalize to themselves."}
-  pace-tests
+  self-normalization
   {"http://:@example.com/" false
    "http://@example.com/" false
    "http://example.com" false
@@ -48,7 +48,7 @@
     (is (= expected (normalize uri :drop-fragment? true)))
     (is (not (= expected (normalize uri))))))
 
-(deftest test-pace-tests
+(deftest test-normalize-to-self
   (doseq [[s normalize-to-self?] pace-tests]
     (let [a (URI. s)
           b (normalize a)
@@ -57,23 +57,6 @@
       (if normalize-to-self?
         (is (= x y) (str x " was normalized to " y))
         (is (not (= x y)) (str x " was normalized to " y))))))
-
-(deftest test-url-equal?
-  (is (url-equal? "http://jaydonnell.com" "http://jaydonnell.com"))
-  (is (url-equal? "http://jaydonnell.com/" "http://jaydonnell.com"))
-  (is (url-equal? "http://jaydonnell.com:80" "http://jaydonnell.com")))
-
-(deftest test-canonical-url
-  (let [want "http://jaydonnell.com/"
-        tests ["http://jaydonnell.com"
-               "http://jaydonnell.com:80"
-               "http://Jaydonnell.com"
-               "Http://Jaydonnell.com"
-               "http://jaydonnell.com#blah"
-               (java.net.URI. "http://jaydonnell.com")
-               (java.net.URL. "http://jaydonnell.com")]]
-    (doall (map #(is (= want (canonicalize-url %))) tests))
-   ))
 
 ;; mnot test suite; three tests updated for rfc2396bis.
 (def mnot-tests 
