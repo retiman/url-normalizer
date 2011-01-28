@@ -7,34 +7,31 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(defn- normalize-host
-  [uri]
-  (su/lower-case (.getHost uri)))
-
 (defn- create-http-host
   [uri]
   (let [scheme (.getScheme uri)
-        host (normalize-host uri)
+        host (su/lower-case (.getHost uri))
         port (.getPort uri)]
     (if (and (= scheme "http") (= port 80))
       (HttpHost. host)
       (HttpHost. host port scheme))))
 
-(defn- resolve
-  [base uri]
-  (URIUtils/resolve base uri))
-
 (defn- rewrite
-  [uri host drop-fragment?]
-  (URIUtils/rewriteURI uri host drop-fragment?))
+  [uri drop-fragment?]
+  (let [host (create-http-host uri)]
+    (URIUtils/rewriteURI uri host drop-fragment?)))
+
+(defn- resolve
+  [uri]
+  (let [base (URI. (.getHost uri))]
+    (URIUtils/resolve base uri)))
 
 (defn normalize
   [url & {:keys [drop-fragment?]
           :or {drop-fragment? false}}]
   (let [uri (URI. url)
-        host (create-http-host uri)
-        rewritten (rewrite uri host drop-fragment?)
-        resolved (resolve (URI. (.toURI host)) rewritten)]
+        rewritten (rewrite uri drop-fragment?)
+        resolved (resolve rewritten)]
     resolved))
     (comment
     (URI. (.getScheme resolved)
