@@ -3,15 +3,22 @@
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
-    [java.net URI]
+    [java.net URL URI]
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
+(defn- normalize-host
+  [uri]
+  (su/lower-case (.getHost uri)))
+
 (defn- create-http-host
-  [scheme host port]
-  (if (and (= scheme "http") (= port 80))
-    (HttpHost. host)
-    (HttpHost. host port scheme)))
+  [uri]
+  (let [scheme (.getScheme uri)
+        host (normalize-host uri)
+        port (.getPort uri)]
+    (if (and (= scheme "http") (= port 80))
+      (HttpHost. host)
+      (HttpHost. host port scheme))))
 
 (defn- resolve
   [base uri]
@@ -19,17 +26,15 @@
 
 (defn- rewrite
   [uri host drop-fragment?]
-  (URIUtils/rewrite uri host drop-fragment?))
+  (URIUtils/rewriteURI uri host drop-fragment?))
 
 (defn normalize
-  [url & {:keys [drop-fragment]
-          :or {drop-fragment false}}]
+  [url & {:keys [drop-fragment?]
+          :or {drop-fragment? false}}]
   (let [uri (URI. url)
-        scheme (.getScheme uri)
-        host (su/lower-case (.getHost uri))
-        port (.getPort uri)
-        rewritten (URIUtils/rewriteURI uri http-host drop-fragment)
-        resolved (URIUtils/resolve base-uri rewritten)]
+        host (create-http-host uri)
+        rewritten (rewrite uri host drop-fragment?)
+        resolved (resolve (URI. (.toURI host)) rewritten)]
     resolved))
     (comment
     (URI. (.getScheme resolved)

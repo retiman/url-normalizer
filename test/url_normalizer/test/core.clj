@@ -3,7 +3,7 @@
     [url-normalizer.core]
     [clojure.test])
   (:import
-    [java.net URI]))
+    [java.net URL URI]))
 
 (deftest test-normalize
   (let [expected (URI. "http://clojure.org/")
