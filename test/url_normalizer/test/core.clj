@@ -67,7 +67,9 @@
     (doseq [[original resolved] abnormal-reference-resolution-examples]
       (is (= (resolve base original) resolved)))))
 
-(deftest test-fixes-java-bug-4708535
+(deftest
+  ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
+  test-fixes-java-bug-4708535
   (let [expected (URI. "http://example.org/dir/file#foo")]
     (is (= expected (resolve (URI. "http://example.org/dir/file")
                              (URI. "#foo"))))
