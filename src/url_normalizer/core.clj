@@ -68,9 +68,10 @@
 (defn resolve
   "Resolve a URI reference against a base URI by removing dot segments."
   [base uri]
-    (if (nil-host? base)
-      (URIUtils/resolve uri uri)
-      (URIUtils/resolve (URI. (.getHost uri)) uri)))
+  (URIUtils/resolve base uri))
+;    (if (nil-host? base)
+;      (URIUtils/resolve uri uri)
+;      (URIUtils/resolve (URI. (.getHost uri)) uri)))
 
 (defn normalize
   [uri & {:keys [base drop-fragment?]
