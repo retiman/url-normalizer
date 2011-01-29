@@ -61,31 +61,28 @@
 
 (defn rewrite
   "Rewrites the URI, possibly dropping the fragment."
-  [base uri drop-fragment?]
-  (let [host (create-http-host (if (nil-host? base) uri base))]
-    (URIUtils/rewriteURI uri host drop-fragment?)))
+  [http-host uri drop-fragment?]
+  (URIUtils/rewriteURI uri http-host drop-fragment?))
 
 (defn resolve
   "Resolve a URI reference against a base URI by removing dot segments."
   [base uri]
   (URIUtils/resolve base uri))
-;    (if (nil-host? base)
-;      (URIUtils/resolve uri uri)
-;      (URIUtils/resolve (URI. (.getHost uri)) uri)))
 
 (defn normalize
-  [uri & {:keys [base drop-fragment?]
-          :or {drop-fragment? false}}]
-    (let [result ((comp #(rewrite base % drop-fragment?)
-                        #(resolve base %))
-                    uri)]
+  [uri]
+  (let [http-host (create-http-host uri)
+        host (URI. (str (.getScheme uri) "://" (.getHost uri)))
+        f (comp #(rewrite http-host % false)
+                #(resolve host %))
+        result (if http-host (f uri) uri)]
       (create-uri :scheme (.getScheme result)
                   :user-info (.getRawUserInfo uri)
                   :host (.getHost result)
                   :port (.getPort result)
                   :path (decode (.getRawPath result))
                   :query (.getRawQuery result)
-                  :fragment (if-not drop-fragment? (.getRawFragment result)))))
+                  :fragment (.getRawFragment result))))
 
 (def default-port
 {

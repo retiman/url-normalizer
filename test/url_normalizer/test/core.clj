@@ -82,14 +82,16 @@
                              (URI. "")))))))
 
 (comment "From 6.2.2.  Syntax-Based Normalization in RFC3986"
-(deftest test-syntax-based-normalization
+(deftest
+  test-syntax-based-normalization
   (is (equivalent? (URI. "example://a/b/c/%7Bfoo%7D")
                    (URI. "eXAMPLE://a/./b/../b/%63/%7bfoo%7d")))))
 
-(comment "From 6.2.2.1.  Case Normalization in RFC3986"
-(deftest test-case-normalization
-  (is (equivalent? (URI. "HTTP://www.EXAMPLE.com/")
-                   (URI. "http://www.example.com/")))))
+(deftest
+  ^{:doc "Tests from 6.2.2.1.  Case Normalization in RFC3986"}
+  test-case-normalization
+  (is (= (normalize (URI. "HTTP://www.EXAMPLE.com/"))
+         (normalize (URI. "http://www.example.com/")))))
 
 (comment "From 6.2.2.2.  Percent-Encoding Normalization")
 
