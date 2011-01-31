@@ -108,7 +108,16 @@
   (is (equal? (normalize (as-uri "http://www.example.com/%7B"))
               (normalize (as-uri "http://www.example.com/%7b")))))
 
-(comment "From 6.2.2.2.  Percent-Encoding Normalization")
+(deftest
+  ^{:doc
+    "Tests for RFC3986: 6.2.2.2.  Percent-Encoding Normalization.
+
+    Do not percent encode unreserved characters.  When encountered, they
+    should be decoded."}
+  test-percent-encoding-normalization
+  (is (equal? (normalize (as-uri "http://example.com/~azAZ09-._"))
+              (normalize (as-uri "http://example.com/%7E%41%5A%61%7A%30%39%2D%2E%5F")))))
+
 
 (comment "From 6.2.2.3.  Path Segment Normalization")
 
