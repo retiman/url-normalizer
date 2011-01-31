@@ -11,6 +11,18 @@
   (apply merge
     (cons {} (map #(vector (as-uri (first %)) (as-uri (second %))) h))))
 
+(defn equal?
+  "Returns true if the ASCII string versions of URIs are equal.  This is
+  different from #'url-normalizer.core/equivalent? as two equivalent URIs
+  may not have the same ASCII string representation.
+
+  For example:
+
+    http://example.com/%7b
+    http://example.com/%7B"
+  [a b]
+  (= (.toASCIIString a) (.toASCIIString b)))
+
 (def
   ^{:doc "Tests from RFC3986: Section 5.3."}
   normal-reference-resolution-examples
@@ -64,23 +76,23 @@
 (deftest test-reference-resolution
   (let [base (as-uri "http://a/b/c/d;p?q")]
     (doseq [[original resolved] normal-reference-resolution-examples]
-      (is (= (resolve base original) resolved)))
+      (is (equal? (resolve base original) resolved)))
     (doseq [[original resolved] abnormal-reference-resolution-examples]
-      (is (= (resolve base original) resolved)))))
+      (is (equal? (resolve base original) resolved)))))
 
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
   test-fixes-java-bug-4708535
   (let [expected (as-uri "http://example.org/dir/file#foo")]
-    (is (= expected (resolve (as-uri "http://example.org/dir/file")
-                             (as-uri "#foo"))))
-    (is (= expected (resolve (as-uri "http://example.org/dir/file#frag")
-                             (as-uri "#foo"))))
+    (is (equal? expected (resolve (as-uri "http://example.org/dir/file")
+                                  (as-uri "#foo"))))
+    (is (equal? expected (resolve (as-uri "http://example.org/dir/file#frag")
+                                  (as-uri "#foo"))))
   (let [expected (as-uri "http://example.org/dir/file")]
-    (is (= expected (resolve (as-uri "http://example.org/dir/file")
-                             (as-uri ""))))
-    (is (= expected (resolve (as-uri "http://example.org/dir/file#frag")
-                             (as-uri "")))))))
+    (is (equal? expected (resolve (as-uri "http://example.org/dir/file")
+                                  (as-uri ""))))
+    (is (equal? expected (resolve (as-uri "http://example.org/dir/file#frag")
+                                  (as-uri "")))))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
