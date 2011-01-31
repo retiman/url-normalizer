@@ -97,16 +97,16 @@
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
   test-syntax-based-normalization
-  (is (equivalent? (as-uri "example://a/b/c/%7Bfoo%7D")
-                   (as-uri "eXAMPLE://a/./b/../b/%63/%7bfoo%7d"))))
+  (is (equal? (normalize (as-uri "example://a/b/c/%7Bfoo%7D"))
+              (normalize (as-uri "eXAMPLE://a/./b/../b/%63/%7bfoo%7d")))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.1.  Case Normalization."}
   test-case-normalization
-  (is (equivalent? (as-uri "HTTP://www.EXAMPLE.com/")
-                   (as-uri "http://www.example.com/")))
-  (is (equivalent? (as-uri "http://www.example.com/%7B")
-                   (as-uri "http://www.example.com/%7b"))))
+  (is (equal? (normalize (as-uri "HTTP://www.EXAMPLE.com/"))
+              (normalize (as-uri "http://www.example.com/"))))
+  (is (equal? (normalize (as-uri "http://www.example.com/%7B"))
+              (normalize (as-uri "http://www.example.com/%7b")))))
 
 (comment "From 6.2.2.2.  Percent-Encoding Normalization")
 
@@ -124,9 +124,10 @@
 
      Being a URL normalizer, we will ignore these."}
   test-scheme-based-normalization
-  (let [expected (as-uri "http://example.com")]
-    (is (equivalent? expected (as-uri "http://example.com/")))
-    (is (equivalent? expected (as-uri "http://example.com/")))
-    (is (equivalent? expected (as-uri "http://example.com:/")))
-    (is (equivalent? expected (as-uri "http://example.com:80/")))
-    (is (not (equivalent? expected (as-uri "http://www.example.com/?"))))))
+  (let [expected (as-uri "http://example.com/")]
+    (is (equal? expected (normalize (as-uri "http://example.com"))))
+    (is (equal? expected (normalize (as-uri "http://example.com/"))))
+    (is (equal? expected (normalize (as-uri "http://example.com:/"))))
+    (is (equal? expected (normalize (as-uri "http://example.com:80/"))))
+    (is (not (equal? expected
+                     (normalize (as-uri "http://www.example.com/?")))))))
