@@ -11,14 +11,14 @@
 (def
   ^{:doc "Maps percent encoded octets to alpha characters."}
   alpha
-  (let [xs (concat (range 0x41 0x5A) (range 0x61 0x7A))]
+  (let [xs (concat (range 0x41 (inc 0x5A)) (range 0x61 (inc 0x7A)))]
     (zipmap (map #(str "%" (su/upper-case (byte-to-hex-string %))) xs)
             (map #(str (char %)) xs))))
 
 (def
   ^{:doc "Maps percent encoded octets to digits."}
   digits
-  (let [xs (range 0x30 0x39)]
+  (let [xs (range 0x30 (inc 0x39))]
     (zipmap (map #(str "%" (byte-to-hex-string %)) xs)
             (map #(str (char %)) xs))))
 
