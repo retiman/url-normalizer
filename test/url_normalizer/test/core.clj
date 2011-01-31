@@ -97,10 +97,20 @@
 
 (comment "From 6.2.2.3.  Path Segment Normalization")
 
-(comment "From 6.2.3.  Scheme-Based Normalization"
-(deftest test-scheme-based-normalization
-  (is (equivalent? (URI. "mailto:Joe@example.com") (URI. "mailto:Joe@example.com")))
-  (is (equivalent? (URI. "http://example.com") (URI. "http://example.com/")))
-  (is (equivalent? (URI. "http://example.com") (URI. "http://example.com/")))
-  (is (equivalent? (URI. "http://example.com") (URI. "http://example.com:/")))
-  (is (equivalent? (URI. "http://example.com") (URI. "http://example.com:80/")))))
+(deftest
+  ^{:doc "Tests from RFC3986: 6.2.3.  Scheme-Based Normalization.
+
+         The preceding section describes additional normalizations for other schemes.
+         For example, the following are equivalent URIs:
+
+         mailto:Joe@example.com
+         mailto:Joe@Example.com
+
+         Being a URL normalizer, we will ignore these."}
+  test-scheme-based-normalization
+  (let [expected (URI. "http://example.com")]
+    (is (equivalent? expected (URI. "http://example.com/")))
+    (is (equivalent? expected (URI. "http://example.com/")))
+    (is (equivalent? expected (URI. "http://example.com:/")))
+    (is (equivalent? expected (URI. "http://example.com:80/")))
+    (is (not (equivalent? expected (URI. "http://www.example.com/?"))))))
