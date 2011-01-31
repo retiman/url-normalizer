@@ -9,9 +9,13 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(defn as-url [url] (URL. url))
+(defn as-url
+  [arg]
+  (if (= URL (type arg)) arg (URL. arg)))
 
-(defn as-uri [uri] (URI. uri))
+(defn as-uri
+  [arg]
+  (if (= URI (type arg)) arg (URI. arg)))
 
 (defn nil-host?
   [uri]
@@ -74,8 +78,9 @@
   (URIUtils/resolve base uri))
 
 (defn normalize
-  [uri]
-  (let [http-host (create-http-host uri)
+  [arg]
+  (let [uri (as-uri arg)
+        http-host (create-http-host uri)
         host (URI. (str (.getScheme uri) "://" (.getHost uri)))
         f (comp #(rewrite http-host % false)
                 #(resolve host %))

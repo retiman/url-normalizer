@@ -97,16 +97,16 @@
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
   test-syntax-based-normalization
-  (is (equal? (normalize (as-uri "example://a/b/c/%7Bfoo%7D"))
-              (normalize (as-uri "eXAMPLE://a/./b/../b/%63/%7bfoo%7d")))))
+  (is (equal? (normalize "example://a/b/c/%7Bfoo%7D")
+              (normalize "eXAMPLE://a/./b/../b/%63/%7bfoo%7d"))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.1.  Case Normalization."}
   test-case-normalization
-  (is (equal? (normalize (as-uri "HTTP://www.EXAMPLE.com/"))
-              (normalize (as-uri "http://www.example.com/"))))
-  (is (equal? (normalize (as-uri "http://www.example.com/%7B"))
-              (normalize (as-uri "http://www.example.com/%7b")))))
+  (is (equal? (normalize "HTTP://www.EXAMPLE.com/")
+              (normalize "http://www.example.com/")))
+  (is (equal? (normalize "http://www.example.com/%7B")
+              (normalize "http://www.example.com/%7b"))))
 
 (deftest
   ^{:doc
@@ -115,8 +115,8 @@
     Do not percent encode unreserved characters.  When encountered, they
     should be decoded."}
   test-percent-encoding-normalization
-  (is (equal? (normalize (as-uri "http://example.com/~azAZ09-._"))
-              (normalize (as-uri "http://example.com/%7E%61%7A%41%5A%30%39%2D%2E%5F")))))
+  (is (equal? (normalize "http://example.com/~azAZ09-._")
+              (normalize "http://example.com/%7E%61%7A%41%5A%30%39%2D%2E%5F"))))
 
 
 (comment "From 6.2.2.3.  Path Segment Normalization")
@@ -134,9 +134,8 @@
      Being a URL normalizer, we will ignore these."}
   test-scheme-based-normalization
   (let [expected (as-uri "http://example.com/")]
-    (is (equal? expected (normalize (as-uri "http://example.com"))))
-    (is (equal? expected (normalize (as-uri "http://example.com/"))))
-    (is (equal? expected (normalize (as-uri "http://example.com:/"))))
-    (is (equal? expected (normalize (as-uri "http://example.com:80/"))))
-    (is (not (equal? expected
-                     (normalize (as-uri "http://www.example.com/?")))))))
+    (is (equal? expected (normalize "http://example.com")))
+    (is (equal? expected (normalize "http://example.com/")))
+    (is (equal? expected (normalize "http://example.com:/")))
+    (is (equal? expected (normalize "http://example.com:80/")))
+    (is (not (equal? expected (normalize "http://www.example.com/?"))))))
