@@ -6,7 +6,7 @@
   (:import
     [java.net URL URI]))
 
-(defn to-uri-map
+(defn as-uri-map
   [h]
   (apply merge
     (cons {} (map #(vector (as-uri (first %)) (as-uri (second %))) h))))
@@ -26,7 +26,7 @@
 (def
   ^{:doc "Tests from RFC3986: Section 5.3."}
   normal-reference-resolution-examples
-  (to-uri-map
+  (as-uri-map
     {"g:h" "g:h"
      "g" "http://a/b/c/g"
      "./g" "http://a/b/c/g"
@@ -53,7 +53,7 @@
 (def
   ^{:doc "Tests from RFC3986 Section 5.4.2."}
   abnormal-reference-resolution-examples
-  (to-uri-map
+  (as-uri-map
     {"../../../g" "http://a/g"
      "../../../../g" "http://a/g"
      "/./g" "http://a/g"
