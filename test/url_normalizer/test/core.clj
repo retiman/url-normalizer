@@ -8,7 +8,8 @@
 
 (defn to-uri-map
   [h]
-  (apply merge (cons {} (map #(vector (URI. (first %)) (URI. (second %))) h))))
+  (apply merge
+    (cons {} (map #(vector (URI. (first %)) (URI. (second %))) h))))
 
 (def
   ^{:doc "Tests from RFC3986: Section 5.3."}
