@@ -90,8 +90,8 @@
 (deftest
   ^{:doc "Tests from 6.2.2.1.  Case Normalization in RFC3986"}
   test-case-normalization
-  (is (= (normalize (URI. "HTTP://www.EXAMPLE.com/"))
-         (normalize (URI. "http://www.example.com/")))))
+  (is (equivalent? (URI. "HTTP://www.EXAMPLE.com/")
+                   (URI. "http://www.example.com/"))))
 
 (comment "From 6.2.2.2.  Percent-Encoding Normalization")
 
