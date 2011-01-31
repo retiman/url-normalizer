@@ -2,9 +2,12 @@
   (:refer-clojure :exclude (resolve))
   (:use
     [url-normalizer.core]
+    [url-normalizer.test.utils]
     [clojure.test])
   (:import
     [java.net URL URI]))
+
+(refer-private 'url-normalizer.core)
 
 (defn as-uri-map
   [h]

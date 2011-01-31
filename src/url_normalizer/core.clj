@@ -17,11 +17,11 @@
   [arg]
   (if (= URI (type arg)) arg (URI. arg)))
 
-(defn nil-host?
+(defn- nil-host?
   [uri]
   (or (nil? uri) (nil? (.getHost uri))))
 
-(defn create-http-host
+(defn- create-http-host
   "Create an org.apache.http.HttpHost with the host name in lowercase.
   Also removes the default port for the HTTP scheme."
   [uri]
@@ -34,7 +34,7 @@
         (HttpHost. host)
         (HttpHost. host port scheme)))))
 
-(defn create-uri
+(defn- create-uri
   [& {:keys [scheme user-info host port path query fragment]}]
   (let [buffer (StringBuilder.)]
     (if-not (nil? host)
@@ -56,7 +56,7 @@
       (.append buffer (str "#" fragment)))
     (URI. (.toString buffer))))
 
-(defn decode
+(defn- decode
   "Decodes percent encoded octets to their corresponding characters.
   Only decodes unreserved characters."
   [path]
@@ -67,12 +67,12 @@
          #(.replaceAll % "%7E" "~"))
      path))
 
-(defn rewrite
+(defn- rewrite
   "Rewrites the URI, possibly dropping the fragment."
   [http-host uri drop-fragment?]
   (URIUtils/rewriteURI uri http-host drop-fragment?))
 
-(defn resolve
+(defn- resolve
   "Resolve a URI reference against a base URI by removing dot segments."
   [base uri]
   (URIUtils/resolve base uri))
