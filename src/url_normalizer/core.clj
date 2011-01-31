@@ -84,6 +84,11 @@
                   :query (.getRawQuery result)
                   :fragment (.getRawFragment result))))
 
+(defn equivalent?
+  "Returns true if the two URIs are equivalent when normalized."
+  [a b]
+  (= (normalize a) (normalize b)))
+
 (def default-port
 {
  "ftp" 21
