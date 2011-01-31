@@ -11,7 +11,7 @@
   (apply merge (cons {} (map #(vector (URI. (first %)) (URI. (second %))) h))))
 
 (def
-  ^{:doc "These tests are from RFC3986 Section 5.3."}
+  ^{:doc "Tests from RFC3986: Section 5.3."}
   normal-reference-resolution-examples
   (to-uri-map
     {"g:h" "g:h"
@@ -38,7 +38,7 @@
      "../../" "http://a/"
      "../../g" "http://a/g"}))
 (def
-  ^{:doc "These tests are from RFC3986 Section 5.4.2."}
+  ^{:doc "Tests from RFC3986 Section 5.4.2."}
   abnormal-reference-resolution-examples
   (to-uri-map
     {"../../../g" "http://a/g"
@@ -81,32 +81,35 @@
     (is (= expected (resolve (URI. "http://example.org/dir/file#frag")
                              (URI. "")))))))
 
-(comment "From 6.2.2.  Syntax-Based Normalization in RFC3986"
 (deftest
+  ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
   test-syntax-based-normalization
   (is (equivalent? (URI. "example://a/b/c/%7Bfoo%7D")
-                   (URI. "eXAMPLE://a/./b/../b/%63/%7bfoo%7d")))))
+                   (URI. "eXAMPLE://a/./b/../b/%63/%7bfoo%7d"))))
 
 (deftest
-  ^{:doc "Tests from 6.2.2.1.  Case Normalization in RFC3986"}
+  ^{:doc "Tests from RFC3986: 6.2.2.1.  Case Normalization."}
   test-case-normalization
   (is (equivalent? (URI. "HTTP://www.EXAMPLE.com/")
-                   (URI. "http://www.example.com/"))))
+                   (URI. "http://www.example.com/")))
+  (is (equivalent? (URI. "http://www.example.com/%7B")
+                   (URI. "http://www.example.com/%7b"))))
 
 (comment "From 6.2.2.2.  Percent-Encoding Normalization")
 
 (comment "From 6.2.2.3.  Path Segment Normalization")
 
 (deftest
-  ^{:doc "Tests from RFC3986: 6.2.3.  Scheme-Based Normalization.
+  ^{:doc
+    "Tests from RFC3986: 6.2.3.  Scheme-Based Normalization.
 
-         The preceding section describes additional normalizations for other schemes.
-         For example, the following are equivalent URIs:
+     The preceding section describes additional normalizations for other schemes.
+     For example, the following are equivalent URIs:
 
-         mailto:Joe@example.com
-         mailto:Joe@Example.com
+     mailto:Joe@example.com
+     mailto:Joe@Example.com
 
-         Being a URL normalizer, we will ignore these."}
+     Being a URL normalizer, we will ignore these."}
   test-scheme-based-normalization
   (let [expected (URI. "http://example.com")]
     (is (equivalent? expected (URI. "http://example.com/")))
