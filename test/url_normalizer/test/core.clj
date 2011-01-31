@@ -9,7 +9,7 @@
 (defn to-uri-map
   [h]
   (apply merge
-    (cons {} (map #(vector (URI. (first %)) (URI. (second %))) h))))
+    (cons {} (map #(vector (as-uri (first %)) (as-uri (second %))) h))))
 
 (def
   ^{:doc "Tests from RFC3986: Section 5.3."}
@@ -62,7 +62,7 @@
      "g#s/../x" "http://a/b/c/g#s/../x"}))
 
 (deftest test-reference-resolution
-  (let [base (URI. "http://a/b/c/d;p?q")]
+  (let [base (as-uri "http://a/b/c/d;p?q")]
     (doseq [[original resolved] normal-reference-resolution-examples]
       (is (= (resolve base original) resolved)))
     (doseq [[original resolved] abnormal-reference-resolution-examples]
@@ -71,30 +71,30 @@
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
   test-fixes-java-bug-4708535
-  (let [expected (URI. "http://example.org/dir/file#foo")]
-    (is (= expected (resolve (URI. "http://example.org/dir/file")
-                             (URI. "#foo"))))
-    (is (= expected (resolve (URI. "http://example.org/dir/file#frag")
-                             (URI. "#foo"))))
-  (let [expected (URI. "http://example.org/dir/file")]
-    (is (= expected (resolve (URI. "http://example.org/dir/file")
-                             (URI. ""))))
-    (is (= expected (resolve (URI. "http://example.org/dir/file#frag")
-                             (URI. "")))))))
+  (let [expected (as-uri "http://example.org/dir/file#foo")]
+    (is (= expected (resolve (as-uri "http://example.org/dir/file")
+                             (as-uri "#foo"))))
+    (is (= expected (resolve (as-uri "http://example.org/dir/file#frag")
+                             (as-uri "#foo"))))
+  (let [expected (as-uri "http://example.org/dir/file")]
+    (is (= expected (resolve (as-uri "http://example.org/dir/file")
+                             (as-uri ""))))
+    (is (= expected (resolve (as-uri "http://example.org/dir/file#frag")
+                             (as-uri "")))))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
   test-syntax-based-normalization
-  (is (equivalent? (URI. "example://a/b/c/%7Bfoo%7D")
-                   (URI. "eXAMPLE://a/./b/../b/%63/%7bfoo%7d"))))
+  (is (equivalent? (as-uri "example://a/b/c/%7Bfoo%7D")
+                   (as-uri "eXAMPLE://a/./b/../b/%63/%7bfoo%7d"))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.1.  Case Normalization."}
   test-case-normalization
-  (is (equivalent? (URI. "HTTP://www.EXAMPLE.com/")
-                   (URI. "http://www.example.com/")))
-  (is (equivalent? (URI. "http://www.example.com/%7B")
-                   (URI. "http://www.example.com/%7b"))))
+  (is (equivalent? (as-uri "HTTP://www.EXAMPLE.com/")
+                   (as-uri "http://www.example.com/")))
+  (is (equivalent? (as-uri "http://www.example.com/%7B")
+                   (as-uri "http://www.example.com/%7b"))))
 
 (comment "From 6.2.2.2.  Percent-Encoding Normalization")
 
@@ -112,9 +112,9 @@
 
      Being a URL normalizer, we will ignore these."}
   test-scheme-based-normalization
-  (let [expected (URI. "http://example.com")]
-    (is (equivalent? expected (URI. "http://example.com/")))
-    (is (equivalent? expected (URI. "http://example.com/")))
-    (is (equivalent? expected (URI. "http://example.com:/")))
-    (is (equivalent? expected (URI. "http://example.com:80/")))
-    (is (not (equivalent? expected (URI. "http://www.example.com/?"))))))
+  (let [expected (as-uri "http://example.com")]
+    (is (equivalent? expected (as-uri "http://example.com/")))
+    (is (equivalent? expected (as-uri "http://example.com/")))
+    (is (equivalent? expected (as-uri "http://example.com:/")))
+    (is (equivalent? expected (as-uri "http://example.com:80/")))
+    (is (not (equivalent? expected (as-uri "http://www.example.com/?"))))))
