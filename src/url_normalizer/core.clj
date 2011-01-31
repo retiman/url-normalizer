@@ -9,6 +9,10 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
+(defn as-url [url] (URL. url))
+
+(defn as-uri [uri] (URI. uri))
+
 (defn nil-host?
   [uri]
   (or (nil? uri) (nil? (.getHost uri))))
