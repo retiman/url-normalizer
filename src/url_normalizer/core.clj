@@ -26,6 +26,7 @@
    :lower-case-host? true
    :upper-case-percent-encoding? true
    :decode-unreserved-characters? true
+   :encode-illegal-characters? true
    :add-trailing-slash? true
    :remove-default-port? true
    :remove-dot-segments? true})
@@ -207,7 +208,9 @@
       (su/lower-case scheme))))
 
 (defn- normalize-user-info [uri ctx]
-  (let [user-info (.getRawUserInfo uri)
+  (let [user-info (if (:encode-illegal-characters? ctx)
+                    (.getRawUserInfo uri)
+                    (.getUserInfo uri))
         empty-user-info? (or (nil? user-info)
                              (= ":" user-info)
                              (= "" user-info))]
@@ -215,10 +218,22 @@
       user-info)))
 
 (defn- normalize-query
-  "TODO: Apply sort-query? and remove-empty-query? normalizations."
-  [uri]
-  (if-let [query (.getRawQuery uri)]
-    (str "?" query)))
+  "TODO: Apply sort-query? and normalizations."
+  [uri ctx]
+  (let [query (if (:encode-illegal-characters? ctx)
+                   (.getRawQuery uri)
+                   (.getQuery uri))
+           empty-query? (or (nil? query) (= "" query))]
+    (if (not (and (:remove-empty-query? ctx) empty-query?))
+      (str "?" query))))
+
+(defn- normalize-fragment
+  [uri ctx]
+  (let [fragment (if (:encode-illegal-characters? ctx)
+                   (.getRawFragment uri)
+                   (.getFragment uri))]
+    (if (not (:remove-fragment? uri))
+      fragment)))
 
 (defmulti to-uri class)
 (defmethod to-uri URL [url]
@@ -240,7 +255,7 @@
        host  (normalize-host uri)
        port  (normalize-port uri)
        path  (normalize-path uri)
-       query (normalize-query uri)]
+       query (normalize-query uri *context*)]
     (str scheme scheme-connector user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
 (defmethod canonicalize-url String [url]
