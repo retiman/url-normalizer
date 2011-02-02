@@ -56,3 +56,14 @@
   (concat
     (map #(fn [s] (.replaceAll s (first %) (last %)))
          (concat alpha digits))))
+
+(defn lower-case-host [host ctx]
+  (if (:lower-case-host? ctx)
+    (su/lower-case host)
+    host))
+
+(defn remove-trailing-dot-in-host [host ctx]
+  (if (and (:remove-trailing-dot-in-host? ctx)
+           (= \. (last host)))
+    (apply str (butlast host))
+    host))

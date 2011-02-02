@@ -157,10 +157,12 @@
 
 (deftest test-normalize-host
   (letfn [(f ([uri] (f uri *context*))
-                    ([uri ctx] (normalize-host
-                      (as-uri uri)
-                      (merge *context* ctx))))]
-    (is (= (f "http://WWW.EXAMPLE.COM" "www.example.com")))
+             ([uri ctx] (normalize-host
+                          (as-uri uri)
+                          (merge *context* ctx))))]
+    (is (= (f "http://WWW.EXAMPLE.COM") "www.example.com"))
     (is (= (f "http://www.example.com.") "www.example.com."))
     (is (= (f "http://www.example.com." {:remove-trailing-dot-in-host? true})
-           "www.example.com"))))
+           "www.example.com"))
+    (is (nil? (f "/")))
+    (is (nil? (f "/" {:remove-trailing-dot-in-host? true})))))
