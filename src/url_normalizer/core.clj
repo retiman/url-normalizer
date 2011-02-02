@@ -232,7 +232,7 @@
   (let [fragment (if (:encode-illegal-characters? ctx)
                    (.getRawFragment uri)
                    (.getFragment uri))]
-    (if (not (:remove-fragment? uri))
+    (if (not (:remove-fragment? ctx))
       fragment)))
 
 (defmulti to-uri class)
