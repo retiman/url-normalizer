@@ -35,11 +35,12 @@
    :remove-fragment? false
    :remove-ip? false
    :remove-duplicate-slash? false
+   :remove-duplicate-query? false
+   :remove-empty-query? false
+   :remove-empty-user-info? false
    :force-http? false
    :remove-www? false
    :sort-query? false
-   :remove-duplicate-query? false
-   :remove-question-mark? false
    :decode-special-characters? false})
 
 (def *context*
@@ -205,12 +206,13 @@
     (if (:lower-case-scheme? ctx)
       (su/lower-case scheme))))
 
-(defn normalize-user-info [uri]
-  (let [user-info (.getUserInfo uri)]
-    (if (and user-info
-             (not (contains? #{"" ":"} user-info)))
-      (str user-info "@")
-      "")))
+(defn normalize-user-info [uri ctx]
+  (let [user-info (.getRawUserInfo uri)
+        empty-user-info? (or (nil? user-info)
+                             (= ":" user-info)
+                             (= "" user-info))]
+    (if (not (and (:remove-empty-user-info? ctx) empty-user-info?))
+      user-info)))
 
 (defn normalize-query [uri] ;; TODO
   (if-let [q (.getQuery uri)]
@@ -232,7 +234,7 @@
 (defmethod canonicalize-url URI [uri]
  (let [scheme (normalize-scheme uri *context*)
        scheme-connector (if scheme "://" "")
-       user-info  (normalize-user-info uri)
+       user-info  (normalize-user-info uri *context*)
        host  (normalize-host uri)
        port  (normalize-port uri)
        path  (normalize-path uri)
