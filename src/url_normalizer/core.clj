@@ -218,11 +218,14 @@
       nil
       (str ":" port))))
 
-(defn normalize-path [uri]
-  (let [path (normalize-path-dot-segments uri)
-        path2 (only-percent-encode-where-essential path)]
-    ;; (if (or (= path "") (= path "/")) "" path)
-    path2))
+(defn normalize-path
+  [uri ctx]
+  ((comp #(if (:remove-dot-segments? ctx)
+            (-> % (.normalize) (.getRawPath))
+            (.getRawPath %))
+         #(if (:decode-unreserved-characters? ctx) (decode %) %)
+         #(if (and (:add-trailing-slash? ctx) (= "" %)) "/" %))
+     uri))
 
 ; TODO: Technically, the "?" is not part of the query.
 (defn- normalize-query
@@ -263,7 +266,7 @@
        user-info  (normalize-user-info uri *context*)
        host  (normalize-host uri *context*)
        port  (normalize-port uri *context*)
-       path  (normalize-path uri)
+       path  (normalize-path uri *context*)
        query (normalize-query uri *context*)]
     (str scheme scheme-connector user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
