@@ -200,9 +200,10 @@
         (su/join "" (drop-last (seq lhost)))
         lhost))))
 
-(defn normalize-scheme [uri]
+(defn- normalize-scheme [uri ctx]
   (if-let [scheme (.getScheme uri)]
-    (su/lower-case scheme)))
+    (if (:lower-case-scheme? ctx)
+      (su/lower-case scheme))))
 
 (defn normalize-user-info [uri]
   (let [user-info (.getUserInfo uri)]
@@ -229,7 +230,7 @@
 
 (defmulti canonicalize-url class)
 (defmethod canonicalize-url URI [uri]
- (let [scheme (normalize-scheme uri)
+ (let [scheme (normalize-scheme uri *context*)
        scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info uri)
        host  (normalize-host uri)
