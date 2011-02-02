@@ -68,6 +68,21 @@
          #(.replaceAll % "%7E" "~"))
      path))
 
+(defn get-path [uri ctx]
+  (if (:remove-dot-segments? ctx)
+    (-> uri (.normalize) (.getRawPath))
+    (.getRawPath uri)))
+
+(defn get-query [uri ctx]
+  (if (:encode-illegal-characters? ctx)
+    (.getRawQuery uri)
+    (.getQuery uri)))
+
+(defn get-fragment [uri ctx]
+  (if (:encode-illegal-characters? ctx)
+    (.getRawFragment uri)
+    (.getFragment uri)))
+
 (defn lower-case-host [host ctx]
   (if (:lower-case-host? ctx)
     (su/lower-case host)
@@ -85,13 +100,18 @@
     nil
     (str ":" port)))
 
-(defn get-path [uri ctx]
-  (if (:remove-dot-segments? ctx)
-    (-> uri (.normalize) (.getRawPath))
-    (.getRawPath uri)))
-
 (defn decode-unreserved-characters [path ctx]
   (if (:decode-unreserved-characters? ctx) (decode path) path))
 
 (defn add-trailing-slash [path ctx]
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
+
+(defn remove-empty-query [query ctx]
+  (if (and (:remove-empty-query? ctx) (nil? query) (= query ""))
+    nil
+    (str "?" query)))
+
+(defn remove-fragment [fragment ctx]
+  (if (:remove-fragment? ctx)
+    nil
+    (str "#" fragment)))

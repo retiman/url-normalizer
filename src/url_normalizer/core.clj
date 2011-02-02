@@ -212,25 +212,15 @@
         #(add-trailing-slash % ctx))
      uri))
 
-; TODO: Technically, the "?" is not part of the query.
-(defn- normalize-query-part
-  "TODO: Apply sort-query? and normalizations."
-  [uri ctx]
-  (let [query (if (:encode-illegal-characters? ctx)
-                   (.getRawQuery uri)
-                   (.getQuery uri))
-           empty-query? (or (nil? query) (= "" query))]
-    (if (not (and (:remove-empty-query? ctx) empty-query?))
-      (str "?" query))))
+(defn- normalize-query-part [uri ctx]
+  ((>>> #(get-query % ctx)
+        #(remove-empty-query % ctx))
+     uri))
 
-; TODO: When joining the fragment, include the "#"
-(defn- normalize-fragment-part
-  [uri ctx]
-  (let [fragment (if (:encode-illegal-characters? ctx)
-                   (.getRawFragment uri)
-                   (.getFragment uri))]
-    (if (not (:remove-fragment? ctx))
-      fragment)))
+(defn- normalize-fragment-part [uri ctx]
+  ((>>> #(get-fragment % ctx)
+        #(remove-fragment % ctx))
+     uri))
 
 (defmulti to-uri class)
 (defmethod to-uri URL [url]

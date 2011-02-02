@@ -175,3 +175,21 @@
     (is (= (f "http://example.com:8080") ":8080"))
     (is (= (f "http://example.com:8080" {:remove-default-port? true}) ":8080"))
     (is (nil? (f "http://example.com:80" {:remove-default-port? true})))))
+
+(deftest test-normalize-path-part
+  (letfn [(f ([uri] (f uri *context*))
+             ([uri ctx] (normalize-path-part
+                          (as-uri uri)
+                          (merge *context* ctx))))]
+    (is (= (f "http://example.com") "/"))
+    (is (= (f "http://example.com/") "/"))
+    (is (= (f "http://example.com/foo/bar/../baz") "/foo/baz"))
+    (is (= (f "http://example.com/foo/bar/../baz/") "/foo/baz/"))
+    (is (= (f "http://example.com/foo/../..") "/.."))))
+
+(deftest test-normalize-fragment-part
+  (letfn [(f ([uri] (f uri *context*))
+             ([uri ctx] (normalize-fragment-part
+                          (as-uri uri)
+                          (merge *context* ctx))))]
+    (is (= (f "http://example.com#foo") "#foo"))))
