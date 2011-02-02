@@ -112,6 +112,6 @@
     (str "?" query)))
 
 (defn remove-fragment [fragment ctx]
-  (if (:remove-fragment? ctx)
+  (if (or (:remove-fragment? ctx) (nil? fragment))
     nil
     (str "#" fragment)))
