@@ -200,7 +200,8 @@
   [uri ctx]
   (let [host (.getHost uri)]
     ((comp #(if (:lower-case-host? ctx) (su/lower-case %))
-           #(if (:remove-trailing-dot-in-host? ctx)
+           #(if (and (:remove-trailing-dot-in-host? ctx)
+                     (= (last %) \.))
               (apply str (take (dec (count %)) %))))
        host)))
 
