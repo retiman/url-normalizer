@@ -150,35 +150,6 @@
                 :query (normalize-query uri ctx)
                 :fragment (normalize-fragment uri ctx)))))
 
-
-
-(defn normalize-path-dot-segments [uri]
-  (if-let [path (.getPath uri)]
-   (let [segments (su/split path #"/" -1)
-         ;;x (prn segments)
-         ;; resolve relative paths
-         segs2 (reduce
-                (fn [acc segment]
-                  (cond
-                   (= "" segment ) (if (> (count acc) 0)
-                                     acc
-                                     (concat acc [segment]))
-                   (= "."  segment) acc
-                   (= ".." segment) (if (> (count acc) 1)
-                                      (drop-last acc)
-                                      acc)
-                   true (concat acc [segment])
-                   )) [] segments)
-         ;; add a slash if the last segment is "" "." ".."
-         new-segments (if (contains? #{"" "." ".."} (last segments))
-                        (concat segs2 [nil])
-                        segs2)]
-     (su/join "/" new-segments))))
-
-(defn only-percent-encode-where-essential [path]
-  (comment "Where is it non-essential besides tilde ~ ?. a bit of a hack, will extend as new test cases are presented. see: http://labs.apache.org/webarch/uri/rfc/rfc3986.html#unreserved" )
-  (su/replace path #"(?i:%7e)" "~"))
-
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
@@ -202,20 +173,18 @@
       (remove-default-port port ctx))))
 
 (defn normalize-path-part [uri ctx]
-  ((comp #(add-trailing-slash % ctx)
-         #(decode-unreserved-characters % ctx)
-         #(get-path % ctx))
-     uri))
+  (if-let [path (get-path uri ctx)]
+    ((comp #(add-trailing-slash % ctx)
+           #(decode-unreserved-characters % ctx))
+       path)))
 
 (defn- normalize-query-part [uri ctx]
-  ((comp #(remove-empty-query % ctx)
-         #(get-query % ctx))
-     uri))
+  (if-let [query (get-query uri ctx)]
+    (remove-empty-query query ctx)))
 
 (defn- normalize-fragment-part [uri ctx]
-  ((comp #(remove-fragment % ctx)
-         #(get-fragment % ctx))
-     uri))
+  (if-let [fragment (get-fragment uri ctx)]
+    (remove-fragment fragment ctx)))
 
 (defmulti to-uri class)
 (defmethod to-uri URL [url]

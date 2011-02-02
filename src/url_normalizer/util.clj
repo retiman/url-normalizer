@@ -90,12 +90,11 @@
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
 
 (defn remove-empty-query [query ctx]
-  (if (and (:remove-empty-query? ctx)
-           (or (nil? query) (= query "")))
+  (if (and (:remove-empty-query? ctx) (= query ""))
     nil
     (str "?" query)))
 
 (defn remove-fragment [fragment ctx]
-  (if (or (:remove-fragment? ctx) (nil? fragment))
+  (if (:remove-fragment? ctx)
     nil
     (str "#" fragment)))
