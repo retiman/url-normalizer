@@ -185,16 +185,15 @@
     (if (:lower-case-scheme? ctx)
       (su/lower-case scheme))))
 
-(defn- normalize-user-info
+(defn- normalize-user-info-part
   [uri ctx]
-  (let [user-info (if (:encode-illegal-characters? ctx)
-                    (.getRawUserInfo uri)
-                    (.getUserInfo uri))
-        empty-user-info? (or (nil? user-info)
-                             (= ":" user-info)
-                             (= "" user-info))]
-    (if (not (and (:remove-empty-user-info? ctx) empty-user-info?))
-      user-info)))
+  (if-let [user-info (if (:encode-illegal-characters? ctx)
+                       (.getRawUserInfo uri)
+                       (.getUserInfo uri))]
+    (if (and (:remove-empty-user-info? ctx)
+             (or (= ":" user-info) (= "" user-info)))
+      nil
+      (str user-info "@"))))
 
 (defn- normalize-host
   [uri ctx]
@@ -263,7 +262,7 @@
 (defmethod canonicalize-url URI [uri]
  (let [scheme (normalize-scheme uri *context*)
        scheme-connector (if scheme "://" "")
-       user-info  (normalize-user-info uri *context*)
+       user-info  (normalize-user-info-part uri *context*)
        host  (normalize-host uri *context*)
        port  (normalize-port uri *context*)
        path  (normalize-path uri *context*)
