@@ -39,6 +39,7 @@
    :remove-duplicate-query? false
    :remove-empty-query? false
    :remove-empty-user-info? false
+   :remove-trailing-dot-in-host? false
    :force-http? false
    :remove-www? false
    :sort-query? false
@@ -195,12 +196,13 @@
     ;; (if (or (= path "") (= path "/")) "" path)
     path2))
 
-(defn normalize-host [uri]
-  (if-let [host (.getHost uri)]
-    (let [lhost (su/lower-case host)]
-      (if (= (last (seq lhost)) \.)
-        (su/join "" (drop-last (seq lhost)))
-        lhost))))
+(defn- normalize-host
+  [uri ctx]
+  (let [host (.getHost uri)]
+    ((comp #(if (:lower-case-host? ctx) (su/lower-case %))
+           #(if (:remove-trailing-dot-in-host? ctx)
+              (apply str (take (dec (count %)) %))))
+       host)))
 
 (defn- normalize-scheme [uri ctx]
   (if-let [scheme (.getScheme uri)]
@@ -252,7 +254,7 @@
  (let [scheme (normalize-scheme uri *context*)
        scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info uri *context*)
-       host  (normalize-host uri)
+       host  (normalize-host uri *context*)
        port  (normalize-port uri)
        path  (normalize-path uri)
        query (normalize-query uri *context*)]
