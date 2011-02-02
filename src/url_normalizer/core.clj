@@ -195,7 +195,7 @@
       nil
       (str user-info "@"))))
 
-(defn- normalize-host
+(defn- normalize-host-part
   [uri ctx]
   (if-let [host (.getHost uri)]
     ((>>> #(lower-case-host % ctx)
@@ -261,7 +261,7 @@
  (let [scheme (normalize-scheme uri *context*)
        scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info-part uri *context*)
-       host  (normalize-host uri *context*)
+       host  (normalize-host-part uri *context*)
        port  (normalize-port uri *context*)
        path  (normalize-path uri *context*)
        query (normalize-query uri *context*)]
