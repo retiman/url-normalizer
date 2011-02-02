@@ -204,6 +204,8 @@
               (apply str (take (dec (count %)) %))))
        host)))
 
+; TODO: Technically, the ":" connector is not part of the port.  This should
+; be removed.
 (defn normalize-port
   [uri ctx]
   (let [scheme (.getScheme uri)
@@ -221,6 +223,7 @@
     ;; (if (or (= path "") (= path "/")) "" path)
     path2))
 
+; TODO: Technically, the "?" is not part of the query.
 (defn- normalize-query
   "TODO: Apply sort-query? and normalizations."
   [uri ctx]
@@ -231,6 +234,7 @@
     (if (not (and (:remove-empty-query? ctx) empty-query?))
       (str "?" query))))
 
+; TODO: When joining the fragment, include the "#"
 (defn- normalize-fragment
   [uri ctx]
   (let [fragment (if (:encode-illegal-characters? ctx)
