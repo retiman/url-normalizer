@@ -179,7 +179,7 @@
   (comment "Where is it non-essential besides tilde ~ ?. a bit of a hack, will extend as new test cases are presented. see: http://labs.apache.org/webarch/uri/rfc/rfc3986.html#unreserved" )
   (su/replace path #"(?i:%7e)" "~"))
 
-(defn- normalize-scheme
+(defn- normalize-scheme-part
   [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
@@ -204,7 +204,7 @@
 
 ; TODO: Technically, the ":" connector is not part of the port.  This should
 ; be removed.
-(defn normalize-port
+(defn normalize-port-part
   [uri ctx]
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
@@ -215,7 +215,7 @@
       nil
       (str ":" port))))
 
-(defn normalize-path
+(defn normalize-path-part
   [uri ctx]
   ((comp #(if (:remove-dot-segments? ctx)
             (-> % (.normalize) (.getRawPath))
@@ -225,7 +225,7 @@
      uri))
 
 ; TODO: Technically, the "?" is not part of the query.
-(defn- normalize-query
+(defn- normalize-query-part
   "TODO: Apply sort-query? and normalizations."
   [uri ctx]
   (let [query (if (:encode-illegal-characters? ctx)
@@ -236,7 +236,7 @@
       (str "?" query))))
 
 ; TODO: When joining the fragment, include the "#"
-(defn- normalize-fragment
+(defn- normalize-fragment-part
   [uri ctx]
   (let [fragment (if (:encode-illegal-characters? ctx)
                    (.getRawFragment uri)
@@ -258,13 +258,13 @@
 
 (defmulti canonicalize-url class)
 (defmethod canonicalize-url URI [uri]
- (let [scheme (normalize-scheme uri *context*)
+ (let [scheme (normalize-scheme-part uri *context*)
        scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info-part uri *context*)
        host  (normalize-host-part uri *context*)
-       port  (normalize-port uri *context*)
-       path  (normalize-path uri *context*)
-       query (normalize-query uri *context*)]
+       port  (normalize-port-part uri *context*)
+       path  (normalize-path-part uri *context*)
+       query (normalize-query-part uri *context*)]
     (str scheme scheme-connector user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
 (defmethod canonicalize-url String [url]

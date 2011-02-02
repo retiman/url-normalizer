@@ -155,9 +155,9 @@
     (is (nil? (f "http://@example.com" {:remove-empty-user-info? true})))
     (is (nil? (f "http://:@example.com" {:remove-empty-user-info? true})))))
 
-(deftest test-normalize-host
+(deftest test-normalize-host-part
   (letfn [(f ([uri] (f uri *context*))
-             ([uri ctx] (normalize-host
+             ([uri ctx] (normalize-host-part
                           (as-uri uri)
                           (merge *context* ctx))))]
     (is (= (f "http://WWW.EXAMPLE.COM") "www.example.com"))
