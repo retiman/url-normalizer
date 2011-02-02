@@ -204,7 +204,8 @@
               (apply str (take (dec (count %)) %))))
        host)))
 
-(defn normalize-port [uri]
+(defn normalize-port
+  [uri ctx]
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
     (if (or (nil? port)
@@ -256,7 +257,7 @@
        scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info uri *context*)
        host  (normalize-host uri *context*)
-       port  (normalize-port uri)
+       port  (normalize-port uri *context*)
        path  (normalize-path uri)
        query (normalize-query uri *context*)]
     (str scheme scheme-connector user-info host port path query)))
