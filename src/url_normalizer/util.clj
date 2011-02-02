@@ -90,7 +90,8 @@
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
 
 (defn remove-empty-query [query ctx]
-  (if (and (:remove-empty-query? ctx) (nil? query) (= query ""))
+  (if (and (:remove-empty-query? ctx)
+           (or (nil? query) (= query "")))
     nil
     (str "?" query)))
 
