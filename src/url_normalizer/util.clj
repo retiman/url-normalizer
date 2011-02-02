@@ -67,3 +67,9 @@
            (= \. (last host)))
     (apply str (butlast host))
     host))
+
+; TODO: Add other default ports
+(defn remove-default-port [port ctx]
+  (if (and (:remove-default-port? ctx) (= port 80))
+    nil
+    (str ":" port)))

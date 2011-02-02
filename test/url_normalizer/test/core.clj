@@ -166,3 +166,12 @@
            "www.example.com"))
     (is (nil? (f "/")))
     (is (nil? (f "/" {:remove-trailing-dot-in-host? true})))))
+
+(deftest test-normalize-port-part
+  (letfn [(f ([uri] (f uri *context*))
+             ([uri ctx] (normalize-port-part
+                          (as-uri uri)
+                          (merge *context* ctx))))]
+    (is (= (f "http://example.com:8080") ":8080"))
+    (is (= (f "http://example.com:8080" {:remove-default-port? true}) ":8080"))
+    (is (nil? (f "http://example.com:80" {:remove-default-port? true})))))

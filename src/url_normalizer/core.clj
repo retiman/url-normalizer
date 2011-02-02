@@ -179,15 +179,13 @@
   (comment "Where is it non-essential besides tilde ~ ?. a bit of a hack, will extend as new test cases are presented. see: http://labs.apache.org/webarch/uri/rfc/rfc3986.html#unreserved" )
   (su/replace path #"(?i:%7e)" "~"))
 
-(defn- normalize-scheme-part
-  [uri ctx]
+(defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
       (str (su/lower-case scheme) "://")
       (str scheme "://"))))
 
-(defn- normalize-user-info-part
-  [uri ctx]
+(defn- normalize-user-info-part [uri ctx]
   (if-let [user-info (if (:encode-illegal-characters? ctx)
                        (.getRawUserInfo uri)
                        (.getUserInfo uri))]
@@ -196,25 +194,17 @@
       nil
       (str user-info "@"))))
 
-(defn- normalize-host-part
-  [uri ctx]
+(defn- normalize-host-part [uri ctx]
   (if-let [host (.getHost uri)]
     ((>>> #(lower-case-host % ctx)
           #(remove-trailing-dot-in-host % ctx))
        host)))
 
-; TODO: Technically, the ":" connector is not part of the port.  This should
-; be removed.
-(defn normalize-port-part
-  [uri ctx]
+(defn normalize-port-part [uri ctx]
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
-    (if (or (nil? port)
-            (= port -1)
-            (and (contains? default-port scheme)
-                 (= port (default-port scheme))))
-      nil
-      (str ":" port))))
+    (if (and port (not= -1 port))
+      (remove-default-port port ctx))))
 
 (defn normalize-path-part
   [uri ctx]
