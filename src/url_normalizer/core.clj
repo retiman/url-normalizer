@@ -21,6 +21,18 @@
   [uri]
   (or (nil? uri) (nil? (.getHost uri))))
 
+(def default-port
+  {"ftp" 21
+   "telnet" 23
+   "http" 80
+   "gopher" 70
+   "news" 119
+   "nntp" 119
+   "prospero" 191
+   "https" 443
+   "snews" 563
+   "snntp" 563})
+
 (def *safe-normalizations*
   {:lower-case-scheme? true
    :lower-case-host? true
@@ -139,29 +151,6 @@
                 :fragment (normalize-fragment uri ctx)))))
 
 
-(def default-port
-{
- "ftp" 21
- "telnet" 23
- "http" 80
- "gopher" 70
- "news" 119
- "nntp" 119
- "prospero" 191
- "https" 443
- "snews" 563
- "snntp" 563
-})
-
-(defn normalize-port [uri]
-  (let [scheme (.getScheme uri)
-        port (.getPort uri)]
-    (if (or (nil? port)
-            (= port -1)
-            (and (contains? default-port scheme)
-                 (= port (default-port scheme))))
-      nil
-      (str ":" port))))
 
 (defn normalize-path-dot-segments [uri]
   (if-let [path (.getPath uri)]
@@ -190,11 +179,22 @@
   (comment "Where is it non-essential besides tilde ~ ?. a bit of a hack, will extend as new test cases are presented. see: http://labs.apache.org/webarch/uri/rfc/rfc3986.html#unreserved" )
   (su/replace path #"(?i:%7e)" "~"))
 
-(defn normalize-path [uri]
-  (let [path (normalize-path-dot-segments uri)
-        path2 (only-percent-encode-where-essential path)]
-    ;; (if (or (= path "") (= path "/")) "" path)
-    path2))
+(defn- normalize-scheme
+  [uri ctx]
+  (if-let [scheme (.getScheme uri)]
+    (if (:lower-case-scheme? ctx)
+      (su/lower-case scheme))))
+
+(defn- normalize-user-info
+  [uri ctx]
+  (let [user-info (if (:encode-illegal-characters? ctx)
+                    (.getRawUserInfo uri)
+                    (.getUserInfo uri))
+        empty-user-info? (or (nil? user-info)
+                             (= ":" user-info)
+                             (= "" user-info))]
+    (if (not (and (:remove-empty-user-info? ctx) empty-user-info?))
+      user-info)))
 
 (defn- normalize-host
   [uri ctx]
@@ -204,20 +204,21 @@
               (apply str (take (dec (count %)) %))))
        host)))
 
-(defn- normalize-scheme [uri ctx]
-  (if-let [scheme (.getScheme uri)]
-    (if (:lower-case-scheme? ctx)
-      (su/lower-case scheme))))
+(defn normalize-port [uri]
+  (let [scheme (.getScheme uri)
+        port (.getPort uri)]
+    (if (or (nil? port)
+            (= port -1)
+            (and (contains? default-port scheme)
+                 (= port (default-port scheme))))
+      nil
+      (str ":" port))))
 
-(defn- normalize-user-info [uri ctx]
-  (let [user-info (if (:encode-illegal-characters? ctx)
-                    (.getRawUserInfo uri)
-                    (.getUserInfo uri))
-        empty-user-info? (or (nil? user-info)
-                             (= ":" user-info)
-                             (= "" user-info))]
-    (if (not (and (:remove-empty-user-info? ctx) empty-user-info?))
-      user-info)))
+(defn normalize-path [uri]
+  (let [path (normalize-path-dot-segments uri)
+        path2 (only-percent-encode-where-essential path)]
+    ;; (if (or (= path "") (= path "/")) "" path)
+    path2))
 
 (defn- normalize-query
   "TODO: Apply sort-query? and normalizations."
