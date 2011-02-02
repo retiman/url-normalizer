@@ -204,7 +204,7 @@
   (if-let [scheme (.getScheme uri)]
     (su/lower-case scheme)))
 
-(defn normalize-auth [uri]
+(defn normalize-user-info [uri]
   (let [user-info (.getUserInfo uri)]
     (if (and user-info
              (not (contains? #{"" ":"} user-info))) 
@@ -231,12 +231,12 @@
 (defmethod canonicalize-url URI [uri]
  (let [scheme (normalize-scheme uri)
        scheme-connector (if scheme "://" "")
-       auth  (normalize-auth uri)
+       user-info  (normalize-user-info uri)
        host  (normalize-host uri)
        port  (normalize-port uri)
        path  (normalize-path uri) 
        query (normalize-query uri)]
-    (str scheme scheme-connector auth host port path query)))
+    (str scheme scheme-connector user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
 (defmethod canonicalize-url String [url]
   (try 
