@@ -206,7 +206,7 @@
     (if (:lower-case-scheme? ctx)
       (su/lower-case scheme))))
 
-(defn normalize-user-info [uri ctx]
+(defn- normalize-user-info [uri ctx]
   (let [user-info (.getRawUserInfo uri)
         empty-user-info? (or (nil? user-info)
                              (= ":" user-info)
