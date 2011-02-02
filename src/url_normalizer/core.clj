@@ -186,13 +186,8 @@
       (str scheme "://"))))
 
 (defn- normalize-user-info-part [uri ctx]
-  (if-let [user-info (if (:encode-illegal-characters? ctx)
-                       (.getRawUserInfo uri)
-                       (.getUserInfo uri))]
-    (if (and (:remove-empty-user-info? ctx)
-             (or (= ":" user-info) (= "" user-info)))
-      nil
-      (str user-info "@"))))
+  (if-let [user-info (get-user-info uri ctx)]
+    (remove-empty-user-info user-info ctx)))
 
 (defn- normalize-host-part [uri ctx]
   (if-let [host (.getHost uri)]

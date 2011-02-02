@@ -40,6 +40,11 @@
          #(.replaceAll % "%7E" "~"))
      path))
 
+(defn get-user-info [uri ctx]
+  (if (:encode-illegal-characters? ctx)
+    (.getRawUserInfo uri)
+    (.getUserInfo uri)))
+
 (defn get-path [uri ctx]
   (if (:remove-dot-segments? ctx)
     (-> uri (.normalize) (.getRawPath))
@@ -59,6 +64,12 @@
   (if (:lower-case-host? ctx)
     (su/lower-case host)
     host))
+
+(defn remove-empty-user-info [user-info ctx]
+  (if (and (:remove-empty-user-info? ctx)
+           (or (= ":" user-info) (= "" user-info)))
+    nil
+    (str user-info "@")))
 
 (defn remove-trailing-dot-in-host [host ctx]
   (if (and (:remove-trailing-dot-in-host? ctx)
