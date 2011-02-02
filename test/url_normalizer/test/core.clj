@@ -144,15 +144,23 @@
     (is (not (equal? expected (normalize "http://www.example.com/?"))))))
 
 (deftest test-normalize-user-info-part
-  (letfn [(-normalize ([uri] (-normalize uri *context*))
-                      ([uri ctx] (normalize-user-info-part
-                                   (as-uri uri)
-                                   (merge *context* ctx))))]
-    (is (= (-normalize "http://user@example.com") "user@"))
-    (is (= (-normalize "http://user:password@example.com") "user:password@"))
-    (is (= (-normalize "http://@example.com") "@"))
-    (is (nil? (-normalize "http://example.com")))
-    (is (nil? (-normalize "http://@example.com"
-                          {:remove-empty-user-info? true})))
-    (is (nil? (-normalize "http://:@example.com"
-                          {:remove-empty-user-info? true})))))
+  (letfn [(f ([uri] (f uri *context*))
+             ([uri ctx] (normalize-user-info-part
+                          (as-uri uri)
+                          (merge *context* ctx))))]
+    (is (= (f "http://user@example.com") "user@"))
+    (is (= (f "http://user:password@example.com") "user:password@"))
+    (is (= (f "http://@example.com") "@"))
+    (is (nil? (f "http://example.com")))
+    (is (nil? (f "http://@example.com" {:remove-empty-user-info? true})))
+    (is (nil? (f "http://:@example.com" {:remove-empty-user-info? true})))))
+
+(deftest test-normalize-host
+  (letfn [(f ([uri] (f uri *context*))
+                    ([uri ctx] (normalize-host
+                      (as-uri uri)
+                      (merge *context* ctx))))]
+    (is (= (f "http://WWW.EXAMPLE.COM" "www.example.com")))
+    (is (= (f "http://www.example.com.") "www.example.com."))
+    (is (= (f "http://www.example.com." {:remove-trailing-dot-in-host? true})
+           "www.example.com"))))

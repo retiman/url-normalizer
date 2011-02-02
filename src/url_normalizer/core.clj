@@ -197,11 +197,11 @@
 
 (defn- normalize-host
   [uri ctx]
-  (let [host (.getHost uri)]
-    ((comp #(if (:lower-case-host? ctx) (su/lower-case %))
-           #(if (and (:remove-trailing-dot-in-host? ctx)
-                     (= (last %) \.))
-              (apply str (take (dec (count %)) %))))
+  (if-let [host (.getHost uri)]
+    ((>> #(if (:lower-case-host? ctx) (su/lower-case %))
+         #(if (and (:remove-trailing-dot-in-host? ctx)
+                   (= (last %) \.))
+            (apply str (take (dec (count %)) %))))
        host)))
 
 ; TODO: Technically, the ":" connector is not part of the port.  This should
