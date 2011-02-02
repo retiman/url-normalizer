@@ -214,9 +214,11 @@
     (if (not (and (:remove-empty-user-info? ctx) empty-user-info?))
       user-info)))
 
-(defn normalize-query [uri] ;; TODO
-  (if-let [q (.getQuery uri)]
-    (str "?" q)))
+(defn- normalize-query
+  "TODO: Apply sort-query? and remove-empty-query? normalizations."
+  [uri]
+  (if-let [query (.getRawQuery uri)]
+    (str "?" query)))
 
 (defmulti to-uri class)
 (defmethod to-uri URL [url]
