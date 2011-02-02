@@ -183,7 +183,8 @@
   [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
-      (su/lower-case scheme))))
+      (str (su/lower-case scheme) "://")
+      (str scheme "://"))))
 
 (defn- normalize-user-info-part
   [uri ctx]
@@ -259,13 +260,12 @@
 (defmulti canonicalize-url class)
 (defmethod canonicalize-url URI [uri]
  (let [scheme (normalize-scheme-part uri *context*)
-       scheme-connector (if scheme "://" "")
        user-info  (normalize-user-info-part uri *context*)
        host  (normalize-host-part uri *context*)
        port  (normalize-port-part uri *context*)
        path  (normalize-path-part uri *context*)
        query (normalize-query-part uri *context*)]
-    (str scheme scheme-connector user-info host port path query)))
+    (str scheme user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
 (defmethod canonicalize-url String [url]
   (try
