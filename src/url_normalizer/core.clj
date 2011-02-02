@@ -153,8 +153,8 @@
 (defn normalize-port [uri]
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
-    (if (or (nil? port) 
-            (= port -1) 
+    (if (or (nil? port)
+            (= port -1)
             (and (contains? default-port scheme)
                  (= port (default-port scheme))))
       nil
@@ -165,17 +165,17 @@
    (let [segments (su/split path #"/" -1)
          ;;x (prn segments)
          ;; resolve relative paths
-         segs2 (reduce 
+         segs2 (reduce
                 (fn [acc segment]
                   (cond
                    (= "" segment ) (if (> (count acc) 0)
                                      acc
                                      (concat acc [segment]))
-                   (= "."  segment) acc 
+                   (= "."  segment) acc
                    (= ".." segment) (if (> (count acc) 1)
                                       (drop-last acc)
                                       acc)
-                   true (concat acc [segment]) 
+                   true (concat acc [segment])
                    )) [] segments)
          ;; add a slash if the last segment is "" "." ".."
          new-segments (if (contains? #{"" "." ".."} (last segments))
@@ -196,7 +196,7 @@
 (defn normalize-host [uri]
   (if-let [host (.getHost uri)]
     (let [lhost (su/lower-case host)]
-      (if (= (last (seq lhost)) \.) 
+      (if (= (last (seq lhost)) \.)
         (su/join "" (drop-last (seq lhost)))
         lhost))))
 
@@ -208,16 +208,16 @@
 (defn normalize-user-info [uri]
   (let [user-info (.getUserInfo uri)]
     (if (and user-info
-             (not (contains? #{"" ":"} user-info))) 
-      (str user-info "@") 
+             (not (contains? #{"" ":"} user-info)))
+      (str user-info "@")
       "")))
 
 (defn normalize-query [uri] ;; TODO
-  (if-let [q (.getQuery uri)] 
+  (if-let [q (.getQuery uri)]
     (str "?" q)))
 
 (defmulti to-uri class)
-(defmethod to-uri URL [url] 
+(defmethod to-uri URL [url]
    (URI. (.getProtocol url)
          (.getUserInfo url)
          (.getHost url)
@@ -235,12 +235,12 @@
        user-info  (normalize-user-info uri)
        host  (normalize-host uri)
        port  (normalize-port uri)
-       path  (normalize-path uri) 
+       path  (normalize-path uri)
        query (normalize-query uri)]
     (str scheme scheme-connector user-info host port path query)))
 (defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
 (defmethod canonicalize-url String [url]
-  (try 
+  (try
     (canonicalize-url (to-uri (URL. url)))
     (catch java.net.URISyntaxException    e (canonicalize-url (URI. url)))
     (catch java.net.MalformedURLException e (canonicalize-url (URI. url)))
