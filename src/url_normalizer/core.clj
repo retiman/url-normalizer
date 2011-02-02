@@ -21,6 +21,30 @@
   [uri]
   (or (nil? uri) (nil? (.getHost uri))))
 
+(def *safe-normalizations*
+  {:lower-case-scheme? true
+   :lower-case-host? true
+   :upper-case-percent-encoding? true
+   :decode-unreserved-characters? true
+   :add-trailing-slash? true
+   :remove-default-port? true
+   :remove-dot-segments? true})
+
+(def *unsafe-normalizations*
+  {:remove-directory-index? false
+   :remove-fragment? false
+   :remove-ip? false
+   :remove-duplicate-slash? false
+   :force-http? false
+   :remove-www? false
+   :sort-query? false
+   :remove-duplicate-query? false
+   :remove-question-mark? false
+   :decode-special-characters? false})
+
+(def *context*
+  (merge *safe-normalizations* *unsafe-normalizations*))
+
 (defn- create-http-host
   "Create an org.apache.http.HttpHost with the host name in lowercase.
   Also removes the default port for the HTTP scheme."
@@ -97,6 +121,20 @@
   "Returns true if the two URIs are equivalent when normalized."
   [a b]
   (= (normalize a) (normalize b)))
+
+(comment
+(defn normalize-
+  ([uri]
+    (normalize- *context*))
+  ([uri ctx]
+    (create-uri :scheme (normalize-scheme uri ctx)
+                :user-info (normalize-user-info uri ctx)
+                :host (normalize-host uri ctx)
+                :port (normalize-port uri ctx)
+                :path (normalize-path uri ctx)
+                :query (normalize-query uri ctx)
+                :fragment (normalize-fragment uri ctx)))))
+
 
 (def default-port
 {
