@@ -196,8 +196,8 @@
 
 (defn- normalize-host-part [uri ctx]
   (if-let [host (.getHost uri)]
-    ((>>> #(lower-case-host % ctx)
-          #(remove-trailing-dot-in-host % ctx))
+    ((comp #(remove-trailing-dot-in-host % ctx)
+           #(lower-case-host % ctx))
        host)))
 
 (defn normalize-port-part [uri ctx]
@@ -207,19 +207,19 @@
       (remove-default-port port ctx))))
 
 (defn normalize-path-part [uri ctx]
-  ((>>> #(get-path % ctx)
-        #(decode-unreserved-characters % ctx)
-        #(add-trailing-slash % ctx))
+  ((comp #(add-trailing-slash % ctx)
+         #(decode-unreserved-characters % ctx)
+         #(get-path % ctx))
      uri))
 
 (defn- normalize-query-part [uri ctx]
-  ((>>> #(get-query % ctx)
-        #(remove-empty-query % ctx))
+  ((comp #(remove-empty-query % ctx)
+         #(get-query % ctx))
      uri))
 
 (defn- normalize-fragment-part [uri ctx]
-  ((>>> #(get-fragment % ctx)
-        #(remove-fragment % ctx))
+  ((comp #(remove-fragment % ctx)
+         #(get-fragment % ctx))
      uri))
 
 (defmulti to-uri class)
