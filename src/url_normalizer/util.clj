@@ -57,6 +57,17 @@
     (map #(fn [s] (.replaceAll s (first %) (last %)))
          (concat alpha digits))))
 
+(defn- decode
+  "Decodes percent encoded octets to their corresponding characters.
+  Only decodes unreserved characters."
+  [path]
+  ((comp (apply comp decode-alphanum)
+         #(.replaceAll % "%2D" "-")
+         #(.replaceAll % "%2E" ".")
+         #(.replaceAll % "%5F" "_")
+         #(.replaceAll % "%7E" "~"))
+     path))
+
 (defn lower-case-host [host ctx]
   (if (:lower-case-host? ctx)
     (su/lower-case host)
@@ -73,3 +84,14 @@
   (if (and (:remove-default-port? ctx) (= port 80))
     nil
     (str ":" port)))
+
+(defn get-path [uri ctx]
+  (if (:remove-dot-segments? ctx)
+    (-> uri (.normalize) (.getRawPath))
+    (.getRawPath uri)))
+
+(defn decode-unreserved-characters [path ctx]
+  (if (:decode-unreserved-characters? ctx) (decode path) path))
+
+(defn add-trailing-slash [path ctx]
+  (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))

@@ -206,13 +206,10 @@
     (if (and port (not= -1 port))
       (remove-default-port port ctx))))
 
-(defn normalize-path-part
-  [uri ctx]
-  ((comp #(if (:remove-dot-segments? ctx)
-            (-> % (.normalize) (.getRawPath))
-            (.getRawPath %))
-         #(if (:decode-unreserved-characters? ctx) (decode %) %)
-         #(if (and (:add-trailing-slash? ctx) (= "" %)) "/" %))
+(defn normalize-path-part [uri ctx]
+  ((>>> #(get-path % ctx)
+        #(decode-unreserved-characters % ctx)
+        #(add-trailing-slash % ctx))
      uri))
 
 ; TODO: Technically, the "?" is not part of the query.
