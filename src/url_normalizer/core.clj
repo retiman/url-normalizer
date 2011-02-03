@@ -26,7 +26,12 @@
         (.getQuery arg)
         (.getRef arg)))
 
-(def *safe-normalizations*
+(def
+  ^{:doc
+   "These are safe normalizations that will not change the semantics of a URI.
+   See the #'url-normalizer.util namespace for additional details and
+   implementations."}
+  *safe-normalizations*
   {:lower-case-scheme? true
    :lower-case-host? true
    :upper-case-percent-encoding? true
@@ -36,7 +41,13 @@
    :remove-default-port? true
    :remove-dot-segments? true})
 
-(def *unsafe-normalizations*
+(def
+  ^{:doc
+    "These are unsafe normalizations that can either change the semantics of
+    the URI or cause it to refer to a different resource.  See the
+    #'url-normalizer.util namespace for additional details and
+    implementations."}
+  *unsafe-normalizations*
   {:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
