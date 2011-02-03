@@ -157,6 +157,12 @@
   [a b]
   (= (.toASCIIString a) (.toASCIIString b)))
 
+(defn with-normalization-context
+  "Evaluates a function with *context* bound to context"
+  [context f]
+  (binding [*context* context]
+    (f)))
+
 (defn to-uri
   "DEPRECATED: Prefer as-uri."
   {:deprecated "0.1.0"}
