@@ -96,7 +96,11 @@
        path)
     path))
 
-(defn upper-case-percent-encoding [text ctx]
+(defn upper-case-percent-encoding
+  "Why is this so hard in Java?
+
+  See <http://stackoverflow.com/questions/2770967/use-java-and-regex-to-convert-casing-in-a-string>"
+  [text ctx]
   (if (:upper-case-percent-encoding? ctx)
     (loop [sb (StringBuilder.)
            m (re-matcher #"%[a-f0-9]{2}" text)
