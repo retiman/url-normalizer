@@ -1,5 +1,5 @@
 - Move normalizations into a normalizations.clj?
-* Document the normalizations
+- Document the normalizations
 * Hook up Nate and Jay's tests into the test cases
 - Rename test utils.clj to util.clj
 * Implement an algorithm to uppercase percent encodings in the path part:
@@ -10,14 +10,14 @@
   incur severe performance penalties
 * Include some tests (from Jay and Nate's tests) for the older, deprecated
   API
-* Expose resolve fn in public API
-* Include :base key in the context so that URIs can be resolved if necessary
-* Note the bug in Java for the resolve fn
+- Expose resolve fn in public API
+- Include :base key in the context so that URIs can be resolved if necessary
+- Note the bug in Java for the resolve fn
 * Sort query strings?
 * Use alternate form of URI. constructor so as not to incur the parsing
   overhead
 * Make clear that only URLs get normalized and URIs are not supported
-* Will the :doc tag work with Clojure defs?
-* Migrate to Clojure style deprecation:
+- Will the :doc tag work with Clojure defs?
+- Migrate to Clojure style deprecation:
   (defn foo "blah" {:deprecated "1.0"} [] ...)
 * Include tests for specific normalizations

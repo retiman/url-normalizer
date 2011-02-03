@@ -63,6 +63,26 @@
     (.getRawFragment uri)
     (.getFragment uri)))
 
+(defn force-http
+  "An unsafe normalization that forces the HTTP scheme if HTTPS is encountered:
+
+  https://example.com -> http://example.com"
+  [scheme ctx]
+  (if (and (:force-http? ctx) (= scheme "https"))
+    "http"
+    scheme))
+
+(defn remove-www
+  "An unsafe normalization that removes the www from a domain:
+
+  http://www.example.com/ -> http://example.com/
+  http://www.foo.bar.example.com/ -> http://www.foo.bar.example.com/
+  http://www2.example.com/ -> http://www2.example.com/"
+  [host ctx]
+  (if (:remove-www? ctx)
+    (throw (UnsupportedOperationException.))
+    host))
+
 (defn lower-case-host
   "A safe normalization that lower cases the host name:
 
@@ -70,6 +90,15 @@
   [host ctx]
   (if (:lower-case-host? ctx)
     (su/lower-case host)
+    host))
+
+(defn remove-ip
+  "An unsafe normalization that removes the IP:
+
+  http://192.0.32.10 -> http://example.com"
+  [host ctx]
+  (if (:remove-ip? ctx)
+    (throw (UnsupportedOperationException.))
     host))
 
 (defn remove-empty-user-info
@@ -103,6 +132,13 @@
            (= port (get default-port scheme)))
     nil
     (str ":" port)))
+
+(defn decode-special-characters
+  [path ctx]
+  "An unsafe normalization that decodes special characters"
+  (if (:decode-special-characters? ctx)
+    (throw (UnsupportedOperationException.))
+    path))
 
 (defn decode-unreserved-characters
   "A safe normalization that decodes percent encoded characters that don't need
@@ -143,6 +179,15 @@
             (recur sb m (.end m))))))
     text))
 
+(defn remove-duplicate-slash
+  "An unsafe normalization that removes duplicate slashes in a path:
+
+  http://example.com/foo//bar/ -> http://example.com/foo/bar"
+  [path ctx]
+  (if (:remove-duplicate-slashes? ctx)
+    (throw (UnsupportedOperationException.))
+    path))
+
 (defn add-trailing-slash
   "A safe normalization that adds a slash to an empty path:
 
@@ -150,6 +195,24 @@
   http://example.com/foo -> http://example.com/foo"
   [path ctx]
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
+
+(defn remove-duplicate-query-keys
+  "An unsafe normalization that removes duplicate query keys and values:
+
+  http://example.com/?foo&foo=bar -> http://example.com/?foo=bar"
+  [query ctx]
+  (if (:remove-duplicate-query-keys? ctx)
+    (throw (UnsupportedOperationException.))
+    query))
+
+(defn sort-query-keys
+  "An unsafe normalization that sorts the query keys and values:
+
+  http://example.com/?c&a&b -> http://example.com/a&b&c"
+  [query ctx]
+  (if (:sort-query-keys? ctx)
+    (throw (UnsupportedOperationException.))
+    query))
 
 (defn remove-empty-query
   "An unsafe normalization that removes an empty query:

@@ -58,7 +58,7 @@
    :remove-trailing-dot-in-host? false
    :force-http? false
    :remove-www? false
-   :sort-query? false
+   :sort-query-keys? false
    :decode-special-characters? false})
 
 (def
