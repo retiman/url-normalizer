@@ -56,6 +56,7 @@ maven
 
 ## Authors
 
+* Min Huang [<min.huang@alumni.usc.edu>](mailto:min.huang@alumni.usc.edu)
 * Jay Donnell
 * Nate Murray [<nate@xcombinator.com>](mailto:nate@xcombinator.com)
 
