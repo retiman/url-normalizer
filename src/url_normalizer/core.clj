@@ -77,8 +77,8 @@
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
-      (str (su/lower-case scheme) "://")
-      (str scheme "://"))))
+      (su/lower-case scheme)
+      scheme)))
 
 (defn- normalize-user-info-part [uri ctx]
   (if-let [user-info (get-user-info uri ctx)]
@@ -139,9 +139,13 @@
           path (normalize-path-part uri ctx)
           query (normalize-query-part uri ctx)
           fragment (normalize-fragment-part uri ctx)]
-      ; TODO: Consider using the an alternate constructor so as not to incur
-      ; a parsing overhead?
-      (URI. (str scheme user-info host port path query fragment)))))
+      (URI. scheme
+            user-info
+            host
+            (if (nil? port) -1 port)
+            path
+            query
+            fragment))))
 
 (defn equivalent?
   "Returns true if the two URIs are equivalent when normalized.

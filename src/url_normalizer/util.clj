@@ -111,7 +111,7 @@
   (if (and (:remove-empty-user-info? ctx)
            (or (= ":" user-info) (= "" user-info)))
     nil
-    (str user-info "@")))
+    user-info))
 
 (defn remove-trailing-dot-in-host
   "An unsafe normalization that removes the trailing dot in a host:
@@ -132,7 +132,7 @@
   (if (and (:remove-default-port? ctx)
            (= port (get default-port scheme)))
     nil
-    (str ":" port)))
+    port))
 
 (defn decode-special-characters
   [path ctx]
@@ -223,7 +223,7 @@
   [query ctx]
   (if (and (:remove-empty-query? ctx) (= query ""))
     nil
-    (str "?" query)))
+    query))
 
 (defn remove-fragment
   "An unsafe normalization that removes the fragment.  The URI will still refer
@@ -233,4 +233,4 @@
   [fragment ctx]
   (if (:remove-fragment? ctx)
     nil
-    (str "#" fragment)))
+    fragment))

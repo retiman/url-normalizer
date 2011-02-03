@@ -265,9 +265,9 @@
              ([uri ctx] (normalize-user-info-part
                           (as-uri uri)
                           (merge *context* ctx))))]
-    (is (= (f "http://user@example.com") "user@"))
-    (is (= (f "http://user:password@example.com") "user:password@"))
-    (is (= (f "http://@example.com") "@"))
+    (is (= (f "http://user@example.com") "user"))
+    (is (= (f "http://user:password@example.com") "user:password"))
+    (is (= (f "http://@example.com") ""))
     (is (nil? (f "http://example.com")))
     (is (nil? (f "http://@example.com" {:remove-empty-user-info? true})))
     (is (nil? (f "http://:@example.com" {:remove-empty-user-info? true})))))
@@ -289,8 +289,8 @@
              ([uri ctx] (normalize-port-part
                           (as-uri uri)
                           (merge *context* ctx))))]
-    (is (= (f "http://example.com:8080") ":8080"))
-    (is (= (f "http://example.com:8080" {:remove-default-port? true}) ":8080"))
+    (is (= (f "http://example.com:8080") 8080))
+    (is (= (f "http://example.com:8080" {:remove-default-port? true}) 8080))
     (is (nil? (f "http://example.com:80" {:remove-default-port? true})))))
 
 (deftest test-normalize-path-part
@@ -309,7 +309,7 @@
              ([uri ctx] (normalize-fragment-part
                           (as-uri uri)
                           (merge *context* ctx))))]
-    (is (= (f "http://example.com#foo") "#foo"))
-    (is (= (f "http://example.com#") "#"))
+    (is (= (f "http://example.com#foo") "foo"))
+    (is (= (f "http://example.com#") ""))
     (is (nil? (f "http://example.com")))
     (is (nil? (f "http://example.com#foo" {:remove-fragment? true})))))
