@@ -65,17 +65,6 @@
 (def *context*
   (merge *safe-normalizations* *unsafe-normalizations*))
 
-(defn- decode
-  "Decodes percent encoded octets to their corresponding characters.
-  Only decodes unreserved characters."
-  [path]
-  ((comp (apply comp decode-alphanum)
-         #(.replaceAll % "%2D" "-")
-         #(.replaceAll % "%2E" ".")
-         #(.replaceAll % "%5F" "_")
-         #(.replaceAll % "%7E" "~"))
-     path))
-
 (defn- resolve
   "Resolve a URI reference against a base URI by removing dot segments."
   [base uri]
