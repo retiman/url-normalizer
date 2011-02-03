@@ -9,6 +9,20 @@
     (if (= (count s) 1) (str "0" s) s)))
 
 (def
+  ^{:doc "The default ports for various schemes"}
+  default-port
+  {"ftp" 21
+   "telnet" 23
+   "http" 80
+   "gopher" 70
+   "news" 119
+   "nntp" 119
+   "prospero" 191
+   "https" 443
+   "snews" 563
+   "snntp" 563})
+
+(def
   ^{:doc "Maps percent encoded octets to alpha characters."}
   alpha
   (let [xs (concat (range 0x41 (inc 0x5A)) (range 0x61 (inc 0x7A)))]
@@ -66,9 +80,9 @@
     (apply str (butlast host))
     host))
 
-; TODO: Add other default ports
-(defn remove-default-port [port ctx]
-  (if (and (:remove-default-port? ctx) (= port 80))
+(defn remove-default-port [scheme port ctx]
+  (if (and (:remove-default-port? ctx)
+           (= port (get default-port scheme)))
     nil
     (str ":" port)))
 

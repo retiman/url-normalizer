@@ -26,18 +26,6 @@
         (.getQuery arg)
         (.getRef arg)))
 
-(def default-port
-  {"ftp" 21
-   "telnet" 23
-   "http" 80
-   "gopher" 70
-   "news" 119
-   "nntp" 119
-   "prospero" 191
-   "https" 443
-   "snews" 563
-   "snntp" 563})
-
 (def *safe-normalizations*
   {:lower-case-scheme? true
    :lower-case-host? true
@@ -85,7 +73,7 @@
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
     (if (and port (not= -1 port))
-      (remove-default-port port ctx))))
+      (remove-default-port scheme port ctx))))
 
 (defn normalize-path-part [uri ctx]
   (if-let [path (get-path uri ctx)]
