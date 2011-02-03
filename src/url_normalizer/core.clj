@@ -13,9 +13,22 @@
   [arg]
   (if (= URL (type arg)) arg (URL. arg)))
 
-(defn as-uri
-  [arg]
-  (if (= URI (type arg)) arg (URI. arg)))
+(defmulti as-uri class)
+
+(defmethod as-uri URL [arg]
+  (URI. (.getProtocol arg)
+        (.getUserInfo arg)
+        (.getHost arg)
+        (.getPort arg)
+        (.getPath arg)
+        (.getQuery arg)
+        (.getRef arg)))
+
+(defmethod as-uri String [arg]
+  (URI. arg))
+
+(defmethod as-uri URI [arg]
+  arg)
 
 (defn- nil-host?
   [uri]
@@ -186,17 +199,11 @@
   (if-let [fragment (get-fragment uri ctx)]
     (remove-fragment fragment ctx)))
 
-(defmulti to-uri class)
-(defmethod to-uri URL [url]
-   (URI. (.getProtocol url)
-         (.getUserInfo url)
-         (.getHost url)
-         (.getPort url)
-         (.getPath url)
-         (.getQuery url)
-         (.getRef url)))
-;; (defmethod to-uri String [url]
-;;  (to-uri (URL. url)))
+(defn to-uri
+  "DEPRECATED: Prefer as-uri."
+  {:deprecated "0.1.0"}
+  [#^URL url]
+  (as-uri url))
 
 (defmulti canonicalize-url class)
 (defmethod canonicalize-url URI [uri]
