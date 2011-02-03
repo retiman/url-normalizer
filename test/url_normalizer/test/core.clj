@@ -20,7 +20,7 @@
     http://a/b/c/d;p?q to the values.
 
     See <http://www.ietf.org/rfc/rfc3986.txt>"}
-  normal-reference-resolution-examples
+  rfc3986-normal-tests
   (as-uri-map
     {"g:h" "g:h"
      "g" "http://a/b/c/g"
@@ -51,7 +51,7 @@
     http://a/b/c/d;p?q to the values.
 
     See <http://www.ietf.org/rfc/rfc3986.txt>"}
-  abnormal-reference-resolution-examples
+  rfc3986-abnormal-tests
   (as-uri-map
     {"../../../g" "http://a/g"
      "../../../../g" "http://a/g"
@@ -114,9 +114,9 @@
 
 (deftest test-reference-resolution
   (let [base (as-uri "http://a/b/c/d;p?q")]
-    (doseq [[original resolved] normal-reference-resolution-examples]
+    (doseq [[original resolved] rfc3986-normal-tests]
       (is (equal? (resolve base original) resolved)))
-    (doseq [[original resolved] abnormal-reference-resolution-examples]
+    (doseq [[original resolved] rfc3986-abnormal-tests]
       (is (equal? (resolve base original) resolved)))))
 
 (deftest
