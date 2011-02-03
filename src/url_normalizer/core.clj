@@ -65,11 +65,6 @@
 (def *context*
   (merge *safe-normalizations* *unsafe-normalizations*))
 
-(defn- resolve
-  "Resolve a URI reference against a base URI by removing dot segments."
-  [base uri]
-  (URIUtils/resolve base uri))
-
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
@@ -106,7 +101,17 @@
   (if-let [fragment (get-fragment uri ctx)]
     (remove-fragment fragment ctx)))
 
+(defn- resolve
+  "Resolve a URI reference against a base URI by removing dot segments."
+  [base uri]
+  (URIUtils/resolve base uri))
+
 (defn normalize
+  "By default normalizes a URI using safe normalizations.  The URI is expected
+  to be a URL with either the HTTP or HTTPS scheme.
+
+  You may specify a normalization context in order to apply non-semantic
+  preserving normalizations."
   ([arg]
     (normalize arg *context*))
   ([arg context]
