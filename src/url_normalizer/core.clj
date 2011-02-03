@@ -41,7 +41,7 @@
    :remove-fragment? false
    :remove-ip? false
    :remove-duplicate-slash? false
-   :remove-duplicate-query? false
+   :remove-duplicate-query-keys? false
    :remove-empty-query? false
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
@@ -50,7 +50,11 @@
    :sort-query? false
    :decode-special-characters? false})
 
-(def *context*
+(def
+  ^{:doc
+    "A normalization context. See #'url-normalizer/*safe-normalizations* and
+     #'url-normalizer/*unsafe-normalizations* for possible normalizations."}
+  *context*
   (merge *safe-normalizations* *unsafe-normalizations*))
 
 (defn- normalize-scheme-part [uri ctx]
@@ -90,7 +94,11 @@
     (remove-fragment fragment ctx)))
 
 (defn- resolve
-  "Resolve a URI reference against a base URI by removing dot segments."
+  "Resolve a URI reference against a base URI by removing dot segments.  The
+  Apache HttpClient version is used instead of the resolve method on URI due
+  to a bug in the Java standard library.
+
+  See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"
   [base uri]
   (URIUtils/resolve base uri))
 
@@ -103,8 +111,9 @@
   ([arg]
     (normalize arg *context*))
   ([arg context]
-    (let [uri (as-uri arg)
-          ctx (merge *context* context)
+    (let [ctx (merge *context* context)
+          uri- (as-uri arg)
+          uri (if (:base ctx) (resolve (:base ctx) uri-) uri-)
           scheme (normalize-scheme-part uri ctx)
           user-info (normalize-user-info-part uri ctx)
           host (normalize-host-part uri ctx)
