@@ -113,7 +113,7 @@
 
   See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"
   [base uri]
-  (URIUtils/resolve base uri))
+  (URIUtils/resolve (as-uri base) (as-uri uri)))
 
 (defn normalize
   "By default normalizes a URI using safe normalizations.  The URI is expected
