@@ -158,7 +158,7 @@
     http://example.com/%7b
     http://example.com/%7B"
   [a b]
-  (= (.toASCIIString a) (.toASCIIString b)))
+  (= (.toASCIIString (as-uri a)) (.toASCIIString (as-uri b))))
 
 (defn with-normalization-context
   "Evaluates a function with *context* bound to context"
