@@ -132,6 +132,7 @@
     (let [ctx (merge *context* context)
           uri- (as-uri arg)
           uri (if (:base ctx) (resolve (:base ctx) uri-) uri-)
+          authority (.getRawAuthority uri)
           scheme (normalize-scheme-part uri ctx)
           user-info (normalize-user-info-part uri ctx)
           host (normalize-host-part uri ctx)
@@ -139,13 +140,10 @@
           path (normalize-path-part uri ctx)
           query (normalize-query-part uri ctx)
           fragment (normalize-fragment-part uri ctx)]
-      (URI. scheme
-            user-info
-            host
-            (if (nil? port) -1 port)
-            path
-            query
-            fragment))))
+      (if (and (nil? authority) (.isAbsolute uri))
+        (URI. scheme (.getSchemeSpecificPart uri) fragment)
+        (URI. scheme user-info host (if (nil? port) -1 port) path query
+              fragment)))))
 
 (defn equivalent?
   "Returns true if the two URIs are equivalent when normalized.
