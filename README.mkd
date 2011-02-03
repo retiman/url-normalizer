@@ -4,6 +4,8 @@ Normalize URLs. See the [tests](https://github.com/jashmenn/url-normalizer/blob/
 
 ## Usage
 
+Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
+
 <code>
      (use 'url-normalizer.core)
 
@@ -29,6 +31,18 @@ Normalize URLs. See the [tests](https://github.com/jashmenn/url-normalizer/blob/
 </code>
 
 See `#'url-normalizer.core/*context*` for applicable normalizations.  Some normalizations do not preserve semantics; be warned.
+
+You can also test if two URLs are equivalent or if they are equal.  Two URLs are equivalent if they normalize to the same thing, but they are equal if their ascii representations are the same.
+
+<code>
+    (use 'url-normalizer.core)
+
+    (equivalent? "http://example.com" "http://example.com/")
+    -> true
+
+    (equal? "http://example.com" "http://example.com/")
+    -> false
+</code>
 
 ## Installation
 
