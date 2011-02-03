@@ -93,7 +93,7 @@
   (if-let [fragment (get-fragment uri ctx)]
     (remove-fragment fragment ctx)))
 
-(defn- resolve
+(defn resolve
   "Resolve a URI reference against a base URI by removing dot segments.  The
   Apache HttpClient version is used instead of the resolve method on URI due
   to a bug in the Java standard library.
