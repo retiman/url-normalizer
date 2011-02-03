@@ -15,7 +15,9 @@
     (cons {} (map #(vector (as-uri (first %)) (as-uri (second %))) h))))
 
 (def
-  ^{:doc "Tests from RFC3986: Section 5.3."}
+  ^{:doc
+    "Tests from RFC3986: Section 5.3.  The keys should resolve against
+    http://a/b/c/d;p?q to the values."}
   normal-reference-resolution-examples
   (as-uri-map
     {"g:h" "g:h"
@@ -42,7 +44,9 @@
      "../../" "http://a/"
      "../../g" "http://a/g"}))
 (def
-  ^{:doc "Tests from RFC3986 Section 5.4.2."}
+  ^{:doc
+    "Tests from RFC3986 Section 5.4.2.  The keys should resolve against
+    http://a/b/c/d;p?q to the values."}
   abnormal-reference-resolution-examples
   (as-uri-map
     {"../../../g" "http://a/g"
