@@ -165,8 +165,12 @@
       (is (equal? (resolve base original) resolved)))))
 
 (deftest test-pace
-  (doseq [[original resolved] pace-tests]
-    (is (equivalent? original resolved {:remove-empty-user-info? true}))))
+  (doseq [[a b] pace-tests]
+    (is (equivalent? a b {:remove-empty-user-info? true}))))
+
+(deftest test-rfc2396bis
+  (doseq [[a b] rfc2396bis-tests]
+    (is (equivalent? a b))))
 
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
