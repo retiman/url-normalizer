@@ -2,7 +2,7 @@
   (:require
     [clojure.contrib.str-utils2 :as su]))
 
-(defn byte-to-hex-string
+(defn- byte-to-hex-string
   "Converts the lower 16 bits of b to into a hex string"
   [b]
   (let [s (Integer/toHexString (bit-and 0xff b))]
@@ -28,17 +28,6 @@
   (concat
     (map #(fn [s] (.replaceAll s (first %) (last %)))
          (concat alpha digits))))
-
-(defn- decode
-  "Decodes percent encoded octets to their corresponding characters.
-  Only decodes unreserved characters."
-  [path]
-  ((comp (apply comp decode-alphanum)
-         #(.replaceAll % "%2D" "-")
-         #(.replaceAll % "%2E" ".")
-         #(.replaceAll % "%5F" "_")
-         #(.replaceAll % "%7E" "~"))
-     path))
 
 (defn get-user-info [uri ctx]
   (if (:encode-illegal-characters? ctx)
@@ -84,7 +73,14 @@
     (str ":" port)))
 
 (defn decode-unreserved-characters [path ctx]
-  (if (:decode-unreserved-characters? ctx) (decode path) path))
+  (if (:decode-unreserved-characters? ctx)
+    ((comp (apply comp decode-alphanum)
+           #(.replaceAll % "%2D" "-")
+           #(.replaceAll % "%2E" ".")
+           #(.replaceAll % "%5F" "_")
+           #(.replaceAll % "%7E" "~"))
+       path)
+    path))
 
 (defn add-trailing-slash [path ctx]
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
