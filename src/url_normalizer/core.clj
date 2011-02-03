@@ -70,12 +70,6 @@
   [base uri]
   (URIUtils/resolve base uri))
 
-(comment
-(defn equivalent?
-  "Returns true if the two URIs are equivalent when normalized."
-  [a b]
-  (= (normalize a) (normalize b))))
-
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
     (if (:lower-case-scheme? ctx)
@@ -127,6 +121,11 @@
           fragment (normalize-fragment-part uri ctx)]
       (URI. (str scheme user-info host port path query fragment)))))
 
+(defn equivalent?
+  "Returns true if the two URIs are equivalent when normalized."
+  [a b]
+  (= (normalize a) (normalize b)))
+
 (defn to-uri
   "DEPRECATED: Prefer as-uri."
   {:deprecated "0.1.0"}
@@ -147,9 +146,6 @@
     (catch URISyntaxException e (canonicalize-url (to-uri arg)))
     (catch MalformedURLException e (canonicalize-url (to-url arg)))))
 
-(defmulti url-equal? (fn [a b] [(class a) (class b)]))
-
-(defmethod url-equal? [String String] [url1 url2]
-           (let [u1 (canonicalize-url (URI. url1))
-                 u2 (canonicalize-url (URI. url2))]
-             (= u1 u2)))
+(defn url-equal?
+  [a b]
+  (equivalent? a b))
