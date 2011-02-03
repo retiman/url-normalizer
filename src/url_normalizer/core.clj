@@ -31,7 +31,7 @@
    "These are safe normalizations that will not change the semantics of a URI.
    See the #'url-normalizer.util namespace for additional details and
    implementations."}
-  *safe-normalizations*
+  safe-normalizations
   {:lower-case-scheme? true
    :lower-case-host? true
    :upper-case-percent-encoding? true
@@ -47,7 +47,7 @@
     the URI or cause it to refer to a different resource.  See the
     #'url-normalizer.util namespace for additional details and
     implementations."}
-  *unsafe-normalizations*
+  unsafe-normalizations
   {:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
@@ -66,7 +66,7 @@
     "A normalization context. See #'url-normalizer/*safe-normalizations* and
      #'url-normalizer/*unsafe-normalizations* for possible normalizations."}
   *context*
-  (merge *safe-normalizations* *unsafe-normalizations*))
+  (merge safe-normalizations unsafe-normalizations))
 
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
