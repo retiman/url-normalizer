@@ -140,6 +140,7 @@
 
 (defn canonicalize-url
   "DEPRECATED: Prefer normalize."
+  {:deprecated "0.1.0"}
   [arg]
   (try
     (normalize arg)
@@ -147,5 +148,7 @@
     (catch MalformedURLException e (canonicalize-url (to-url arg)))))
 
 (defn url-equal?
+  "DEPRECATED: Prefer equivalent?"
+  {:deprecated "0.1.0"}
   [a b]
   (equivalent? a b))
