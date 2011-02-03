@@ -115,7 +115,21 @@
 
 (def
   ^{:doc
-    "Tests from MNot's urlnorm.py.
+    "Tests from MNot's urlnorm.py.  The MNot tests drop the fragment and
+    removing the trailing dot in the host.
+
+    Additionally, the MNot tests normalize relative URIs different from
+    RFC2396.  For example, in RFC2396:
+
+      /../foo -> /../foo
+
+    But in the MNot tests, they normalize to:
+
+      /../foo -> /foo
+
+    As per RFC3986, a relative URI of /../foo resolved against a base URI
+    of http://a would give a path part of /foo.  Given that we are not
+    doing resolution, I've commented out these MNot tests.
 
     See <http://www.mnot.net/python/urlnorm.py>"}
   mnot-tests
@@ -128,15 +142,15 @@
      "/foo/bar/../.." "/"
      "/foo/bar/../../" "/"
      "/foo/bar/../../baz" "/baz"
-     "/foo/bar/../../../baz" "/baz"
-     "/foo/bar/../../../../baz"      "/baz"
+     ;"/foo/bar/../../../baz" "/baz"
+     ;"/foo/bar/../../../../baz" "/baz"
      "/./foo" "/foo"
-     "/../foo" "/foo"
+     ;"/../foo" "/foo"
      "/foo." "/foo."
      "/.foo" "/.foo"
      "/foo.." "/foo.."
      "/..foo" "/..foo"
-     "/./../foo" "/foo"
+     ;"/./../foo" "/foo"
      "/./foo/." "/foo/"
      "/foo/./bar" "/foo/bar"
      "/foo/../bar" "/bar"
@@ -171,6 +185,11 @@
 (deftest test-rfc2396bis
   (doseq [[a b] rfc2396bis-tests]
     (is (equivalent? a b))))
+
+(deftest test-mnot
+  (doseq [[a b] mnot-tests]
+    (is (equivalent? a b {:remove-fragment? true
+                          :remove-trailing-dot-in-host? true}))))
 
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
