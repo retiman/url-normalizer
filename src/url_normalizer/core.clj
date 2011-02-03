@@ -9,13 +9,14 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(defn as-url
-  [arg]
-  (if (= URL (type arg)) arg (URL. arg)))
+(defmulti as-url class)
+(defmethod as-url String [arg] (URL. arg))
+(defmethod as-url URI [arg] (.toURL arg))
+(defmethod as-url URL [arg] arg)
 
 (defmulti as-uri class)
-(defmethod as-uri URI [arg] arg)
 (defmethod as-uri String [arg] (URI. arg))
+(defmethod as-uri URI [arg] arg)
 (defmethod as-uri URL [arg]
   (URI. (.getProtocol arg)
         (.getUserInfo arg)
@@ -144,8 +145,14 @@
 (defn to-uri
   "DEPRECATED: Prefer as-uri."
   {:deprecated "0.1.0"}
-  [#^URL url]
-  (as-uri url))
+  [arg]
+  (as-uri arg))
+
+(defn to-url
+  "DEPRECATED: Prefer as-url."
+  {:deprecated "0.1.0"}
+  [arg]
+  (as-url arg))
 
 (defn canonicalize-url
   "DEPRECATED: Prefer normalize."
@@ -153,7 +160,7 @@
   (try
     (normalize arg)
     (catch URISyntaxException e (canonicalize-url (to-uri arg)))
-    (catch MalformedURLException e (canonicalize-url (as-url arg)))))
+    (catch MalformedURLException e (canonicalize-url (to-url arg)))))
 
 (defmulti url-equal? (fn [a b] [(class a) (class b)]))
 
