@@ -9,7 +9,7 @@
 
 (refer-private 'url-normalizer.core)
 
-(defn as-uri-map
+(defn- as-uri-map
   [h]
   (apply merge
     (cons {} (map #(vector (as-uri (first %)) (as-uri (second %))) h))))
