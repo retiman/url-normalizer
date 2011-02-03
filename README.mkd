@@ -6,7 +6,7 @@ Normalize URLs. See the [tests](https://github.com/jashmenn/url-normalizer/blob/
 
 Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
 
-<pre>
+<code>
 (use 'url-normalizer.core)
 
 (normalize "http://WWW.EXAMPLE.COM:80/%7ejane/foo/bar/../baz")
@@ -28,13 +28,13 @@ Use the `normalize` function to apply specific normalizations to URLs.  Note tha
   :remove-trailing-dot-in-host? true}
  #(normalize "http://WWW.example.COM.:80/?"))
 -> #<URI http://WWW.example.COM:80/>
-</pre>
+</code>
 
 See `#'url-normalizer.core/*context*` for applicable normalizations.  Some normalizations do not preserve semantics; be warned.
 
 You can also test if two URLs are equivalent or if they are equal.  Two URLs are equivalent if they normalize to the same thing, but they are equal if their ascii representations are the same.
 
-<pre>
+<code>
 (use 'url-normalizer.core)
 
 (equivalent? "http://example.com" "http://example.com/")
@@ -42,7 +42,7 @@ You can also test if two URLs are equivalent or if they are equal.  Two URLs are
 
 (equal? "http://example.com" "http://example.com/")
 -> false
-</pre>
+</code>
 
 ## Installation
 
