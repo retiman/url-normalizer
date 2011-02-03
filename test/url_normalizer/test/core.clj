@@ -112,6 +112,50 @@
      "http://example.com?q=foo" "http://example.com/?q=foo"
      "http://example.com/?q=foo" "http://example.com/?q=foo"}))
 
+(def
+  ^{:doc
+    "Tests from MNot's urlnorm.py.
+
+    See <http://www.mnot.net/python/urlnorm.py>"}
+  mnot-tests
+  (as-uri-map
+    {"/foo/bar/." "/foo/bar/"
+     "/foo/bar/./" "/foo/bar/"
+     "/foo/bar/.." "/foo/"
+     "/foo/bar/../" "/foo/"
+     "/foo/bar/../baz" "/foo/baz"
+     "/foo/bar/../.." "/"
+     "/foo/bar/../../" "/"
+     "/foo/bar/../../baz" "/baz"
+     "/foo/bar/../../../baz" "/baz"
+     "/foo/bar/../../../../baz"      "/baz"
+     "/./foo" "/foo"
+     "/../foo" "/foo"
+     "/foo." "/foo."
+     "/.foo" "/.foo"
+     "/foo.." "/foo.."
+     "/..foo" "/..foo"
+     "/./../foo" "/foo"
+     "/./foo/." "/foo/"
+     "/foo/./bar" "/foo/bar"
+     "/foo/../bar" "/bar"
+     "/foo//" "/foo/"
+     "/foo///bar//" "/foo/bar/"
+     "http://www.foo.com:80/foo" "http://www.foo.com/foo"
+     "http://www.foo.com/foo/../foo" "http://www.foo.com/foo"
+     "http://www.foo.com:8000/foo" "http://www.foo.com:8000/foo"
+     "http://www.foo.com./foo/bar.html" "http://www.foo.com/foo/bar.html"
+     "http://www.foo.com.:81/foo" "http://www.foo.com:81/foo"
+     "http://www.foo.com/%7ebar" "http://www.foo.com/~bar"
+     "http://www.foo.com/%7Ebar" "http://www.foo.com/~bar"
+     "ftp://user:pass@ftp.foo.net/foo/bar"
+     "ftp://user:pass@ftp.foo.net/foo/bar"
+     "http://USER:pass@www.Example.COM/foo/bar"
+     "http://USER:pass@www.example.com/foo/bar"
+     "http://www.example.com./" "http://www.example.com/"
+     "-" "-"
+     "http://www.foo.com/?p=529&#038;cpage=1#comment-783" "http://www.foo.com/?p=529&"}))
+
 (deftest test-reference-resolution
   (let [base (as-uri "http://a/b/c/d;p?q")]
     (doseq [[original resolved] rfc3986-normal-tests]

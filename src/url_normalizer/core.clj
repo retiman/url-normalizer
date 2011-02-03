@@ -11,12 +11,11 @@
     [org.apache.http.client.utils URIUtils]))
 
 (defmulti as-url class)
-(defmethod as-url String [arg] (URL. arg))
 (defmethod as-url URI [arg] (.toURL arg))
 (defmethod as-url URL [arg] arg)
+(defmethod as-url String [arg] (URL. arg))
 
 (defmulti as-uri class)
-(defmethod as-uri String [arg] (URI. arg))
 (defmethod as-uri URI [arg] arg)
 (defmethod as-uri URL [arg]
   (URI. (.getProtocol arg)
@@ -26,6 +25,12 @@
         (.getPath arg)
         (.getQuery arg)
         (.getRef arg)))
+; TODO: This is quite an inelegant solution to problem URIs like:
+; http://www.foo.com/?p=529&#038;cpage=1#comment-783 but it'll do for now.
+(defmethod as-uri String [arg]
+  (try
+    (URI. arg)
+    (catch URISyntaxException e (as-uri (URL. arg)))))
 
 (def
   ^{:doc
