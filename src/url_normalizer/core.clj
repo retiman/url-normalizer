@@ -133,6 +133,8 @@
           path (normalize-path-part uri ctx)
           query (normalize-query-part uri ctx)
           fragment (normalize-fragment-part uri ctx)]
+      ; TODO: Consider using the an alternate constructor so as not to incur
+      ; a parsing overhead?
       (URI. (str scheme user-info host port path query fragment)))))
 
 (defn equivalent?
