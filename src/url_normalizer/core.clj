@@ -1,4 +1,5 @@
 (ns url-normalizer.core
+  "A Clojure library for normalizing urls with configurable aggressiveness."
   (:refer-clojure :exclude (resolve))
   (:use
     [url-normalizer.util])

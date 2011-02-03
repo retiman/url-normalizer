@@ -1,4 +1,5 @@
 (ns url-normalizer.util
+  "Utilities and specific normalizations."
   (:require
     [clojure.contrib.str-utils2 :as su]))
 
