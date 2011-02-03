@@ -73,41 +73,6 @@
 (def *context*
   (merge *safe-normalizations* *unsafe-normalizations*))
 
-(defn- create-http-host
-  "Create an org.apache.http.HttpHost with the host name in lowercase.
-  Also removes the default port for the HTTP scheme."
-  [uri]
-  (if (nil-host? uri)
-    nil
-    (let [scheme (.getScheme uri)
-          host (su/lower-case (.getHost uri))
-          port (.getPort uri)]
-      (if (and (= scheme "http") (= port 80))
-        (HttpHost. host)
-        (HttpHost. host port scheme)))))
-
-(defn- create-uri
-  [& {:keys [scheme user-info host port path query fragment]}]
-  (let [buffer (StringBuilder.)]
-    (if-not (nil? host)
-      (do
-        (if-not (nil? scheme)
-          (.append buffer (str scheme "://")))
-        (if-not (or (nil? user-info) (= ":" user-info) (= "" user-info))
-          (.append buffer (str user-info "@")))
-        (.append buffer host)
-        (if (> port 0)
-          (.append buffer (str ":" port)))))
-    (if (or (nil? path) (not (.startsWith path "/")))
-      (.append buffer "/"))
-    (if-not (nil? path)
-      (.append buffer path))
-    (if-not (nil? query)
-      (.append buffer (str "?" query)))
-    (if-not (nil? fragment)
-      (.append buffer (str "#" fragment)))
-    (URI. (.toString buffer))))
-
 (defn- decode
   "Decodes percent encoded octets to their corresponding characters.
   Only decodes unreserved characters."
@@ -119,49 +84,16 @@
          #(.replaceAll % "%7E" "~"))
      path))
 
-(defn- rewrite
-  "Rewrites the URI, possibly dropping the fragment."
-  [http-host uri drop-fragment?]
-  (URIUtils/rewriteURI uri http-host drop-fragment?))
-
 (defn- resolve
   "Resolve a URI reference against a base URI by removing dot segments."
   [base uri]
   (URIUtils/resolve base uri))
 
-(defn normalize
-  [arg]
-  (let [uri (as-uri arg)
-        http-host (create-http-host uri)
-        host (URI. (str (.getScheme uri) "://" (.getHost uri)))
-        f (comp #(rewrite http-host % false)
-                #(resolve host %))
-        result (if http-host (f uri) uri)]
-      (create-uri :scheme (.getScheme result)
-                  :user-info (.getRawUserInfo uri)
-                  :host (.getHost result)
-                  :port (.getPort result)
-                  :path (decode (.getRawPath result))
-                  :query (.getRawQuery result)
-                  :fragment (.getRawFragment result))))
-
+(comment
 (defn equivalent?
   "Returns true if the two URIs are equivalent when normalized."
   [a b]
-  (= (normalize a) (normalize b)))
-
-(comment
-(defn normalize-
-  ([uri]
-    (normalize- *context*))
-  ([uri ctx]
-    (create-uri :scheme (normalize-scheme uri ctx)
-                :user-info (normalize-user-info uri ctx)
-                :host (normalize-host uri ctx)
-                :port (normalize-port uri ctx)
-                :path (normalize-path uri ctx)
-                :query (normalize-query uri ctx)
-                :fragment (normalize-fragment uri ctx)))))
+  (= (normalize a) (normalize b))))
 
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
@@ -199,6 +131,21 @@
   (if-let [fragment (get-fragment uri ctx)]
     (remove-fragment fragment ctx)))
 
+(defn normalize
+  ([arg]
+    (normalize arg *context*))
+  ([arg context]
+    (let [uri (as-uri arg)
+          ctx (merge *context* context)
+          scheme (normalize-scheme-part uri ctx)
+          user-info (normalize-user-info-part uri ctx)
+          host (normalize-host-part uri ctx)
+          port (normalize-port-part uri ctx)
+          path (normalize-path-part uri ctx)
+          query (normalize-query-part uri ctx)
+          fragment (normalize-fragment-part uri ctx)]
+      (URI. (str scheme user-info host port path query fragment)))))
+
 (defn to-uri
   "DEPRECATED: Prefer as-uri."
   {:deprecated "0.1.0"}
@@ -206,6 +153,7 @@
   (as-uri url))
 
 (defmulti canonicalize-url class)
+
 (defmethod canonicalize-url URI [uri]
  (let [scheme (normalize-scheme-part uri *context*)
        user-info  (normalize-user-info-part uri *context*)
