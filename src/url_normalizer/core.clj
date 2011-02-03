@@ -82,8 +82,8 @@
 (defn normalize-path-part [uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
-           #(upper-case-percent-encoding % ctx)
-           #(decode-unreserved-characters % ctx))
+           #(decode-unreserved-characters % ctx)
+           #(upper-case-percent-encoding % ctx))
        path)))
 
 (defn- normalize-query-part [uri ctx]
