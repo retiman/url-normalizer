@@ -96,6 +96,22 @@
        path)
     path))
 
+(defn upper-case-percent-encoding [path ctx]
+  (if (:upper-case-percent-encoding? ctx)
+    (loop [sb (StringBuilder.)
+           m (re-matcher #"%[a-f0-9]{2}" path)
+           k 0]
+      (let [t (re-find m)]
+        (if (nil? t)
+          (do
+            (.append sb (.substring path k))
+            (.toString sb))
+          (do
+            (.append sb (.substring path k (.start m)))
+            (.append sb (-> m (.group 0) (.toUpperCase)))
+            (recur sb m (.end m))))))
+    path))
+
 (defn add-trailing-slash [path ctx]
   (if (and (:add-trailing-slash? ctx) (= "" path)) "/" path))
 
