@@ -6,4 +6,5 @@
                    [commons-logging
                     commons-codec]]]
   :dev-dependencies
-    [[swank-clojure "1.2.1"]])
+    [[autodoc "0.7.1"]
+     [swank-clojure "1.2.1"]])
