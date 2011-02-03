@@ -2,7 +2,7 @@
   (:refer-clojure :exclude (resolve))
   (:use
     [url-normalizer.core]
-    [url-normalizer.test.utils]
+    [url-normalizer.test.util]
     [clojure.test])
   (:import
     [java.net URL URI]))

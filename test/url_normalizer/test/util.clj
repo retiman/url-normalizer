@@ -1,4 +1,4 @@
-(ns url-normalizer.test.utils
+(ns url-normalizer.test.util
   (:gen-class))
 
 (defn refer-private
