@@ -5,7 +5,7 @@
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
-    [java.net URL URI]
+    [java.net URL URI URISyntaxException MalformedURLException]
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
@@ -14,7 +14,8 @@
   (if (= URL (type arg)) arg (URL. arg)))
 
 (defmulti as-uri class)
-
+(defmethod as-uri URI [arg] arg)
+(defmethod as-uri String [arg] (URI. arg))
 (defmethod as-uri URL [arg]
   (URI. (.getProtocol arg)
         (.getUserInfo arg)
@@ -23,12 +24,6 @@
         (.getPath arg)
         (.getQuery arg)
         (.getRef arg)))
-
-(defmethod as-uri String [arg]
-  (URI. arg))
-
-(defmethod as-uri URI [arg]
-  arg)
 
 (defn- nil-host?
   [uri]
@@ -152,23 +147,13 @@
   [#^URL url]
   (as-uri url))
 
-(defmulti canonicalize-url class)
-
-(defmethod canonicalize-url URI [uri]
- (let [scheme (normalize-scheme-part uri *context*)
-       user-info  (normalize-user-info-part uri *context*)
-       host  (normalize-host-part uri *context*)
-       port  (normalize-port-part uri *context*)
-       path  (normalize-path-part uri *context*)
-       query (normalize-query-part uri *context*)]
-    (str scheme user-info host port path query)))
-(defmethod canonicalize-url URL [url] (canonicalize-url (to-uri url)))
-(defmethod canonicalize-url String [url]
+(defn canonicalize-url
+  "DEPRECATED: Prefer normalize."
+  [arg]
   (try
-    (canonicalize-url (to-uri (URL. url)))
-    (catch java.net.URISyntaxException    e (canonicalize-url (URI. url)))
-    (catch java.net.MalformedURLException e (canonicalize-url (URI. url)))
-    ))
+    (normalize arg)
+    (catch URISyntaxException e (canonicalize-url (to-uri arg)))
+    (catch MalformedURLException e (canonicalize-url (as-url arg)))))
 
 (defmulti url-equal? (fn [a b] [(class a) (class b)]))
 
