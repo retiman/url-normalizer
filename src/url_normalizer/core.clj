@@ -150,8 +150,10 @@
 
     http://example.com/%7b
     http://example.com/%7B"
-  [a b]
-  (= (normalize a) (normalize b)))
+  ([a b]
+    (equivalent? a b *context*))
+  ([a b context]
+    (= (normalize a context) (normalize b context))))
 
 (defn equal?
   "Returns true if the ASCII string versions of URIs are equal.  This is

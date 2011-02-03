@@ -74,7 +74,8 @@
 
 (def
   ^{:doc
-    "Pace tests.
+    "Pace tests.  Note that the pace examples remove empty user info as part of
+    the normalization process.
 
     See <http://www.intertwingly.net/wiki/pie/PaceCanonicalIds>"}
   pace-tests
@@ -162,6 +163,10 @@
       (is (equal? (resolve base original) resolved)))
     (doseq [[original resolved] rfc3986-abnormal-tests]
       (is (equal? (resolve base original) resolved)))))
+
+(deftest test-pace
+  (doseq [[original resolved] pace-tests]
+    (is (equivalent? original resolved {:remove-empty-user-info? true}))))
 
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
