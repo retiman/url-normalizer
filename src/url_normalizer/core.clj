@@ -26,10 +26,6 @@
         (.getQuery arg)
         (.getRef arg)))
 
-(defn- nil-host?
-  [uri]
-  (or (nil? uri) (nil? (.getHost uri))))
-
 (def default-port
   {"ftp" 21
    "telnet" 23
