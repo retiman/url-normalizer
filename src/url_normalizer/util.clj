@@ -176,17 +176,16 @@
     (loop [sb (StringBuilder.)
            m (re-matcher #"%[a-fA-F0-9]{2}" text)
            k 0]
-      (let [t (re-find m)]
-        (if (nil? t)
-          (do
-            (.append sb (.substring text k))
-            (.toString sb))
-          (let [g (-> m (.group 0) (.toUpperCase))]
-            (.append sb (.substring text k (.start m)))
-            (if (:decode-unreserved-characters? ctx)
-              (.append sb (get unreserved g))
-              (.append sb g))
-            (recur sb m (.end m))))))
+      (if (nil? (re-find m))
+        (do
+          (.append sb (.substring text k))
+          (.toString sb))
+        (let [g (-> m (.group 0) (.toUpperCase))]
+          (.append sb (.substring text k (.start m)))
+          (if (:decode-unreserved-characters? ctx)
+            (.append sb (get unreserved g))
+            (.append sb g))
+          (recur sb m (.end m)))))
     text))
 
 (defn remove-duplicate-slashes
