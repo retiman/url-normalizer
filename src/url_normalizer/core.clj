@@ -204,9 +204,10 @@
   {:deprecated "0.1.0"}
   [arg]
   (try
-    (normalize arg {:remove-empty-user-info? true
-                    :remove-fragment? true
-                    :remove-trailing-dot-in-host? true})
+    (.toASCIIString
+      (normalize arg {:remove-empty-user-info? true
+                      :remove-fragment? true
+                      :remove-trailing-dot-in-host? true}))
     (catch URISyntaxException e (canonicalize-url (to-uri arg)))
     (catch MalformedURLException e (canonicalize-url (to-url arg)))))
 
