@@ -181,12 +181,11 @@
           (do
             (.append sb (.substring text k))
             (.toString sb))
-          (do
+          (let [g (-> m (.group 0) (.toUpperCase))]
             (.append sb (.substring text k (.start m)))
-            (let [g (-> m (.group 0) (.toUpperCase))]
-              (if (:decode-unreserved-characters? ctx)
-                (.append sb (get unreserved g))
-                (.append sb g)))
+            (if (:decode-unreserved-characters? ctx)
+              (.append sb (get unreserved g))
+              (.append sb g))
             (recur sb m (.end m))))))
     text))
 
