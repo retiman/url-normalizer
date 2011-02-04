@@ -216,4 +216,4 @@
   "DEPRECATED: Prefer equivalent?"
   {:deprecated "0.1.0"}
   [a b]
-  (equivalent? a b))
+  (= (canonicalize-url a) (canonicalize-url b)))
