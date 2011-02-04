@@ -47,6 +47,7 @@
    :remove-default-port? true
    :remove-dot-segments? true})
 
+; TODO: Implement the commented out functionality
 (def
   ^{:doc
     "These are unsafe normalizations that can either change the semantics of
@@ -54,18 +55,18 @@
     #'url-normalizer.util namespace for additional details and
     implementations."}
   unsafe-normalizations
-  {:remove-directory-index? false
+  {;:remove-directory-index? false
    :remove-fragment? false
-   :remove-ip? false
-   :remove-duplicate-slash? false
-   :remove-duplicate-query-keys? false
+   ;:remove-ip? false
+   ;:remove-duplicate-slash? false
+   ;:remove-duplicate-query-keys? false
    :remove-empty-query? false
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
    :force-http? false
-   :remove-www? false
-   :sort-query-keys? false
-   :decode-special-characters? false})
+   :remove-www? false})
+   ;:sort-query-keys? false
+   ;:decode-special-characters? false})
 
 (def
   ^{:doc
@@ -101,6 +102,8 @@
 (defn normalize-path-part [uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
+           ; TODO: Re-add this fn because right now, it doesn't
+           ; even work.
            ;#(remove-duplicate-slashes % ctx)
            #(normalize-percent-encoding % ctx))
        path)))
@@ -108,6 +111,7 @@
 (defn- normalize-query-part [uri ctx]
   (if-let [query (get-query uri ctx)]
     ((comp #(remove-empty-query % ctx)
+           ; TODO: Add these in when they work
            ;#(remove-duplicate-query-keys % ctx)
            ;#(sort-query-keys % ctx)
            #(normalize-percent-encoding % ctx))
