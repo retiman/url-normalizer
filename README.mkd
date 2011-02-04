@@ -2,6 +2,8 @@
 
 Normalize URLs. See the [tests](https://github.com/retiman/url-normalizer/blob/master/test/url_normalizer/test/core.clj#L87).
 
+These normalizations are only tested well against the HTTP and HTTPS schemes.
+
 ## Usage
 
 Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
