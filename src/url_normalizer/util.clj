@@ -38,6 +38,18 @@
             (map #(str (char %)) xs))))
 
 (def
+  ^{:doc
+    "A mapping of encoded unreserved characters to their decoded
+    counterparts"}
+  unreserved
+  (assoc
+    (merge alpha digits)
+    "%2D" "-"
+    "%2E" "."
+    "%5F" "_"
+    "%7E" "~"))
+
+(def
   ^{:doc "A list of functions that decode alphanumerics in a String."}
   decode-alphanum
   (concat
@@ -143,6 +155,7 @@
     nil
     port))
 
+; TODO: Roll me into normalize-percent-encoding
 (defn decode-special-characters
   [text ctx]
   "An unsafe normalization that decodes special characters"
@@ -150,33 +163,18 @@
     (throw (UnsupportedOperationException.))
     text))
 
-(defn decode-unreserved-characters
-  "A safe normalization that decodes percent encoded characters that don't need
-  to be encoded.  According to RFC3986, these characters are:
+(defn normalize-percent-encoding
+  "Applies several percent encoding normalizations.
 
-  unreserved  = ALPHA / DIGIT / - / . / _ / ~
+  upper-case-percent-encoding:
+  http://example.com/%7ejane -> http://example.com/%7Ejane
 
-  Here are some example normalizations:
-
-  http://example.com/%7Ejane -> http://example.com/~jane"
-  [text ctx]
-  (if (:decode-unreserved-characters? ctx)
-    ((comp (apply comp decode-alphanum)
-           #(.replaceAll % "%2D" "-")
-           #(.replaceAll % "%2E" ".")
-           #(.replaceAll % "%5F" "_")
-           #(.replaceAll % "%7E" "~"))
-       text)
-    text))
-
-(defn upper-case-percent-encoding
-  "A safe normalization that converts percent decodings to uppercase:
-
-  http://example.com/%7ejane -> http://example.com/%7Ejane"
+  decode-unreserved-characters:
+  http://example.com/%7ejane -> http://example.com~/jane"
   [text ctx]
   (if (:upper-case-percent-encoding? ctx)
     (loop [sb (StringBuilder.)
-           m (re-matcher #"%[a-f0-9]{2}" text)
+           m (re-matcher #"%[a-fA-F0-9]{2}" text)
            k 0]
       (let [t (re-find m)]
         (if (nil? t)
@@ -185,7 +183,10 @@
             (.toString sb))
           (do
             (.append sb (.substring text k (.start m)))
-            (.append sb (-> m (.group 0) (.toUpperCase)))
+            (let [g (-> m (.group 0) (.toUpperCase))]
+              (if (:decode-unreserved-characters? ctx)
+                (.append sb (get unreserved g))
+                (.append sb g)))
             (recur sb m (.end m))))))
     text))
 

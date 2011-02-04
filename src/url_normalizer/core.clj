@@ -101,28 +101,22 @@
 (defn normalize-path-part [uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
-           #(remove-duplicate-slashes % ctx)
-           #(decode-special-characters % ctx)
-           #(decode-unreserved-characters % ctx)
-           #(upper-case-percent-encoding % ctx))
+           ;#(remove-duplicate-slashes % ctx)
+           #(normalize-percent-encoding % ctx))
        path)))
 
 (defn- normalize-query-part [uri ctx]
   (if-let [query (get-query uri ctx)]
     ((comp #(remove-empty-query % ctx)
-           #(remove-duplicate-query-keys % ctx)
-           #(sort-query-keys % ctx)
-           #(decode-special-characters % ctx)
-           #(decode-unreserved-characters % ctx)
-           #(upper-case-percent-encoding % ctx))
+           ;#(remove-duplicate-query-keys % ctx)
+           ;#(sort-query-keys % ctx)
+           #(normalize-percent-encoding % ctx))
        query)))
 
 (defn- normalize-fragment-part [uri ctx]
   (if-let [fragment (get-fragment uri ctx)]
     ((comp #(remove-fragment % ctx)
-           #(decode-special-characters % ctx)
-           #(decode-unreserved-characters % ctx)
-           #(upper-case-percent-encoding % ctx))
+           #(normalize-percent-encoding % ctx))
        fragment)))
 
 (defn resolve
