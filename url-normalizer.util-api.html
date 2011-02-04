@@ -64,11 +64,13 @@ namespace.
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.util/lower-case-host">lower-case-host</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.util/lower-case-scheme">lower-case-scheme</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.util/remove-default-port">remove-default-port</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.util/remove-duplicate-query-keys">remove-duplicate-query-keys</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#url-normalizer.util/remove-duplicate-slash">remove-duplicate-slash</a>
+      <a href="#url-normalizer.util/remove-duplicate-slashes">remove-duplicate-slashes</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.util/remove-empty-query">remove-empty-query</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
@@ -98,7 +100,7 @@ by <span id="author">Unknown</span><br />
   (:require <span id="long-name">url-normalizer.util</span>))
 </pre><pre>
 </pre><h2>Overview</h2>
-<pre id="namespace-docstr"></pre>
+<pre id="namespace-docstr">Utilities and specific normalizations.</pre>
 <br />
 <h2>Public Variables and Functions</h2>
 <div id="var-entry">
@@ -134,7 +136,7 @@ by <span id="author">Unknown</span><br />
   <hr />
   <h2 id="url-normalizer.util/decode-unreserved-characters">decode-unreserved-characters</h2>
   <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (decode-unreserved-characters path ctx)
+  <pre id="var-usage">Usage: (decode-unreserved-characters text ctx)
 </pre>
   <pre id="var-docstr">A safe normalization that decodes percent encoded characters that don't need
 to be encoded.  According to RFC3986, these characters are:
@@ -186,6 +188,17 @@ Here are some example normalizations:
 </div><div id="var-entry">
   <br />
   <hr />
+  <h2 id="url-normalizer.util/lower-case-scheme">lower-case-scheme</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (lower-case-scheme scheme ctx)
+</pre>
+  <pre id="var-docstr">A safe normalization that lower cases the scheme:
+
+<a href="HTTP://example.com">HTTP://example.com</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
   <h2 id="url-normalizer.util/remove-default-port">remove-default-port</h2>
   <span id="var-type">function</span><br />
   <pre id="var-usage">Usage: (remove-default-port scheme port ctx)
@@ -209,9 +222,9 @@ Here are some example normalizations:
 </div><div id="var-entry">
   <br />
   <hr />
-  <h2 id="url-normalizer.util/remove-duplicate-slash">remove-duplicate-slash</h2>
+  <h2 id="url-normalizer.util/remove-duplicate-slashes">remove-duplicate-slashes</h2>
   <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (remove-duplicate-slash path ctx)
+  <pre id="var-usage">Usage: (remove-duplicate-slashes path ctx)
 </pre>
   <pre id="var-docstr">An unsafe normalization that removes duplicate slashes in a path:
 
