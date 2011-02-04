@@ -111,6 +111,7 @@
   (if-let [query (get-query uri ctx)]
     ((comp #(remove-empty-query % ctx)
            #(remove-duplicate-query-keys % ctx)
+           #(sort-query-keys % ctx)
            #(decode-special-characters % ctx)
            #(decode-unreserved-characters % ctx)
            #(upper-case-percent-encoding % ctx))
