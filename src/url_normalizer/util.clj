@@ -65,6 +65,9 @@
     (.getFragment uri)))
 
 (defn lower-case-scheme
+  "A safe normalization that lower cases the scheme:
+
+  HTTP://example.com -> http://example.com"
   [scheme ctx]
   (if (:lower-case-scheme? ctx)
     (su/lower-case scheme)
