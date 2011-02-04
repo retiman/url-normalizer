@@ -76,9 +76,9 @@
 
 (defn- normalize-scheme-part [uri ctx]
   (if-let [scheme (.getScheme uri)]
-    (if (:lower-case-scheme? ctx)
-      (su/lower-case scheme)
-      scheme)))
+    ((comp #(force-http % ctx)
+           #(lower-case-scheme % ctx))
+       scheme)))
 
 (defn- normalize-user-info-part [uri ctx]
   (if-let [user-info (get-user-info uri ctx)]
@@ -86,7 +86,9 @@
 
 (defn- normalize-host-part [uri ctx]
   (if-let [host (.getHost uri)]
-    ((comp #(remove-trailing-dot-in-host % ctx)
+    ((comp #(remove-www % ctx)
+           #(remove-trailing-dot-in-host % ctx)
+           #(remove-ip % ctx)
            #(lower-case-host % ctx))
        host)))
 
@@ -99,17 +101,28 @@
 (defn normalize-path-part [uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
+           #(remove-duplicate-slashes % ctx)
+           #(decode-special-characters % ctx)
            #(decode-unreserved-characters % ctx)
            #(upper-case-percent-encoding % ctx))
        path)))
 
 (defn- normalize-query-part [uri ctx]
   (if-let [query (get-query uri ctx)]
-    (remove-empty-query query ctx)))
+    ((comp #(remove-empty-query % ctx)
+           #(remove-duplicate-query-keys % ctx)
+           #(decode-special-characters % ctx)
+           #(decode-unreserved-characters % ctx)
+           #(upper-case-percent-encoding % ctx))
+       query)))
 
 (defn- normalize-fragment-part [uri ctx]
   (if-let [fragment (get-fragment uri ctx)]
-    (remove-fragment fragment ctx)))
+    ((comp #(remove-fragment % ctx)
+           #(decode-special-characters % ctx)
+           #(decode-unreserved-characters % ctx)
+           #(upper-case-percent-encoding % ctx))
+       fragment)))
 
 (defn resolve
   "Resolve a URI reference against a base URI by removing dot segments.  The

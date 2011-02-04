@@ -64,6 +64,12 @@
     (.getRawFragment uri)
     (.getFragment uri)))
 
+(defn lower-case-scheme
+  [scheme ctx]
+  (if (:lower-case-scheme? ctx)
+    (su/lower-case scheme)
+    scheme))
+
 (defn force-http
   "An unsafe normalization that forces the HTTP scheme if HTTPS is encountered:
 
@@ -180,7 +186,7 @@
             (recur sb m (.end m))))))
     text))
 
-(defn remove-duplicate-slash
+(defn remove-duplicate-slashes
   "An unsafe normalization that removes duplicate slashes in a path:
 
   http://example.com/foo//bar/ -> http://example.com/foo/bar"
