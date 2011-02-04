@@ -182,7 +182,8 @@
           (.toString sb))
         (let [g (-> m (.group 0) (.toUpperCase))]
           (.append sb (.substring text k (.start m)))
-          (if (:decode-unreserved-characters? ctx)
+          (if (and (:decode-unreserved-characters? ctx)
+                   (contains? unreserved g))
             (.append sb (get unreserved g))
             (.append sb g))
           (recur sb m (.end m)))))

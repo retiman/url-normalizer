@@ -311,6 +311,7 @@
              ([uri ctx] (normalize-fragment-part
                           (as-uri uri)
                           (merge *context* ctx))))]
+    (is (= (f "http://example.com##") "%23"))
     (is (= (f "http://example.com#foo") "foo"))
     (is (= (f "http://example.com#") ""))
     (is (nil? (f "http://example.com")))
