@@ -125,24 +125,23 @@
 
 (def
   ^{:doc
-    "Tests from MNot's urlnorm.py.  The MNot tests drop the fragment and
-    removing the trailing dot in the host.
+    "Tests from RFC1808 and MNot's urlnorm.py.  These tests drop the fragment and
+    remove the trailing dot in the host.
 
-    Additionally, the MNot tests normalize relative URIs different from
-    RFC2396.  For example, in RFC2396:
+    These tests give different output from Java's URI class, which follows RFC2396.
+    For example:
 
       /../foo -> /../foo
 
-    But in the MNot tests, they normalize to:
+    But in the these tests, they normalize to:
 
       /../foo -> /foo
 
-    As per RFC3986, a relative URI of /../foo resolved against a base URI
-    of http://a would give a path part of /foo.  Given that we are not
-    doing resolution, I've commented out these MNot tests.
+    Following Java's URI class, I've commented out the failing tests.
 
+    See <http://www.ietf.org/rfc/rfc1808.txt>
     See <http://www.mnot.net/python/urlnorm.py>"}
-  mnot-tests
+  rfc1808-tests
   (as-uri-map
     {"/foo/bar/." "/foo/bar/"
      "/foo/bar/./" "/foo/bar/"
@@ -196,8 +195,8 @@
   (doseq [[a b] rfc2396bis-tests]
     (is (equivalent? a b))))
 
-(deftest test-mnot
-  (doseq [[a b] mnot-tests]
+(deftest test-rfc1808
+  (doseq [[a b] rfc1808-tests]
     (is (equivalent? a b {:remove-fragment? true
                           :remove-trailing-dot-in-host? true}))))
 
