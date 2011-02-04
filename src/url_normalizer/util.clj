@@ -144,11 +144,11 @@
     port))
 
 (defn decode-special-characters
-  [path ctx]
+  [text ctx]
   "An unsafe normalization that decodes special characters"
   (if (:decode-special-characters? ctx)
     (throw (UnsupportedOperationException.))
-    path))
+    text))
 
 (defn decode-unreserved-characters
   "A safe normalization that decodes percent encoded characters that don't need
@@ -159,15 +159,15 @@
   Here are some example normalizations:
 
   http://example.com/%7Ejane -> http://example.com/~jane"
-  [path ctx]
+  [text ctx]
   (if (:decode-unreserved-characters? ctx)
     ((comp (apply comp decode-alphanum)
            #(.replaceAll % "%2D" "-")
            #(.replaceAll % "%2E" ".")
            #(.replaceAll % "%5F" "_")
            #(.replaceAll % "%7E" "~"))
-       path)
-    path))
+       text)
+    text))
 
 (defn upper-case-percent-encoding
   "A safe normalization that converts percent decodings to uppercase:
