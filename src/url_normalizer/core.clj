@@ -42,7 +42,8 @@
    :lower-case-host? true
    :upper-case-percent-encoding? true
    :decode-unreserved-characters? true
-   :encode-illegal-characters? true
+   ; TODO: Re-insert when this is do-able
+   ;:encode-illegal-characters? true
    :add-trailing-slash? true
    :remove-default-port? true
    :remove-dot-segments? true})
