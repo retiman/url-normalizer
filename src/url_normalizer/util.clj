@@ -57,24 +57,18 @@
          (concat alpha digits))))
 
 (defn get-user-info [uri ctx]
-  (if (:encode-illegal-characters? ctx)
-    (.getRawUserInfo uri)
-    (.getUserInfo uri)))
+  (.getUserInfo uri))
 
 (defn get-path [uri ctx]
   (if (:remove-dot-segments? ctx)
-    (-> uri (.normalize) (.getRawPath))
-    (.getRawPath uri)))
+    (-> uri (.normalize) (.getPath))
+    (.getPath uri)))
 
 (defn get-query [uri ctx]
-  (if (:encode-illegal-characters? ctx)
-    (.getRawQuery uri)
-    (.getQuery uri)))
+  (.getQuery uri))
 
 (defn get-fragment [uri ctx]
-  (if (:encode-illegal-characters? ctx)
-    (.getRawFragment uri)
-    (.getFragment uri)))
+  (.getFragment uri))
 
 (defn lower-case-scheme
   "A safe normalization that lower cases the scheme:

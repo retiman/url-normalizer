@@ -203,6 +203,12 @@
     (is (equivalent? a b {:remove-fragment? true
                           :remove-trailing-dot-in-host? true}))))
 
+(deftest test-normalization
+  (is (equal? (normalize "http://www.foo.com/?p=529&#038;cpage=1#comment-783")
+              (as-uri "http://www.foo.com/?p=529&#038;cpage=1%23comment-783")))
+  (is (equal? (normalize "http://example.com//??##")
+              (as-uri "http://example.com/??#%23"))))
+
 (deftest
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
   test-fixes-java-bug-4708535
@@ -311,7 +317,7 @@
              ([uri ctx] (normalize-fragment-part
                           (as-uri uri)
                           (merge *context* ctx))))]
-    (is (= (f "http://example.com##") "%23"))
+    (is (= (f "http://example.com##") "#"))
     (is (= (f "http://example.com#foo") "foo"))
     (is (= (f "http://example.com#") ""))
     (is (nil? (f "http://example.com")))
