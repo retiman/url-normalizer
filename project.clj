@@ -1,4 +1,4 @@
-(defproject url-normalizer "0.1.2-1"
+(defproject url-normalizer "0.1.3"
   :description "Normalizes and standardizes URLs in a consistent manner."
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
