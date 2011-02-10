@@ -18,7 +18,7 @@
 
 (defmulti as-uri class)
 (defmethod as-uri URI [arg] arg)
-(defmethod as-uri URL [arg]
+(defmethod as-uri URL [#^URL arg]
   (URI. (.getProtocol arg)
         (.getUserInfo arg)
         (.getHost arg)
@@ -77,17 +77,17 @@
   *context*
   (merge safe-normalizations unsafe-normalizations))
 
-(defn- normalize-scheme-part [uri ctx]
+(defn- normalize-scheme-part [#^URI uri ctx]
   (if-let [scheme (.getScheme uri)]
     ((comp #(force-http % ctx)
            #(lower-case-scheme % ctx))
        scheme)))
 
-(defn- normalize-user-info-part [uri ctx]
+(defn- normalize-user-info-part [#^URI uri ctx]
   (if-let [user-info (get-user-info uri ctx)]
     (remove-empty-user-info user-info ctx)))
 
-(defn- normalize-host-part [uri ctx]
+(defn- normalize-host-part [#^URI uri ctx]
   (if-let [host (.getHost uri)]
     ((comp #(remove-www % ctx)
            #(remove-trailing-dot-in-host % ctx)
@@ -95,13 +95,13 @@
            #(lower-case-host % ctx))
        host)))
 
-(defn normalize-port-part [uri ctx]
+(defn normalize-port-part [#^URI uri ctx]
   (let [scheme (.getScheme uri)
         port (.getPort uri)]
     (if (and port (not= -1 port))
       (remove-default-port scheme port ctx))))
 
-(defn normalize-path-part [uri ctx]
+(defn normalize-path-part [#^URI uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
            ; TODO: Re-add this fn because right now, it doesn't
@@ -110,7 +110,7 @@
            #(normalize-percent-encoding % ctx))
        path)))
 
-(defn- normalize-query-part [uri ctx]
+(defn- normalize-query-part [#^URI uri ctx]
   (if-let [query (get-query uri ctx)]
     ((comp #(remove-empty-query % ctx)
            ; TODO: Add these in when they work
@@ -119,7 +119,7 @@
            #(normalize-percent-encoding % ctx))
        query)))
 
-(defn- normalize-fragment-part [uri ctx]
+(defn- normalize-fragment-part [#^URI uri ctx]
   (if-let [fragment (get-fragment uri ctx)]
     ((comp #(remove-fragment % ctx)
            #(normalize-percent-encoding % ctx))
@@ -132,7 +132,8 @@
 
   See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"
   [base uri]
-  (URIUtils/resolve (as-uri base) (as-uri uri)))
+  (URIUtils/resolve #^URI (as-uri base)
+                    #^URI (as-uri uri)))
 
 (defn normalize
   "By default normalizes a URI using safe normalizations.  The URI is expected
@@ -144,9 +145,9 @@
     (normalize arg *context*))
   ([arg context]
     (let [ctx (merge *context* context)
-          uri- (as-uri arg)
-          uri (if (:base ctx) (resolve (:base ctx) uri-) uri-)
-          authority (.getRawAuthority uri)
+          uri- #^URI (as-uri arg)
+          uri #^URI (if (:base ctx) (resolve (:base ctx) uri-) uri-)
+          authority (.getRawAuthority #^URI uri)
           scheme (normalize-scheme-part uri ctx)
           user-info (normalize-user-info-part uri ctx)
           host (normalize-host-part uri ctx)
@@ -154,8 +155,8 @@
           path (normalize-path-part uri ctx)
           query (normalize-query-part uri ctx)
           fragment (normalize-fragment-part uri ctx)]
-      (if (and (nil? authority) (.isAbsolute uri))
-        (URI. scheme (.getSchemeSpecificPart uri) fragment)
+      (if (and (nil? authority) (.isAbsolute #^URI uri))
+        (URI. scheme (.getSchemeSpecificPart #^URI uri) fragment)
         (URI. scheme user-info host (if (nil? port) -1 port) path query
               fragment)))))
 
@@ -181,7 +182,7 @@
     http://example.com/%7b
     http://example.com/%7B"
   [a b]
-  (= (.toASCIIString (as-uri a)) (.toASCIIString (as-uri b))))
+  (= (.toASCIIString #^URI (as-uri a)) (.toASCIIString #^URI (as-uri b))))
 
 (defn with-normalization-context
   "Evaluates a function with *context* bound to context"
@@ -207,9 +208,9 @@
   [arg]
   (try
     (.toASCIIString
-      (normalize arg {:remove-empty-user-info? true
-                      :remove-fragment? true
-                      :remove-trailing-dot-in-host? true}))
+      #^URI (normalize arg {:remove-empty-user-info? true
+                            :remove-fragment? true
+                            :remove-trailing-dot-in-host? true}))
     (catch URISyntaxException e (canonicalize-url (to-uri arg)))
     (catch MalformedURLException e (canonicalize-url (to-url arg)))))
 

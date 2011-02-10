@@ -1,7 +1,9 @@
 (ns url-normalizer.utils
   "Utilities and specific normalizations."
   (:require
-    [clojure.contrib.str-utils2 :as su]))
+    [clojure.contrib.str-utils2 :as su])
+  (:import
+    [java.net URI]))
 
 (defn- byte-to-hex-string
   "Converts the lower 16 bits of b to into a hex string."
@@ -53,21 +55,21 @@
   ^{:doc "A list of functions that decode alphanumerics in a String."}
   decode-alphanum
   (concat
-    (map #(fn [s] (.replaceAll s (first %) (last %)))
+    (map #(fn [#^String s] (.replaceAll s (first %) (last %)))
          (concat alpha digits))))
 
-(defn get-user-info [uri ctx]
+(defn get-user-info [#^URI uri ctx]
   (.getUserInfo uri))
 
-(defn get-path [uri ctx]
+(defn get-path [#^URI uri ctx]
   (if (:remove-dot-segments? ctx)
     (-> uri (.normalize) (.getPath))
     (.getPath uri)))
 
-(defn get-query [uri ctx]
+(defn get-query [#^URI uri ctx]
   (.getQuery uri))
 
-(defn get-fragment [uri ctx]
+(defn get-fragment [#^URI uri ctx]
   (.getFragment uri))
 
 (defn lower-case-scheme
@@ -165,7 +167,7 @@
 
   decode-unreserved-characters:
   http://example.com/%7ejane -> http://example.com~/jane"
-  [text ctx]
+  [#^String text ctx]
   (if (:upper-case-percent-encoding? ctx)
     (loop [sb (StringBuilder.)
            m (re-matcher #"%[a-fA-F0-9]{2}" text)
