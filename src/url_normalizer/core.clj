@@ -2,6 +2,7 @@
   "A Clojure library for normalizing urls with configurable aggressiveness."
   (:refer-clojure :exclude (resolve))
   (:use
+    [clojure.contrib.def]
     [url-normalizer.util])
   (:require
     [clojure.contrib.str-utils2 :as su])
@@ -32,7 +33,7 @@
     (URI. arg)
     (catch URISyntaxException e (as-uri (URL. arg)))))
 
-(def
+(defvar-
   ^{:doc
    "These are safe normalizations that will not change the semantics of a URI.
    See the #'url-normalizer.util namespace for additional details and
@@ -49,7 +50,7 @@
    :remove-dot-segments? true})
 
 ; TODO: Implement the commented out functionality
-(def
+(defvar-
   ^{:doc
     "These are unsafe normalizations that can either change the semantics of
     the URI or cause it to refer to a different resource.  See the
