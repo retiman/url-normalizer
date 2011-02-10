@@ -3,7 +3,7 @@
   (:refer-clojure :exclude (resolve))
   (:use
     [clojure.contrib.def]
-    [url-normalizer.util])
+    [url-normalizer.utils])
   (:require
     [clojure.contrib.io :as io]
     [clojure.contrib.str-utils2 :as su])
