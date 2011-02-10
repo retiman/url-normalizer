@@ -5,16 +5,16 @@
     [clojure.contrib.def]
     [url-normalizer.util])
   (:require
+    [clojure.contrib.io :as io]
     [clojure.contrib.str-utils2 :as su])
   (:import
     [java.net URL URI URISyntaxException MalformedURLException]
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(defmulti as-url class)
-(defmethod as-url URI [arg] (.toURL arg))
-(defmethod as-url URL [arg] arg)
-(defmethod as-url String [arg] (URL. arg))
+(def
+  ^{:doc "DEPRECATED: Prefer clojure.contrib.io/as-url"}
+  as-url io/as-url)
 
 (defmulti as-uri class)
 (defmethod as-uri URI [arg] arg)
