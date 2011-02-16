@@ -12,9 +12,11 @@
     [org.apache.http HttpHost]
     [org.apache.http.client.utils URIUtils]))
 
-(def
-  ^{:doc "DEPRECATED: Prefer clojure.contrib.io/as-url"}
-  as-url io/as-url)
+(defn as-url
+  ([arg]
+    (URL. arg))
+  ([ctx arg]
+    (URL. (URL. ctx) arg)))
 
 (defmulti as-uri class)
 (defmethod as-uri URI [arg] arg)
@@ -201,7 +203,7 @@
   "DEPRECATED: Prefer as-url."
   {:deprecated "0.1.0"}
   [arg]
-  (as-url arg))
+  (io/as-url arg))
 
 (defn canonicalize-url
   "DEPRECATED: Prefer normalize."
