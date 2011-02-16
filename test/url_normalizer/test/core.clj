@@ -185,7 +185,10 @@
     (doseq [[original resolved] rfc3986-normal-tests]
       (is (equal? (resolve base original) resolved)))
     (doseq [[original resolved] rfc3986-abnormal-tests]
-      (is (equal? (resolve base original) resolved)))))
+      (is (equal? (resolve base original) resolved))))
+  (is (= (normalize "http://www.foo.com/?p=529&#038;cpage=1#comment-783")
+         (normalize "/?p=529&#038;cpage=1#comment-783"
+                    {:base "http://www.foo.com"}))))
 
 (deftest test-pace
   (doseq [[a b] pace-tests]

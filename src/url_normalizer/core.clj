@@ -148,7 +148,7 @@
   ([arg context]
     (let [ctx (merge *context* context)
           uri (if (:base ctx)
-                (resolve (:base ctx) (as-uri arg))
+                (as-uri (as-url (:base ctx) arg))
                 (as-uri arg))
           authority (.getRawAuthority #^URI uri)
           scheme (normalize-scheme-part uri ctx)
