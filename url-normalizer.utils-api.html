@@ -1,0 +1,341 @@
+<html>
+  <head>
+    <title>url-normalizer.utils API reference (url-normalizer)</title>
+    <link href="static/favicon.png" rel="icon" />
+    <link href="static/favicon.png" rel="shortcut icon" />
+    <link media="all" type="text/css" href="static/clojure.css" rel="stylesheet" />
+    <link media="all" type="text/css" href="static/wiki.css" rel="stylesheet" />
+    <link media="all" type="text/css" href="static/internal.css" rel="stylesheet" />
+    <!-- TODO: are we using these (from clojure.org)? If so, add the files -->
+    <script src="file/view/code_highlighter.js" type="text/javascript"></script>
+    <script src="file/view/clojure.js" type="text/javascript"></script>
+    <style>.menuWrapper{height: 36px;}</style>
+    <!--[if lte IE 6]>
+    <link rel="stylesheet" href="http://www.wikispaces.com/_/2009051601/s/internal_ie.css" type="text/css" />
+    <![endif]-->
+  </head>
+<!--
+This document was auto-generated from the source by the clojure autodoc system.
+To report errors or ask questions about the overall documentation structure, formatting,
+etc., contact Tom Faulhaber (google mail name: tomfaulhaber).
+For errors in the documentation of a particular namespace, contact the author of that
+namespace.
+-->
+  <body>
+    <div id="AllContentContainer">
+      <div id="Header">
+	<a id="Logo" href="index.html"><img alt="Clojure" height="100" width="100" src="static/clojure-icon.gif" /></a>
+	<h1><a title="page header title" id="page-header" href="index.html">url-normalizer</a></h1>
+      </div>
+      <div id="leftcolumn"><div style="text-align: center;"></div>
+<div class="menu">
+  <div class="WikiCustomNav WikiElement wiki">
+    <a class="wiki_link" href="index.html">Overview</a><br />
+    <a class="wiki_link" href="api-index.html">API Index</a><br />
+    <a class="wiki_link" href="#">Namespaces:</a>
+    <ul id="left-sidebar-list">
+      <li><a href="url-normalizer.core-api.html" class="wiki_link">url-normalizer.core</a></li><li><a href="url-normalizer.utils-api.html" class="wiki_link">url-normalizer.utils</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+      <div id="rightcolumn">
+	<div id="Content">
+	  <div class="contentBox"><div class="innerContentBox">
+              <div id="content_view" class="wiki wikiPage">
+                <div id="right-sidebar"><div id="toc">
+  <h1 class="nopad">Table of Contents</h1>
+  <div style="margin-left: 1em;" class="toc-section">
+    <a href="#toc0">Overview</a>
+    <div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/add-trailing-slash">add-trailing-slash</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/alpha">alpha</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/decode-alphanum">decode-alphanum</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/default-port">default-port</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/digits">digits</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/force-http">force-http</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/lower-case-host">lower-case-host</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/lower-case-scheme">lower-case-scheme</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/normalize-percent-encoding">normalize-percent-encoding</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-default-port">remove-default-port</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-duplicate-query-keys">remove-duplicate-query-keys</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-duplicate-slashes">remove-duplicate-slashes</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-empty-query">remove-empty-query</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-empty-user-info">remove-empty-user-info</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-fragment">remove-fragment</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-ip">remove-ip</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-trailing-dot-in-host">remove-trailing-dot-in-host</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-www">remove-www</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/sort-query-keys">sort-query-keys</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/unreserved">unreserved</a>
+    </div>
+    <br />
+  </div>
+</div>
+</div>
+                <div id="content-tag"><h1 id="overview">API for <span id="namespace-name">url-normalizer.utils</span></h1>
+by <span id="author">Unknown</span><br />
+<br />Usage:
+<pre>
+(ns your-namespace
+  (:require <span id="long-name">url-normalizer.utils</span>))
+</pre><pre>
+</pre><h2>Overview</h2>
+<pre id="namespace-docstr">Utilities and specific normalizations.</pre>
+<br />
+<h2>Public Variables and Functions</h2>
+<div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/add-trailing-slash">add-trailing-slash</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (add-trailing-slash path ctx)
+</pre>
+  <pre id="var-docstr">A safe normalization that adds a slash to an empty path:
+
+<a href="http://example.com">http://example.com</a> -&gt; http://example.com/
+<a href="http://example.com/foo">http://example.com/foo</a> -&gt; <a href="http://example.com/foo">http://example.com/foo</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/alpha">alpha</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">Maps percent encoded octets to alpha characters.</pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/decode-alphanum">decode-alphanum</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">A list of functions that decode alphanumerics in a String.</pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/default-port">default-port</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">The default ports for various schemes.</pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/digits">digits</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">Maps percent encoded octets to digits.</pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/force-http">force-http</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (force-http scheme ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that forces the HTTP scheme if HTTPS is encountered:
+
+<a href="https://example.com">https://example.com</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/lower-case-host">lower-case-host</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (lower-case-host host ctx)
+</pre>
+  <pre id="var-docstr">A safe normalization that lower cases the host name:
+
+<a href="http://ExAmpLe.com">http://ExAmpLe.com</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/lower-case-scheme">lower-case-scheme</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (lower-case-scheme scheme ctx)
+</pre>
+  <pre id="var-docstr">A safe normalization that lower cases the scheme:
+
+<a href="HTTP://example.com">HTTP://example.com</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/normalize-percent-encoding">normalize-percent-encoding</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (normalize-percent-encoding text ctx)
+</pre>
+  <pre id="var-docstr">Applies several percent encoding normalizations.
+
+upper-case-percent-encoding:
+<a href="http://example.com/%7ejane">http://example.com/%7ejane</a> -&gt; http://example.com/%7Ejane
+
+decode-unreserved-characters:
+<a href="http://example.com/%7ejane">http://example.com/%7ejane</a> -&gt; <a href="http://example.com~/jane">http://example.com~/jane</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-default-port">remove-default-port</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-default-port scheme port ctx)
+</pre>
+  <pre id="var-docstr">A safe normalization that removes the the default port:
+
+<a href="http://example.com:80">http://example.com:80</a> -&gt; http://example.com
+<a href="http://example.com:8080">http://example.com:8080</a> -&gt; <a href="http://example.com/">http://example.com/</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-duplicate-query-keys">remove-duplicate-query-keys</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-duplicate-query-keys query ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes duplicate query keys and values:
+
+<a href="http://example.com/?foo&amp;foo=bar">http://example.com/?foo&amp;foo=bar</a> -&gt; <a href="http://example.com/?foo=bar">http://example.com/?foo=bar</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-duplicate-slashes">remove-duplicate-slashes</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-duplicate-slashes path ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes duplicate slashes in a path:
+
+<a href="http://example.com/foo//bar/">http://example.com/foo//bar/</a> -&gt; <a href="http://example.com/foo/bar">http://example.com/foo/bar</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-empty-query">remove-empty-query</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-empty-query query ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes an empty query:
+
+<a href="http://example.com/?">http://example.com/?</a> -&gt; http://example.com/
+<a href="http://example.com?">http://example.com?</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-empty-user-info">remove-empty-user-info</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-empty-user-info user-info ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the user info part of a URI:
+
+<a href="http://@example.com">http://@example.com</a> -&gt; http://example.com
+<a href="http://:@example.com">http://:@example.com</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-fragment">remove-fragment</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-fragment fragment ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the fragment.  The URI will still refer
+to the same resource so sometimes the fragment is not needed:
+
+<a href="http://example.com/#foo">http://example.com/#foo</a> -&gt; <a href="http://example.com/">http://example.com/</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-ip">remove-ip</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-ip host ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the IP:
+
+<a href="http://192.0.32.10">http://192.0.32.10</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-trailing-dot-in-host">remove-trailing-dot-in-host</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-trailing-dot-in-host host ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the trailing dot in a host:
+
+<a href="http://example.com./foo">http://example.com./foo</a> -&gt; <a href="http://example.com/foo">http://example.com/foo</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-www">remove-www</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-www host ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the www from a domain:
+
+<a href="http://www.example.com/">http://www.example.com/</a> -&gt; http://example.com/
+<a href="http://www.foo.bar.example.com/">http://www.foo.bar.example.com/</a> -&gt; http://www.foo.bar.example.com/
+<a href="http://www2.example.com/">http://www2.example.com/</a> -&gt; <a href="http://www2.example.com/">http://www2.example.com/</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/sort-query-keys">sort-query-keys</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (sort-query-keys query ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that sorts the query keys and values:
+
+<a href="http://example.com/?c&amp;a&amp;b">http://example.com/?c&amp;a&amp;b</a> -&gt; <a href="http://example.com/a&amp;b&amp;c">http://example.com/a&amp;b&amp;c</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/unreserved">unreserved</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">A mapping of encoded unreserved characters to their decoded
+counterparts</pre>
+  
+</div>
+
+
+</div>
+              </div>
+            </div>
+          </div>
+	</div>
+	<div id="foot">
+	  <div style="text-align: center;" id="copyright">No copyright info </div>
+	</div>
+      </div>
+      <div id="DesignedBy">Logo &amp; site design by <a title="Visit Tom Hickey's website." href="http://www.tomhickey.com">Tom Hickey</a>.<br />
+      Clojure auto-documentation system by Tom Faulhaber.</div>
+    </div>
+    <!-- /AllContentContainer -->
+  </body>
+
+</html>

@@ -34,7 +34,7 @@ namespace.
     <a class="wiki_link" href="api-index.html">API Index</a><br />
     <a class="wiki_link" href="#">Namespaces:</a>
     <ul id="left-sidebar-list">
-      <li><a href="url-normalizer.core-api.html" class="wiki_link">url-normalizer.core</a></li><li><a href="url-normalizer.util-api.html" class="wiki_link">url-normalizer.util</a></li>
+      <li><a href="url-normalizer.core-api.html" class="wiki_link">url-normalizer.core</a></li><li><a href="url-normalizer.utils-api.html" class="wiki_link">url-normalizer.utils</a></li>
     </ul>
   </div>
 </div>
@@ -60,13 +60,9 @@ namespace.
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.core/resolve">resolve</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#url-normalizer.core/safe-normalizations">safe-normalizations</a>
-    </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.core/to-uri">to-uri</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.core/to-url">to-url</a>
-    </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#url-normalizer.core/unsafe-normalizations">unsafe-normalizations</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.core/url-equal?">url-equal?</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
@@ -166,16 +162,6 @@ See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">htt
 </div><div id="var-entry">
   <br />
   <hr />
-  <h2 id="url-normalizer.core/safe-normalizations">safe-normalizations</h2>
-  <span id="var-type">var</span><br />
-  <pre id="var-usage"></pre>
-  <pre id="var-docstr">These are safe normalizations that will not change the semantics of a URI.
-See the #'url-normalizer.util namespace for additional details and
-implementations.</pre>
-  
-</div><div id="var-entry">
-  <br />
-  <hr />
   <h2 id="url-normalizer.core/to-uri">to-uri</h2>
   <span id="var-type">function</span><br />
   <pre id="var-usage">Usage: (to-uri arg)
@@ -190,17 +176,6 @@ implementations.</pre>
   <pre id="var-usage">Usage: (to-url arg)
 </pre>
   <pre id="var-docstr">DEPRECATED: Prefer as-url.</pre>
-  
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="url-normalizer.core/unsafe-normalizations">unsafe-normalizations</h2>
-  <span id="var-type">var</span><br />
-  <pre id="var-usage"></pre>
-  <pre id="var-docstr">These are unsafe normalizations that can either change the semantics of
-the URI or cause it to refer to a different resource.  See the
-#'url-normalizer.util namespace for additional details and
-implementations.</pre>
   
 </div><div id="var-entry">
   <br />
