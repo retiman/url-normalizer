@@ -68,9 +68,9 @@ namespace.
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-default-port">remove-default-port</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#url-normalizer.utils/remove-duplicate-query-keys">remove-duplicate-query-keys</a>
+      <a href="#url-normalizer.utils/remove-directory-index">remove-directory-index</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
-      <a href="#url-normalizer.utils/remove-duplicate-slashes">remove-duplicate-slashes</a>
+      <a href="#url-normalizer.utils/remove-duplicate-query-keys">remove-duplicate-query-keys</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-empty-query">remove-empty-query</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
@@ -83,6 +83,8 @@ namespace.
       <a href="#url-normalizer.utils/remove-trailing-dot-in-host">remove-trailing-dot-in-host</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-www">remove-www</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/reserved">reserved</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/sort-query-keys">sort-query-keys</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
@@ -193,7 +195,10 @@ upper-case-percent-encoding:
 <a href="http://example.com/%7ejane">http://example.com/%7ejane</a> -&gt; http://example.com/%7Ejane
 
 decode-unreserved-characters:
-<a href="http://example.com/%7ejane">http://example.com/%7ejane</a> -&gt; <a href="http://example.com~/jane">http://example.com~/jane</a></pre>
+<a href="http://example.com/%7ejane">http://example.com/%7ejane</a> -&gt; http://example.com~/jane
+
+decode-reserved-characters:
+<a href="http://example.com//%3Ffoo%3Dbar%26bif%3Dbaz">http://example.com//%3Ffoo%3Dbar%26bif%3Dbaz</a> -&gt; <a href="http://example.com/?foo=bar&amp;bif=baz">http://example.com/?foo=bar&amp;bif=baz</a></pre>
   
 </div><div id="var-entry">
   <br />
@@ -210,6 +215,17 @@ decode-unreserved-characters:
 </div><div id="var-entry">
   <br />
   <hr />
+  <h2 id="url-normalizer.utils/remove-directory-index">remove-directory-index</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-directory-index path ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes the directory index from the path.
+
+<a href="http://www.example.com/index.php">http://www.example.com/index.php</a> -&gt; <a href="http://www.example.com/">http://www.example.com/</a></pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
   <h2 id="url-normalizer.utils/remove-duplicate-query-keys">remove-duplicate-query-keys</h2>
   <span id="var-type">function</span><br />
   <pre id="var-usage">Usage: (remove-duplicate-query-keys query ctx)
@@ -217,17 +233,6 @@ decode-unreserved-characters:
   <pre id="var-docstr">An unsafe normalization that removes duplicate query keys and values:
 
 <a href="http://example.com/?foo&amp;foo=bar">http://example.com/?foo&amp;foo=bar</a> -&gt; <a href="http://example.com/?foo=bar">http://example.com/?foo=bar</a></pre>
-  
-</div><div id="var-entry">
-  <br />
-  <hr />
-  <h2 id="url-normalizer.utils/remove-duplicate-slashes">remove-duplicate-slashes</h2>
-  <span id="var-type">function</span><br />
-  <pre id="var-usage">Usage: (remove-duplicate-slashes path ctx)
-</pre>
-  <pre id="var-docstr">An unsafe normalization that removes duplicate slashes in a path:
-
-<a href="http://example.com/foo//bar/">http://example.com/foo//bar/</a> -&gt; <a href="http://example.com/foo/bar">http://example.com/foo/bar</a></pre>
   
 </div><div id="var-entry">
   <br />
@@ -303,6 +308,15 @@ to the same resource so sometimes the fragment is not needed:
 </div><div id="var-entry">
   <br />
   <hr />
+  <h2 id="url-normalizer.utils/reserved">reserved</h2>
+  <span id="var-type">var</span><br />
+  <pre id="var-usage"></pre>
+  <pre id="var-docstr">A mapping of encoded reserved characters to their decoded
+counterparts.</pre>
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
   <h2 id="url-normalizer.utils/sort-query-keys">sort-query-keys</h2>
   <span id="var-type">function</span><br />
   <pre id="var-usage">Usage: (sort-query-keys query ctx)
@@ -318,7 +332,7 @@ to the same resource so sometimes the fragment is not needed:
   <span id="var-type">var</span><br />
   <pre id="var-usage"></pre>
   <pre id="var-docstr">A mapping of encoded unreserved characters to their decoded
-counterparts</pre>
+counterparts.</pre>
   
 </div>
 
