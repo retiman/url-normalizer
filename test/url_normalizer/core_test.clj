@@ -216,15 +216,35 @@
   ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
   test-fixes-java-bug-4708535
   (let [expected (as-uri "http://example.org/dir/file#foo")]
-    (is (equal? expected (resolve (as-uri "http://example.org/dir/file")
-                                  (as-uri "#foo"))))
-    (is (equal? expected (resolve (as-uri "http://example.org/dir/file#frag")
-                                  (as-uri "#foo"))))
+    (is (equal?
+          expected
+          (resolve (as-uri "http://example.org/dir/file")
+                   (as-uri "#foo"))))
+    (is (equal?
+          expected
+          (resolve (as-uri "http://example.org/dir/file#frag")
+                   (as-uri "#foo"))))
+    (is (equal?
+          expected
+          (normalize "#foo" {:base "http://example.org/dir/file"})))
+    (is (equal?
+          expected
+          (normalize "#foo" {:base "http://example.org/dir/file#frag"}))))
   (let [expected (as-uri "http://example.org/dir/file")]
-    (is (equal? expected (resolve (as-uri "http://example.org/dir/file")
-                                  (as-uri ""))))
-    (is (equal? expected (resolve (as-uri "http://example.org/dir/file#frag")
-                                  (as-uri "")))))))
+    (is (equal?
+          expected
+          (resolve (as-uri "http://example.org/dir/file")
+                   (as-uri ""))))
+    (is (equal?
+          expected
+          (resolve (as-uri "http://example.org/dir/file#frag")
+                   (as-uri ""))))
+    (is (equal?
+          expected
+          (normalize "" {:base "http://example.org/dir/file"})))
+    (is (equal?
+          expected
+          (normalize "" {:base "http://example.org/dir/file#frag"})))))
 
 (deftest
   ^{:doc "Tests from RFC3986: 6.2.2.  Syntax-Based Normalization."}
