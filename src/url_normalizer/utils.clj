@@ -97,8 +97,8 @@
   http://www.foo.bar.example.com/ -> http://www.foo.bar.example.com/
   http://www2.example.com/ -> http://www2.example.com/"
   [host ctx]
-  (if (:remove-www? ctx)
-    (throw (UnsupportedOperationException.))
+  (if (and (:remove-www? ctx) (.startsWith host "www."))
+    (.substring 4 (count host))
     host))
 
 (defn lower-case-host

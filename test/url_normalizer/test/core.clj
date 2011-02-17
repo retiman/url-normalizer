@@ -292,6 +292,9 @@
     (is (= (f "http://www.example.com.") "www.example.com."))
     (is (= (f "http://www.example.com." {:remove-trailing-dot-in-host? true})
            "www.example.com"))
+    (is (= (f "http://example.com" {:remove-www? true}) "example.com"))
+    (is (= (f "http://www2.example.com" {:remove-www? true})
+           "www2.example.com"))
     (is (nil? (f "/")))
     (is (nil? (f "/" {:remove-trailing-dot-in-host? true})))))
 

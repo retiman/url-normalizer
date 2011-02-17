@@ -61,7 +61,7 @@
   unsafe-normalizations
   {;:remove-directory-index? false
    :remove-fragment? false
-   ;:remove-ip? false
+   :remove-ip? false
    ;:remove-duplicate-slash? false
    ;:remove-duplicate-query-keys? false
    :remove-empty-query? false
