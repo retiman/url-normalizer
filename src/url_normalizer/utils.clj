@@ -169,27 +169,28 @@
   decode-reserved-characters:
   http://example.com//%3Ffoo%3Dbar%26bif%3Dbaz -> http://example.com/?foo=bar&bif=baz"
   [#^String text ctx]
-  (if (:upper-case-percent-encoding? ctx)
-    (loop [sb (StringBuilder.)
-           m (re-matcher #"%[a-fA-F0-9]{2}" text)
-           k 0]
-      (if (nil? (re-find m))
-        (do
-          (.append sb (.substring text k))
-          (.toString sb))
-        (let [g (-> m (.group 0) (.toUpperCase))]
-          (.append sb (.substring text k (.start m)))
-          (cond
-            (and (:decode-unreserved-characters? ctx)
-                 (contains? unreserved g))
-              (.append sb (get unreserved g))
-            (and (:decode-reserved-characters? ctx)
-                 (contains? reserved g))
-              (.append sb (get reserved g))
-            :default
-              (.append sb g))
-          (recur sb m (.end m)))))
-    text))
+  (loop [sb (StringBuilder.)
+         m (re-matcher #"%[a-fA-F0-9]{2}" text)
+         k 0]
+    (if (nil? (re-find m))
+      (do
+        (.append sb (.substring text k))
+        (.toString sb))
+      (let [g (-> m (.group 0))
+            t (.toUpperCase g)]
+        (.append sb (.substring text k (.start m)))
+        (cond
+          (and (:decode-unreserved-characters? ctx)
+               (contains? unreserved t))
+            (.append sb (get unreserved t))
+          (and (:decode-reserved-characters? ctx)
+               (contains? reserved t))
+            (.append sb (get reserved t))
+          :default
+            (if (:upper-case-percent-encoding? ctx)
+              (.append sb t)
+              (.append sb g)))
+        (recur sb m (.end m))))))
 
 (defn remove-directory-index
   "An unsafe normalization that removes the directory index from the path.
