@@ -268,7 +268,15 @@ decode-reserved-characters:
   <pre id="var-docstr">An unsafe normalization that removes the fragment.  The URI will still refer
 to the same resource so sometimes the fragment is not needed:
 
-<a href="http://example.com/#foo">http://example.com/#foo</a> -&gt; <a href="http://example.com/">http://example.com/</a></pre>
+remove-fragment:
+<a href="http://example.com/#foo">http://example.com/#foo</a> -&gt; http://example.com/
+
+remove-fragment and keep-hashbang-fragment:
+<a href="http://twitter.com/#foo">http://twitter.com/#foo</a> -&gt; http://twitter.com/#foo
+<a href="http://twitter.com/#!/user">http://twitter.com/#!/user</a> -&gt; http://twitter.com/#!/user
+
+See &lt;http://code.google.com/web/ajaxcrawling/docs/getting-started.html&gt;
+See &lt;<a href="http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch">http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch</a>&gt;</pre>
   
 </div><div id="var-entry">
   <br />
