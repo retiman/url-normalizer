@@ -183,15 +183,6 @@
           (recur sb m (.end m)))))
     text))
 
-(defn remove-duplicate-slashes
-  "An unsafe normalization that removes duplicate slashes in a path:
-
-  http://example.com/foo//bar/ -> http://example.com/foo/bar"
-  [path ctx]
-  (if (:remove-duplicate-slashes? ctx)
-    (throw (UnsupportedOperationException.))
-    path))
-
 (defn add-trailing-slash
   "A safe normalization that adds a slash to an empty path:
 
