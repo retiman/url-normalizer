@@ -65,9 +65,9 @@
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
    :force-http? false
-   :remove-www? false})
+   :remove-www? false
    ;:sort-query-keys? false
-   ;:decode-special-characters? false})
+   :decode-reserved-characters? false})
 
 (def
   ^{:doc

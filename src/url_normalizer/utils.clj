@@ -3,7 +3,7 @@
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
-    [java.net InetAddress URI]))
+    [java.net InetAddress URI URLEncoder]))
 
 (defn- byte-to-hex-string
   "Converts the lower 16 bits of b to into a hex string."
@@ -42,7 +42,7 @@
 (def
   ^{:doc
     "A mapping of encoded unreserved characters to their decoded
-    counterparts"}
+    counterparts."}
   unreserved
   (assoc
     (merge alpha digits)
@@ -50,6 +50,14 @@
     "%2E" "."
     "%5F" "_"
     "%7E" "~"))
+
+(def
+  ^{:doc
+    "A mapping of encoded reserved characters to their decoded
+    counterparts."}
+  reserved
+  (let [cs (map str ":/?#[]@!$&'()*+,;=")]
+    (zipmap (map #(URLEncoder/encode %) cs) cs)))
 
 (def
   ^{:doc "A list of functions that decode alphanumerics in a String."}
@@ -149,14 +157,6 @@
                (= port (get default-port scheme)))
     port))
 
-; TODO: Roll me into normalize-percent-encoding
-(defn decode-special-characters
-  [text ctx]
-  "An unsafe normalization that decodes special characters"
-  (if (:decode-special-characters? ctx)
-    (throw (UnsupportedOperationException.))
-    text))
-
 (defn normalize-percent-encoding
   "Applies several percent encoding normalizations.
 
@@ -176,10 +176,15 @@
           (.toString sb))
         (let [g (-> m (.group 0) (.toUpperCase))]
           (.append sb (.substring text k (.start m)))
-          (if (and (:decode-unreserved-characters? ctx)
-                   (contains? unreserved g))
-            (.append sb (get unreserved g))
-            (.append sb g))
+          (cond
+            (and (:decode-unreserved-characters? ctx)
+                 (contains? unreserved g))
+              (.append sb (get unreserved g))
+            (and (:decode-reserved-characters? ctx)
+                 (contains? reserved g))
+              (.append sb (get reserved g))
+            :default
+              (.append sb g))
           (recur sb m (.end m)))))
     text))
 
