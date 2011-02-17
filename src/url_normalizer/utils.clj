@@ -164,7 +164,10 @@
   http://example.com/%7ejane -> http://example.com/%7Ejane
 
   decode-unreserved-characters:
-  http://example.com/%7ejane -> http://example.com~/jane"
+  http://example.com/%7ejane -> http://example.com~/jane
+
+  decode-reserved-characters:
+  http://example.com//%3Ffoo%3Dbar%26bif%3Dbaz -> http://example.com/?foo=bar&bif=baz"
   [#^String text ctx]
   (if (:upper-case-percent-encoding? ctx)
     (loop [sb (StringBuilder.)
