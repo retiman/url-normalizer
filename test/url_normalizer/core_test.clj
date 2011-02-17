@@ -1,8 +1,8 @@
-(ns url-normalizer.test.core
+(ns url-normalizer.core-test
   (:refer-clojure :exclude (resolve))
   (:use
     [url-normalizer.core]
-    [url-normalizer.test.utils]
+    [url-normalizer.test]
     [clojure.test])
   (:import
     [java.net URL URI]))
