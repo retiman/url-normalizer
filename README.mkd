@@ -8,7 +8,7 @@ These normalizations are only tested well against the HTTP and HTTPS schemes.
 
 Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
 
-    (use 'url-normalizer.core)
+    (use '[url-normalizer.core :exclude (resolve)])
 
     (normalize "http://WWW.EXAMPLE.COM:80/%7ejane/foo/bar/../baz")
     -> #<URI http://www.example.com/~jane/foo/baz>
@@ -17,10 +17,17 @@ Use the `normalize` function to apply specific normalizations to URLs.  Note tha
     -> #<URI http://example.com:8080/a/bif#foo>
 
     (normalize "http://example.com?")
-    -> #<URI http://example.com/?">
+    -> #<URI http://example.com/?>
 
     (normalize "http://example.com?" {:remove-empty-query? true})
-    -> #<URI http://example.com/">
+    -> #<URI http://example.com/>
+
+    (normalize "http://example.com/#!/foo" {:remove-fragment? true})
+    -> #<URI http://example.com/>
+
+    (normalize "http://example.com/#!/foo" {:remove-fragment? true
+                                            :keep-hashbang-fragment? true})
+    -> #<URI http://example.com/#!/foo>
 
     (with-normalization-context
      {:lower-case-host? false
