@@ -5,8 +5,7 @@
     [clojure.contrib.def]
     [url-normalizer.utils])
   (:require
-    [clojure.contrib.io :as io]
-    [clojure.contrib.str-utils2 :as su])
+    [clojure.contrib.io :as io])
   (:import
     [java.net URL URI URISyntaxException MalformedURLException]
     [org.apache.http HttpHost]

@@ -1,7 +1,7 @@
 (ns url-normalizer.utils
   "Utilities and specific normalizations."
   (:require
-    [clojure.contrib.str-utils2 :as su])
+    [clojure.string :as s])
   (:import
     [java.net InetAddress URI URLEncoder]))
 
@@ -29,7 +29,7 @@
   ^{:doc "Maps percent encoded octets to alpha characters."}
   alpha
   (let [xs (concat (range 0x41 (inc 0x5A)) (range 0x61 (inc 0x7A)))]
-    (zipmap (map #(str "%" (su/upper-case (byte-to-hex-string %))) xs)
+    (zipmap (map #(str "%" (s/upper-case (byte-to-hex-string %))) xs)
             (map #(str (char %)) xs))))
 
 (def
@@ -86,7 +86,7 @@
   HTTP://example.com -> http://example.com"
   [scheme ctx]
   (if (:lower-case-scheme? ctx)
-    (su/lower-case scheme)
+    (s/lower-case scheme)
     scheme))
 
 (defn force-http
@@ -115,7 +115,7 @@
   http://ExAmpLe.com -> http://example.com"
   [host ctx]
   (if (:lower-case-host? ctx)
-    (su/lower-case host)
+    (s/lower-case host)
     host))
 
 (defn remove-ip
