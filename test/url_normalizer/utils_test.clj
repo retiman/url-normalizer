@@ -21,3 +21,12 @@
 (deftest test-remove-duplicate-query-keys
   (let [ctx {:remove-duplicate-query-keys? true}]
     (is (= (remove-duplicate-query-keys "a=0&a=1&a=2&b=0&b=1" ctx) "b=1&a=2"))))
+
+(deftest test-remove-fragment
+  (let [ctx {:remove-fragment? true}]
+    (is (nil? (remove-fragment "foo" ctx)))
+    (is (nil? (remove-fragment "!foo" ctx))))
+  (let [ctx {:remove-fragment? true
+             :keep-hashbang-fragment? true}]
+    (is (nil? (remove-fragment "foo" ctx)))
+    (is (= (remove-fragment "!foo" ctx) "!foo"))))

@@ -246,7 +246,16 @@
   "An unsafe normalization that removes the fragment.  The URI will still refer
   to the same resource so sometimes the fragment is not needed:
 
-  http://example.com/#foo -> http://example.com/"
+  remove-fragment:
+  http://example.com/#foo -> http://example.com/
+
+  remove-fragment and keep-hashbang-fragment:
+  http://twitter.com/#foo -> http://twitter.com/#foo
+  http://twitter.com/#!/user -> http://twitter.com/#!/user
+
+  See <http://code.google.com/web/ajaxcrawling/docs/getting-started.html>
+  See <http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch>"
   [fragment ctx]
-  (if-not (:remove-fragment? ctx)
-    fragment))
+  (let [keep? (and (:keep-hashbang-fragment? ctx) (.startsWith fragment "!"))]
+    (if-not (and (:remove-fragment? ctx) (not keep?))
+      fragment)))

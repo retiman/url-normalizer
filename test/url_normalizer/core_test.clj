@@ -371,4 +371,11 @@
     (is (= (f "http://example.com#foo") "foo"))
     (is (= (f "http://example.com#") ""))
     (is (nil? (f "http://example.com")))
-    (is (nil? (f "http://example.com#foo" {:remove-fragment? true})))))
+    (is (nil? (f "http://example.com#foo" {:remove-fragment? true})))
+    (is (nil? (f "http://example.com/#foo"
+              {:remove-fragment? true
+               :keep-hashbang-fragment? true})))
+    (is (= (f "http://example.com/#!foo"
+              {:remove-fragment? true
+               :keep-hashbang-fragment? true})
+           "!foo"))))

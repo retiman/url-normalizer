@@ -62,6 +62,7 @@
    :remove-empty-query? false
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
+   :keep-hashbang-fragment? false
    :force-http? false
    :remove-www? false
    :sort-query-keys? false
