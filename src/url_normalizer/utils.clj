@@ -176,7 +176,7 @@
       (do
         (.append sb (.substring text k))
         (.toString sb))
-      (let [g (-> m (.group 0))
+      (let [g (.group m 0)
             t (.toUpperCase g)]
         (.append sb (.substring text k (.start m)))
         (cond
