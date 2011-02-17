@@ -216,7 +216,9 @@
   http://example.com/?foo&foo=bar -> http://example.com/?foo=bar"
   [query ctx]
   (if (:remove-duplicate-query-keys? ctx)
-    (throw (UnsupportedOperationException.))
+    (let [keyvals (map #(s/split % #"=") (s/split query #"&"))
+          query-map (apply merge (cons {} keyvals))]
+      (s/join "&" (map #(s/join "=" %) query-map)))
     query))
 
 (defn sort-query-keys
