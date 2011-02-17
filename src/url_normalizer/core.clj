@@ -45,8 +45,6 @@
    :lower-case-host? true
    :upper-case-percent-encoding? true
    :decode-unreserved-characters? true
-   ; TODO: Re-insert when this is do-able
-   ;:encode-illegal-characters? true
    :add-trailing-slash? true
    :remove-default-port? true
    :remove-dot-segments? true})
@@ -62,7 +60,6 @@
   {;:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
-   ;:remove-duplicate-slash? false
    ;:remove-duplicate-query-keys? false
    :remove-empty-query? false
    :remove-empty-user-info? false

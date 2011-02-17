@@ -125,9 +125,8 @@
   http://@example.com -> http://example.com
   http://:@example.com -> http://example.com"
   [user-info ctx]
-  (if (and (:remove-empty-user-info? ctx)
-           (or (= ":" user-info) (= "" user-info)))
-    nil
+  (if-not (and (:remove-empty-user-info? ctx)
+               (or (= ":" user-info) (= "" user-info)))
     user-info))
 
 (defn remove-trailing-dot-in-host
@@ -146,9 +145,8 @@
   http://example.com:80 -> http://example.com
   http://example.com:8080 -> http://example.com/"
   [scheme port ctx]
-  (if (and (:remove-default-port? ctx)
-           (= port (get default-port scheme)))
-    nil
+  (if-not (and (:remove-default-port? ctx)
+               (= port (get default-port scheme)))
     port))
 
 ; TODO: Roll me into normalize-percent-encoding
@@ -226,8 +224,7 @@
   http://example.com/? -> http://example.com/
   http://example.com? -> http://example.com"
   [query ctx]
-  (if (and (:remove-empty-query? ctx) (= query ""))
-    nil
+  (if-not (and (:remove-empty-query? ctx) (= query ""))
     query))
 
 (defn remove-fragment
@@ -236,6 +233,5 @@
 
   http://example.com/#foo -> http://example.com/"
   [fragment ctx]
-  (if (:remove-fragment? ctx)
-    nil
+  (if-not (:remove-fragment? ctx)
     fragment))
