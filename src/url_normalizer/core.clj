@@ -48,7 +48,6 @@
    :remove-default-port? true
    :remove-dot-segments? true})
 
-; TODO: Implement the commented out functionality
 (defvar-
   ^{:doc
     "These are unsafe normalizations that can either change the semantics of
@@ -59,13 +58,13 @@
   {:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
-   ;:remove-duplicate-query-keys? false
+   :remove-duplicate-query-keys? false
    :remove-empty-query? false
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
    :force-http? false
    :remove-www? false
-   ;:sort-query-keys? false
+   :sort-query-keys? false
    :decode-reserved-characters? false})
 
 (def
@@ -109,8 +108,7 @@
 (defn- normalize-query-part [#^URI uri ctx]
   (if-let [query (get-query uri ctx)]
     ((comp #(remove-empty-query % ctx)
-           ; TODO: Add these in when they work
-           ;#(remove-duplicate-query-keys % ctx)
+           #(remove-duplicate-query-keys % ctx)
            #(sort-query-keys % ctx)
            #(normalize-percent-encoding % ctx))
        query)))
