@@ -3,7 +3,7 @@
   (:require
     [clojure.contrib.str-utils2 :as su])
   (:import
-    [java.net URI]))
+    [java.net InetAddress URI]))
 
 (defn- byte-to-hex-string
   "Converts the lower 16 bits of b to into a hex string."
@@ -116,7 +116,7 @@
   http://192.0.32.10 -> http://example.com"
   [host ctx]
   (if (:remove-ip? ctx)
-    (throw (UnsupportedOperationException.))
+    (.getHostName (InetAddress/getByName host))
     host))
 
 (defn remove-empty-user-info
