@@ -111,7 +111,7 @@
     ((comp #(remove-empty-query % ctx)
            ; TODO: Add these in when they work
            ;#(remove-duplicate-query-keys % ctx)
-           ;#(sort-query-keys % ctx)
+           #(sort-query-keys % ctx)
            #(normalize-percent-encoding % ctx))
        query)))
 

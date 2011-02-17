@@ -225,7 +225,10 @@
   http://example.com/?c&a&b -> http://example.com/a&b&c"
   [query ctx]
   (if (:sort-query-keys? ctx)
-    (throw (UnsupportedOperationException.))
+    ((comp #(s/join "&" %)
+           sort
+           #(s/split % #"&"))
+       query)
     query))
 
 (defn remove-empty-query
