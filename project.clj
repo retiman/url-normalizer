@@ -9,4 +9,9 @@
                     commons-codec]]]
   :dev-dependencies
     [[autodoc "0.7.1"]
-     [swank-clojure "1.2.1"]])
+     [robert/hooke "1.1.0"]
+     [swank-clojure "1.2.1"]]
+  :test-selectors
+    {:default (fn [t] (not (:failing t)))
+     :failing :failing
+     :all (fn [_] true)})

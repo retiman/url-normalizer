@@ -213,7 +213,16 @@
               (as-uri "http://example.com/??#%23"))))
 
 (deftest
-  ^{:doc "See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"}
+  ^{:doc
+    "There is a bug with URI resolution in the Java URI class.  Making use
+    of the URI class in conjunction with the Apache HttpComponents library's
+    resolve function fixes the problem.  However, the single argument
+    constructor to URI cannot handle unencoded URI's.  The URL class can,
+    but then we run into the resolution problem.  We can later move towards
+    our own URI constructor that avoids this problem.
+
+    See <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>"
+    :failing true}
   test-fixes-java-bug-4708535
   (let [expected (as-uri "http://example.org/dir/file#foo")]
     (is (equal?
