@@ -250,8 +250,6 @@
   (is (equal? (normalize "http://example.com/~azAZ09-._")
               (normalize "http://example.com/%7E%61%7A%41%5A%30%39%2D%2E%5F"))))
 
-(comment "From 6.2.2.3.  Path Segment Normalization")
-
 (deftest
   ^{:doc
     "Tests from RFC3986: 6.2.3.  Scheme-Based Normalization.
