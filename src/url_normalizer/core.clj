@@ -57,7 +57,7 @@
     #'url-normalizer.util namespace for additional details and
     implementations."}
   unsafe-normalizations
-  {;:remove-directory-index? false
+  {:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
    ;:remove-duplicate-query-keys? false
@@ -103,9 +103,7 @@
 (defn normalize-path-part [#^URI uri ctx]
   (if-let [path (get-path uri ctx)]
     ((comp #(add-trailing-slash % ctx)
-           ; TODO: Re-add this fn because right now, it doesn't
-           ; even work.
-           ;#(remove-duplicate-slashes % ctx)
+           #(remove-directory-index % ctx)
            #(normalize-percent-encoding % ctx))
        path)))
 

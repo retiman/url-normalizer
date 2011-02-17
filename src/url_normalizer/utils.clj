@@ -183,6 +183,16 @@
           (recur sb m (.end m)))))
     text))
 
+(defn remove-directory-index
+  "An unsafe normalization that removes the directory index from the path.
+
+  http://www.example.com/index.php -> http://www.example.com/"
+  [path ctx]
+  (if (and (:remove-directory-index? ctx)
+           (re-matches #"/index\.[^/]+" path))
+    "/"
+    path))
+
 (defn add-trailing-slash
   "A safe normalization that adds a slash to an empty path:
 

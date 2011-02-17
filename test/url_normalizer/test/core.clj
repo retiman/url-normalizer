@@ -316,7 +316,13 @@
     (is (= (f "http://example.com/") "/"))
     (is (= (f "http://example.com/foo/bar/../baz") "/foo/baz"))
     (is (= (f "http://example.com/foo/bar/../baz/") "/foo/baz/"))
-    (is (= (f "http://example.com/foo/../..") "/.."))))
+    (is (= (f "http://example.com/foo/../..") "/.."))
+    (is (= (f "http://example.com/index." {:remove-directory-index? true})
+           "/index."))
+    (is (= (f "http://example.com/index.html" {:remove-directory-index? true})
+           "/"))
+    (is (= (f "http://example.com/index.php" {:remove-directory-index? true})
+           "/"))))
 
 (deftest test-normalize-fragment-part
   (letfn [(f ([uri] (f uri *context*))
