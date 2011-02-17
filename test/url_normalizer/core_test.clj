@@ -128,17 +128,6 @@
     "Tests from RFC1808 and MNot's urlnorm.py.  These tests drop the fragment and
     remove the trailing dot in the host.
 
-    These tests give different output from Java's URI class, which follows RFC2396.
-    For example:
-
-      /../foo -> /../foo
-
-    But in the these tests, they normalize to:
-
-      /../foo -> /foo
-
-    Following Java's URI class, I've commented out the failing tests.
-
     See <http://www.ietf.org/rfc/rfc1808.txt>
     See <http://www.mnot.net/python/urlnorm.py>"}
   rfc1808-tests
@@ -151,15 +140,11 @@
      "/foo/bar/../.." "/"
      "/foo/bar/../../" "/"
      "/foo/bar/../../baz" "/baz"
-     ;"/foo/bar/../../../baz" "/baz"
-     ;"/foo/bar/../../../../baz" "/baz"
      "/./foo" "/foo"
-     ;"/../foo" "/foo"
      "/foo." "/foo."
      "/.foo" "/.foo"
      "/foo.." "/foo.."
      "/..foo" "/..foo"
-     ;"/./../foo" "/foo"
      "/./foo/." "/foo/"
      "/foo/./bar" "/foo/bar"
      "/foo/../bar" "/bar"
@@ -179,6 +164,26 @@
      "http://www.example.com./" "http://www.example.com/"
      "-" "-"
      "http://www.foo.com/?p=529&#038;cpage=1#comment-783" "http://www.foo.com/?p=529&"}))
+
+(def
+  ^{:doc
+    "These MNot tests give different output from Java's URI class, which follows
+    RFC2396.  For example:
+
+      /../foo -> /../foo
+
+    But in the these tests, they normalize to:
+
+      /../foo -> /foo
+
+    Currently, they are failing.  I'll re-enable them once I figure out who is
+    right."}
+  rfc1808-failing-tests
+  (as-uri-map
+    {"/foo/bar/../../../baz" "/baz"
+     "/foo/bar/../../../../baz" "/baz"
+     "/../foo" "/foo"
+     "/./../foo" "/foo"}))
 
 (deftest test-reference-resolution
   (let [base (as-uri "http://a/b/c/d;p?q")]
@@ -202,6 +207,12 @@
 
 (deftest test-rfc1808
   (doseq [[a b] rfc1808-tests]
+    (is (url-equal? a b))
+    (is (equivalent? a b {:remove-fragment? true
+                          :remove-trailing-dot-in-host? true}))))
+
+(deftest ^{:failing true} test-rfc1808-failing
+  (doseq [[a b] rfc1808-failing-tests]
     (is (url-equal? a b))
     (is (equivalent? a b {:remove-fragment? true
                           :remove-trailing-dot-in-host? true}))))
