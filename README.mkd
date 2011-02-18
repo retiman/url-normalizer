@@ -29,6 +29,9 @@ Use the `normalize` function to apply specific normalizations to URLs.  Note tha
                                             :keep-hashbang-fragment? true})
     -> #<URI http://example.com/#!/foo>
 
+    (normalize "http://例え.テスト/")
+    -> #<URI http://xn--r8jz45g.xn--zckzah/>
+
     (with-normalization-context
      {:lower-case-host? false
       :remove-default-port? false

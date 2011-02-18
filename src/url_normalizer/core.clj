@@ -8,7 +8,7 @@
     [clojure.contrib.io :as io])
   (:import
     [java.net URL URI URISyntaxException MalformedURLException]
-    [org.apache.http HttpHost]
+    [org.apache.abdera.i18n.iri IDNA]
     [org.apache.http.client.utils URIUtils]))
 
 (defn as-url
@@ -86,12 +86,21 @@
     (remove-empty-user-info user-info ctx)))
 
 (defn- normalize-host-part [#^URI uri ctx]
-  (if-let [host (.getHost uri)]
-    ((comp #(remove-www % ctx)
-           #(remove-trailing-dot-in-host % ctx)
-           #(remove-ip % ctx)
-           #(lower-case-host % ctx))
-       host)))
+  (let [host (.getHost uri)
+        authority (.getAuthority uri)]
+    (cond
+      (not (nil? host))
+        ((comp #(remove-www % ctx)
+               #(remove-trailing-dot-in-host % ctx)
+               #(remove-ip % ctx)
+               #(lower-case-host % ctx))
+           host)
+      (and (not (nil? authority))
+           (or (-> uri (.getScheme) (.equalsIgnoreCase "http"))
+               (-> uri (.getScheme) (.equalsIgnoreCase "https"))))
+        (IDNA/toASCII authority)
+      :default
+        nil)))
 
 (defn normalize-port-part [#^URI uri ctx]
   (let [scheme (.getScheme uri)

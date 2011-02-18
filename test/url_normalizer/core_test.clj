@@ -221,7 +221,9 @@
   (is (equal? (normalize "http://www.foo.com/?p=529&#038;cpage=1#comment-783")
               (as-uri "http://www.foo.com/?p=529&#038;cpage=1%23comment-783")))
   (is (equal? (normalize "http://example.com//??##")
-              (as-uri "http://example.com/??#%23"))))
+              (as-uri "http://example.com/??#%23")))
+  (is (equal? (normalize "http://例え.テスト/")
+              (as-uri "http://xn--r8jz45g.xn--zckzah/"))))
 
 (deftest
   ^{:doc
