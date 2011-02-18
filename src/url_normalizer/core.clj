@@ -37,7 +37,7 @@
 (defvar-
   ^{:doc
    "These are safe normalizations that will not change the semantics of a URI.
-   See the #'url-normalizer.util namespace for additional details and
+   See the #'url-normalizer.utils namespace for additional details and
    implementations."}
   safe-normalizations
   {:lower-case-scheme? true
@@ -52,7 +52,7 @@
   ^{:doc
     "These are unsafe normalizations that can either change the semantics of
     the URI or cause it to refer to a different resource.  See the
-    #'url-normalizer.util namespace for additional details and
+    #'url-normalizer.utils namespace for additional details and
     implementations."}
   unsafe-normalizations
   {:remove-directory-index? false
