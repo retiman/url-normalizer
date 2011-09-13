@@ -1,8 +1,37 @@
 # url-normalizer
 
-Normalize URLs. See the [tests](https://github.com/retiman/url-normalizer/blob/master/test/url_normalizer/test/core.clj#L87).
+Normalize URLs, with options for selecting normalizations that may or may not be semantic preserving.
 
 These normalizations are only tested well against the HTTP and HTTPS schemes.
+
+
+## Semantic Preserving Normalizations
+
+Applying these normalizations will not cause the URL to describe a different resource.
+
+* Lower case the scheme portion
+* Lower case the host
+* Upper case percent encodings
+* Decode unreserved characters
+* Add a trailing slash to the host
+* Remove the default port
+* Remove dot segments
+
+## Non Semantic Preserving Normalizations
+Apply these normalizations with caution because technically they cause the URL to describe a different resource (but sometimes the server won't care; e.g. if you remove the fragment).  There is some trickiness involved with hashbang segments for sites like Twitter, so there is an option for that.
+
+* Remove the directory index
+* Remove the fragment
+* Convert from an IP address to a hostname
+* Remove duplicate query keys and values
+* Remove empty query
+* Remove empty user info segment
+* Remove trailing dot in host
+* Keep the hashbang fragment
+* Force http instead of https
+* Remove the www from the host
+* Sort the query keys
+* Decode reserved characters
 
 ## Usage
 
