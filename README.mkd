@@ -52,20 +52,6 @@ You can also test if two URLs are equivalent or if they are equal.  Two URLs are
     (equal? "http://example.com" "http://example.com/")
     -> false
 
-## Installation
-
-leiningen
-
-    [url-normalizer "0.1.0"]
-
-maven
-
-    <dependency>
-      <groupId>url-normalizer</groupId>
-      <artifactId>url-normalizer</artifactId>
-      <version>0.1.0</version>
-    </dependency>
-
 ## Authors
 
 * Min Huang [<min.huang@alumni.usc.edu>](mailto:min.huang@alumni.usc.edu)
