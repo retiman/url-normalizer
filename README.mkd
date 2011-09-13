@@ -33,10 +33,10 @@ Use the `normalize` function to apply specific normalizations to URLs.  Note tha
     -> #<URI http://xn--r8jz45g.xn--zckzah/>
 
     (with-normalization-context
-     {:lower-case-host? false
-      :remove-default-port? false
-      :remove-empty-query? true
-      :remove-trailing-dot-in-host? true}
+      {:lower-case-host? false
+       :remove-default-port? false
+       :remove-empty-query? true
+       :remove-trailing-dot-in-host? true}
      #(normalize "http://WWW.example.COM.:80/?"))
     -> #<URI http://WWW.example.COM:80/>
 
