@@ -1,4 +1,4 @@
-(defproject url-normalizer "0.3.4-1"
+(defproject url-normalizer "0.3.4-2"
   :description "Normalizes and standardizes URLs in a consistent manner."
   :min-lein-version "1.4.2"
   :warn-on-reflection true
@@ -14,6 +14,7 @@
         commons-codec]]]
   :dev-dependencies
     [[lein-javac "1.2.1-SNAPSHOT"]
+     [lein-clojars "0.6.0"]
      [autodoc "0.7.1"]
      [robert/hooke "1.1.0"]
      [swank-clojure "1.2.1"]]
