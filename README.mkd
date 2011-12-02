@@ -33,6 +33,9 @@ Apply these normalizations with caution because technically they cause the URL t
 * Sort the query keys
 * Decode reserved characters
 
+## Building
+Make sure to delete your classes and lib directory if you are upgrading.  Leiningen and Clojure are finicky.
+
 ## Usage
 
 Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
