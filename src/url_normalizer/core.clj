@@ -68,7 +68,8 @@
 (def
   ^{:doc
     "A normalization context. See #'url-normalizer/*safe-normalizations* and
-     #'url-normalizer/*unsafe-normalizations* for possible normalizations."}
+     #'url-normalizer/*unsafe-normalizations* for possible normalizations."
+    :dynamic true}
   *context*
   (merge safe-normalizations unsafe-normalizations))
 
