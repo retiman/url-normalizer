@@ -12,7 +12,7 @@
        [commons-logging
         commons-codec]]]
   :dev-dependencies
-    [[org.clojars.weavejester/autodoc "0.9.0"]
+    [[backtype/autodoc "0.9.0-SNAPSHOT"]
      [lein-clojars "0.7.0"]
      [robert/hooke "1.1.2"]]
   :test-selectors
