@@ -13,8 +13,7 @@
        [commons-logging
         commons-codec]]]
   :dev-dependencies
-    [[org.clojars.mmcgrana/lein-javac "1.2.1"]
-     [org.clojars.weavejester/autodoc "0.9.0"]
+    [[org.clojars.weavejester/autodoc "0.9.0"]
      [lein-clojars "0.7.0"]
      [robert/hooke "1.1.2"]]
   :test-selectors
