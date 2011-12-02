@@ -4,7 +4,6 @@
   :warn-on-reflection true
   :dependencies
     [[org.clojure/clojure "1.3.0"]
-     [org.clojure/core.incubator "0.1.0"]
      [org.apache.abdera/abdera-i18n "1.1.1" :exclusions
        [commons-codec
         geronimo-activation]]
