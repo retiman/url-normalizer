@@ -104,9 +104,9 @@
   http://www.example.com/ -> http://example.com/
   http://www.foo.bar.example.com/ -> http://www.foo.bar.example.com/
   http://www2.example.com/ -> http://www2.example.com/"
-  [host ctx]
+  [^String host ctx]
   (if (and (:remove-www? ctx) (.startsWith host "www."))
-    (.substring 4 (count host))
+    (.substring host 4 (count host))
     host))
 
 (defn lower-case-host
@@ -255,7 +255,7 @@
 
   See <http://code.google.com/web/ajaxcrawling/docs/getting-started.html>
   See <http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch>"
-  [fragment ctx]
+  [^String fragment ctx]
   (let [keep? (and (:keep-hashbang-fragment? ctx) (.startsWith fragment "!"))]
     (if-not (and (:remove-fragment? ctx) (not keep?))
       fragment)))
