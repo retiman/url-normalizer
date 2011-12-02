@@ -2,10 +2,9 @@
   "A Clojure library for normalizing urls with configurable aggressiveness."
   (:refer-clojure :exclude (resolve))
   (:use
-    [clojure.contrib.def]
     [url-normalizer.utils])
   (:require
-    [clojure.contrib.io :as io])
+    [clojure.java.io :as io])
   (:import
     [java.net URL URI URISyntaxException MalformedURLException]
     [org.apache.abdera.i18n.iri IDNA]
@@ -34,12 +33,11 @@
     (URI. arg)
     (catch URISyntaxException e (as-uri (URL. arg)))))
 
-(defvar-
-  ^{:doc
-   "These are safe normalizations that will not change the semantics of a URI.
-   See the #'url-normalizer.utils namespace for additional details and
-   implementations."}
-  safe-normalizations
+(def safe-normalizations
+  ^{:doc "These are safe normalizations that will not change the semantics of a
+         URI. See the #'url-normalizer.utils namespace for additional details
+         and implementations."
+    :private true}
   {:lower-case-scheme? true
    :lower-case-host? true
    :upper-case-percent-encoding? true
@@ -48,13 +46,12 @@
    :remove-default-port? true
    :remove-dot-segments? true})
 
-(defvar-
-  ^{:doc
-    "These are unsafe normalizations that can either change the semantics of
-    the URI or cause it to refer to a different resource.  See the
-    #'url-normalizer.utils namespace for additional details and
-    implementations."}
-  unsafe-normalizations
+(def unsafe-normalizations
+  ^{:doc "These are unsafe normalizations that can either change the semantics
+         of the URI or cause it to refer to a different resource.  See the
+         #'url-normalizer.utils namespace for additional details and
+         implementations."
+    :private true}
   {:remove-directory-index? false
    :remove-fragment? false
    :remove-ip? false
