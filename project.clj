@@ -2,7 +2,6 @@
   :description "Normalizes and standardizes URLs in a consistent manner."
   :min-lein-version "1.6.2"
   :warn-on-reflection true
-  :java-source-path "src"
   :dependencies
     [[org.clojure/clojure "1.3.0"]
      [org.clojure/core.incubator "0.1.0"]
