@@ -1,4 +1,4 @@
-(defproject url-normalizer "0.4.1-SNAPSHOT"
+(defproject url-normalizer "0.4.1"
   :description "Normalizes and standardizes URLs in a consistent manner."
   :min-lein-version "1.6.2"
   :warn-on-reflection true
