@@ -1,14 +1,11 @@
 <html>
   <head>
-    <title>url-normalizer.core API reference (url-normalizer)</title>
+    <title>url-normalizer.core - url-normalizer nil API documentation</title>
     <link href="static/favicon.png" rel="icon" />
     <link href="static/favicon.png" rel="shortcut icon" />
     <link media="all" type="text/css" href="static/clojure.css" rel="stylesheet" />
     <link media="all" type="text/css" href="static/wiki.css" rel="stylesheet" />
     <link media="all" type="text/css" href="static/internal.css" rel="stylesheet" />
-    <!-- TODO: are we using these (from clojure.org)? If so, add the files -->
-    <script src="file/view/code_highlighter.js" type="text/javascript"></script>
-    <script src="file/view/clojure.js" type="text/javascript"></script>
     <style>.menuWrapper{height: 36px;}</style>
     <!--[if lte IE 6]>
     <link rel="stylesheet" href="http://www.wikispaces.com/_/2009051601/s/internal_ie.css" type="text/css" />
@@ -30,12 +27,19 @@ namespace.
       <div id="leftcolumn"><div style="text-align: center;"></div>
 <div class="menu">
   <div class="WikiCustomNav WikiElement wiki">
-    <a class="wiki_link" href="index.html">Overview</a><br />
-    <a class="wiki_link" href="api-index.html">API Index</a><br />
-    <a class="wiki_link" href="#">Namespaces:</a>
-    <ul id="left-sidebar-list">
-      <li><a href="url-normalizer.core-api.html" class="wiki_link">url-normalizer.core</a></li><li><a href="url-normalizer.utils-api.html" class="wiki_link">url-normalizer.utils</a></li>
+    <span class="toc-header"><span id="project-name">url-normalizer</span> <span id="version"></span> API</span><br />
+    <ul>
+      <li><a class="wiki_link" href="index.html">Overview</a></li>
+      <li><a class="wiki_link" href="api-index.html">API Index</a></li>
     </ul>
+    <div class="NamespaceTOC">
+      <span class="toc-header">Namespaces</span>
+      <ul id="left-sidebar-list">
+        <li><a href="url-normalizer.core-api.html" class="wiki_link">url-normalizer.core</a></li><li><a href="url-normalizer.utils-api.html" class="wiki_link">url-normalizer.utils</a></li>
+      </ul>
+    </div>
+    
+    <a href="http://clojure.org" class="wiki_link">Clojure Home</a>
   </div>
 </div>
 </div>
@@ -72,15 +76,16 @@ namespace.
   </div>
 </div>
 </div>
-                <div id="content-tag"><h1 id="overview">API for <span id="namespace-name">url-normalizer.core</span></h1>
-by <span id="author">Unknown</span><br />
-<br />Usage:
-<pre>
-(ns your-namespace
-  (:require <span id="long-name">url-normalizer.core</span>))
-</pre><pre>
-</pre><h2>Overview</h2>
+                <div id="content-tag"><h1 id="overview">API for <span id="namespace-name">url-normalizer.core</span>
+  - <span id="header-project">url-normalizer</span> <span id="header-version"></span> (<span id="header-status"></span>)
+  </h1>
+
+<br />Full namespace name: <span id="long-name">url-normalizer.core</span>
+<p></p>
+<h2>Overview</h2>
 <pre id="namespace-docstr">A Clojure library for normalizing urls with configurable aggressiveness.</pre>
+
+
 <br />
 <h2>Public Variables and Functions</h2>
 <div id="var-entry">
@@ -92,6 +97,8 @@ by <span id="author">Unknown</span><br />
   <pre id="var-docstr">A normalization context. See #'url-normalizer/*safe-normalizations* and
 #'url-normalizer/*unsafe-normalizations* for possible normalizations.</pre>
   
+  
+  
 </div><div id="var-entry">
   <br />
   <hr />
@@ -100,6 +107,8 @@ by <span id="author">Unknown</span><br />
   <pre id="var-usage">Usage: (canonicalize-url arg)
 </pre>
   <pre id="var-docstr">DEPRECATED: Prefer normalize.</pre>
+  
+  <span class="var-deprecated"><span id="content">Deprecated since url-normalizer version 0.1.0</span><br /></span>
   
 </div><div id="var-entry">
   <br />
@@ -114,8 +123,10 @@ may not have the same ASCII string representation.
 
 For example, the following URIs are equivalent but not equal:
 
-  http://example.com/%7b
+  <a href="http://example.com/%7b">http://example.com/%7b</a>
   <a href="http://example.com/%7B">http://example.com/%7B</a></pre>
+  
+  
   
 </div><div id="var-entry">
   <br />
@@ -129,8 +140,10 @@ For example, the following URIs are equivalent but not equal:
 
 For example, the following two URIs are equivalent but not equal:
 
-  http://example.com/%7b
+  <a href="http://example.com/%7b">http://example.com/%7b</a>
   <a href="http://example.com/%7B">http://example.com/%7B</a></pre>
+  
+  
   
 </div><div id="var-entry">
   <br />
@@ -146,6 +159,8 @@ to be a URL with either the HTTP or HTTPS scheme.
 You may specify a normalization context in order to apply non-semantic
 preserving normalizations.</pre>
   
+  
+  
 </div><div id="var-entry">
   <br />
   <hr />
@@ -159,6 +174,8 @@ to a bug in the Java standard library.
 
 See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535</a>&gt;</pre>
   
+  
+  
 </div><div id="var-entry">
   <br />
   <hr />
@@ -167,6 +184,8 @@ See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">htt
   <pre id="var-usage">Usage: (to-uri arg)
 </pre>
   <pre id="var-docstr">DEPRECATED: Prefer as-uri.</pre>
+  
+  <span class="var-deprecated"><span id="content">Deprecated since url-normalizer version 0.1.0</span><br /></span>
   
 </div><div id="var-entry">
   <br />
@@ -177,6 +196,8 @@ See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">htt
 </pre>
   <pre id="var-docstr">DEPRECATED: Prefer as-url.</pre>
   
+  <span class="var-deprecated"><span id="content">Deprecated since url-normalizer version 0.1.0</span><br /></span>
+  
 </div><div id="var-entry">
   <br />
   <hr />
@@ -186,6 +207,8 @@ See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">htt
 </pre>
   <pre id="var-docstr">DEPRECATED: Prefer equivalent?</pre>
   
+  <span class="var-deprecated"><span id="content">Deprecated since url-normalizer version 0.1.0</span><br /></span>
+  
 </div><div id="var-entry">
   <br />
   <hr />
@@ -194,6 +217,8 @@ See &lt;<a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535">htt
   <pre id="var-usage">Usage: (with-normalization-context context f)
 </pre>
   <pre id="var-docstr">Evaluates a function with *context* bound to context</pre>
+  
+  
   
 </div>
 
