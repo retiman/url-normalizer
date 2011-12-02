@@ -16,8 +16,7 @@
     [[lein-javac "1.2.1-SNAPSHOT"]
      [lein-clojars "0.6.0"]
      [autodoc "0.7.1"]
-     [robert/hooke "1.1.0"]
-     [swank-clojure "1.2.1"]]
+     [robert/hooke "1.1.0"]]
   :test-selectors
     {:default (fn [t] (not (:failing t)))
      :failing :failing
