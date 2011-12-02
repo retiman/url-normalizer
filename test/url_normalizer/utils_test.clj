@@ -30,3 +30,12 @@
              :keep-hashbang-fragment? true}]
     (is (nil? (remove-fragment "foo" ctx)))
     (is (= (remove-fragment "!foo" ctx) "!foo"))))
+
+(deftest test-remove-www
+  (let [ctx {:remove-www? true}]
+    (is (= (remove-www "www.hello.com" ctx) "hello.com"))
+    (is (= (remove-www "wwwhello.com" ctx) "wwwhello.com"))
+    (is (= (remove-www "www2.hello.com" ctx) "www2.hello.com"))
+    (is (= (remove-www "wwww.hello.com" ctx) "wwww.hello.com"))
+    (is (= (remove-www "" ctx) ""))
+    (is (= (remove-www "www." ctx) ""))))
