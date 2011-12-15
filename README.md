@@ -1,11 +1,13 @@
-# url-normalizer
+DESCRIPTION
+===========
 
 Normalize URLs, with options for selecting normalizations that may or may not be semantic preserving.
 
 These normalizations are only tested well against the HTTP and HTTPS schemes.
 
 
-## Semantic Preserving Normalizations
+SEMANTIC PRESERVING NORMALIZATIONS
+==================================
 
 Applying these normalizations will not cause the URL to describe a different resource.
 
@@ -17,7 +19,9 @@ Applying these normalizations will not cause the URL to describe a different res
 * Remove the default port
 * Remove dot segments
 
-## Non Semantic Preserving Normalizations
+NON SEMANTIC PRESERVING NORMALIZATIONS
+======================================
+
 Apply these normalizations with caution because technically they cause the URL to describe a different resource (but sometimes the server won't care; e.g. if you remove the fragment).  There is some trickiness involved with hashbang segments for sites like Twitter, so there is an option for that.
 
 * Remove the directory index
@@ -33,10 +37,13 @@ Apply these normalizations with caution because technically they cause the URL t
 * Sort the query keys
 * Decode reserved characters
 
-## Building
+BUILDING
+========
+
 Make sure to delete your classes and lib directory if you are upgrading.  Leiningen and Clojure are finicky.
 
-## Usage
+USAGE
+=====
 
 Use the `normalize` function to apply specific normalizations to URLs.  Note that only safe, semantic preserving normalizations are applied by default.
 
@@ -84,7 +91,8 @@ You can also test if two URLs are equivalent or if they are equal.  Two URLs are
     (equal? "http://example.com" "http://example.com/")
     -> false
 
-## Authors
+AUTHORS
+=======
 
 * Min Huang [<min.huang@alumni.usc.edu>](mailto:min.huang@alumni.usc.edu)
 * Jay Donnell
@@ -92,7 +100,8 @@ You can also test if two URLs are equivalent or if they are equal.  Two URLs are
 
 Tests taken from Sam Ruby's version of `urlnorm.py`
 
-## See Also
+SEE ALSO
+========
 
 * Sam Ruby's [`urlnorm.py`](http://intertwingly.net/blog/2004/08/04/Urlnorm)
 * [Wikipedia Page on URL Normalization](http://en.wikipedia.org/wiki/URL_normalization)
@@ -101,7 +110,8 @@ Tests taken from Sam Ruby's version of `urlnorm.py`
 * [RFC2396](http://labs.apache.org/webarch/uri/rev-2002/rfc2396bis.html)
 * [RFC1808](http://www.ietf.org/rfc/rfc1808.txt)
 
-## License
+LICENSE
+=======
 
 Copyright (C) 2010
 
