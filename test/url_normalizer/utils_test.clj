@@ -18,6 +18,10 @@
   (let [ctx {:sort-query-keys? true}]
     (is (= (sort-query-keys "c=1&c=2&b=3&a=0" ctx) "a=0&b=3&c=1&c=2"))))
 
+(deftest test-remove-query
+  (let [ctx {:remove-query? true}]
+    (is (= (remove-query "c=1&c=2&b=3&a=0" ctx) nil))))
+
 (deftest test-remove-duplicate-query-keys
   (let [ctx {:remove-duplicate-query-keys? true}]
     (is (= (remove-duplicate-query-keys "a=0&a=1&a=2&b=0&b=1" ctx) "b=1&a=2"))))

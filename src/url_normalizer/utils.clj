@@ -242,6 +242,15 @@
   (if-not (and (:remove-empty-query? ctx) (= query ""))
     query))
 
+(defn remove-query
+  "An unsafe normalization that removes entire query:
+
+  http://example.com/?foo=bar -> http://example.com/
+  http://example.com? -> http://example.com"
+  [query ctx]
+  (if-not (:remove-query? ctx)
+    query))
+
 (defn remove-fragment
   "An unsafe normalization that removes the fragment.  The URI will still refer
   to the same resource so sometimes the fragment is not needed:
