@@ -57,6 +57,7 @@
    :remove-ip? false
    :remove-duplicate-query-keys? false
    :remove-empty-query? false
+   :remove-query? false
    :remove-empty-user-info? false
    :remove-trailing-dot-in-host? false
    :keep-hashbang-fragment? false
@@ -115,7 +116,8 @@
 
 (defn- normalize-query-part [#^URI uri ctx]
   (if-let [query (get-query uri ctx)]
-    ((comp #(remove-empty-query % ctx)
+    ((comp #(remove-query % ctx)
+           #(remove-empty-query % ctx)
            #(remove-duplicate-query-keys % ctx)
            #(sort-query-keys % ctx)
            #(normalize-percent-encoding % ctx))
