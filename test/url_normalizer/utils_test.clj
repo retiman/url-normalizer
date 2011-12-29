@@ -20,6 +20,8 @@
 
 (deftest test-remove-query
   (let [ctx {:remove-query? true}]
+    (is (= (remove-query "/hello/?" ctx) nil))
+    (is (= (remove-query "" ctx) nil))
     (is (= (remove-query "c=1&c=2&b=3&a=0" ctx) nil))))
 
 (deftest test-remove-duplicate-query-keys
