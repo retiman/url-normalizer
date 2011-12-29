@@ -11,9 +11,12 @@
        [commons-logging
         commons-codec]]]
   :dev-dependencies
-    [[backtype/autodoc "0.9.0-SNAPSHOT"]
-     [lein-clojars "0.7.0"]
-     [robert/hooke "1.1.2"]]
+    [[backtype/autodoc "0.9.0-SNAPSHOT" :exclusions
+       [org.clojure/clojure]]
+     [lein-clojars "0.7.0" :exclusions
+       [org.clojure/clojure]]
+     [robert/hooke "1.1.2" :exclusions
+       [org.clojure/clojure]]]
   :test-selectors
     {:default (fn [t] (not (:failing t)))
      :failing :failing
