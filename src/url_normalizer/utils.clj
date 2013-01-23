@@ -215,7 +215,8 @@
 
   http://example.com/?foo&foo=bar -> http://example.com/?foo=bar"
   [query ctx]
-  (if (:remove-duplicate-query-keys? ctx)
+  (if (and (:remove-duplicate-query-keys? ctx)
+           (not (s/blank? query)))
     (let [keyvals (map #(s/split % #"=") (s/split query #"&"))
           query-map (apply merge (cons {} keyvals))]
       (s/join "&" (map #(s/join "=" %) query-map)))
