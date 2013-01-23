@@ -217,9 +217,11 @@
   [query ctx]
   (if (and (:remove-duplicate-query-keys? ctx)
            (not (s/blank? query)))
-    (let [keyvals (map #(s/split % #"=") (s/split query #"&"))
-          query-map (apply merge (cons {} keyvals))]
-      (s/join "&" (map #(s/join "=" %) query-map)))
+    (let [entries (map #(s/split % #"=") (s/split query #"&"))
+          query-map (apply merge (cons {} entries))
+          ks (map first entries)
+          ordered-query-map (conj {} (select-keys query-map ks))]
+      (s/join "&" (map #(s/join "=" %) ordered-query-map)))
     query))
 
 (defn sort-query-keys
