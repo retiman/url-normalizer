@@ -1,6 +1,6 @@
 (defproject url-normalizer "0.5.0"
   :description "Normalizes and standardizes URLs in a consistent manner."
-  :min-lein-version "1.6.2"
+  :min-lein-version "2.0.0"
   :warn-on-reflection true
   :dependencies
     [[org.clojure/clojure "1.3.0"]
