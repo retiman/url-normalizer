@@ -381,3 +381,9 @@
               {:remove-fragment? true
                :keep-hashbang-fragment? true})
            "!foo"))))
+
+(deftest test-sort-and-remove-duplicate-query-key
+  (is (= (normalize "http://example.net/?a=1&b=2&a=3&A=4"
+                    {:remove-duplicate-query-keys? true
+                     :sort-query-keys? true})
+         (as-uri "http://example.net/?A=4&a=3&b=2"))))
