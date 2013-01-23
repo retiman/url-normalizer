@@ -194,33 +194,3 @@
   [context f]
   (binding [*context* context]
     (f)))
-
-(defn to-uri
-  "DEPRECATED: Prefer as-uri."
-  {:deprecated "0.1.0"}
-  [arg]
-  (as-uri arg))
-
-(defn to-url
-  "DEPRECATED: Prefer as-url."
-  {:deprecated "0.1.0"}
-  [arg]
-  (io/as-url arg))
-
-(defn canonicalize-url
-  "DEPRECATED: Prefer normalize."
-  {:deprecated "0.1.0"}
-  [arg]
-  (try
-    (.toASCIIString
-      #^URI (normalize arg {:remove-empty-user-info? true
-                            :remove-fragment? true
-                            :remove-trailing-dot-in-host? true}))
-    (catch URISyntaxException e (canonicalize-url (to-uri arg)))
-    (catch MalformedURLException e (canonicalize-url (to-url arg)))))
-
-(defn url-equal?
-  "DEPRECATED: Prefer equivalent?"
-  {:deprecated "0.1.0"}
-  [a b]
-  (= (canonicalize-url a) (canonicalize-url b)))
