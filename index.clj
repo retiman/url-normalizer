@@ -9,28 +9,17 @@
    :name "url-normalizer.utils",
    :doc "Utilities and specific normalizations."}),
  :vars
- ({:file "src/url_normalizer/core.clj",
-   :raw-source-url nil,
+ ({:name "*context*",
+   :namespace "url-normalizer.core",
    :source-url nil,
+   :dynamic true,
+   :raw-source-url nil,
    :wiki-url
    "/url-normalizer.core-api.html#url-normalizer.core/*context*",
-   :namespace "url-normalizer.core",
-   :line 68,
-   :var-type "var",
    :doc
    "A normalization context. See #'url-normalizer/*safe-normalizations* and\n#'url-normalizer/*unsafe-normalizations* for possible normalizations.",
-   :name "*context*"}
-  {:arglists ([arg]),
-   :name "canonicalize-url",
-   :namespace "url-normalizer.core",
-   :source-url nil,
-   :deprecated "0.1.0",
-   :raw-source-url nil,
-   :wiki-url
-   "/url-normalizer.core-api.html#url-normalizer.core/canonicalize-url",
-   :doc "DEPRECATED: Prefer normalize.",
-   :var-type "function",
-   :line 207,
+   :var-type "var",
+   :line 69,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([a b]),
    :name "equal?",
@@ -42,7 +31,7 @@
    :doc
    "Returns true if the ASCII string versions of URIs are equal.  This is\ndifferent from #'url-normalizer.core/equivalent? as two equivalent URIs\nmay not have the same ASCII string representation.\n\nFor example, the following URIs are equivalent but not equal:\n\n  http://example.com/%7b\n  http://example.com/%7B",
    :var-type "function",
-   :line 177,
+   :line 180,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([a b] [a b context]),
    :name "equivalent?",
@@ -54,7 +43,7 @@
    :doc
    "Returns true if the two URIs are equivalent when normalized.\n\nFor example, the following two URIs are equivalent but not equal:\n\n  http://example.com/%7b\n  http://example.com/%7B",
    :var-type "function",
-   :line 165,
+   :line 168,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([arg] [arg context]),
    :name "normalize",
@@ -66,7 +55,7 @@
    :doc
    "By default normalizes a URI using safe normalizations.  The URI is expected\nto be a URL with either the HTTP or HTTPS scheme.\n\nYou may specify a normalization context in order to apply non-semantic\npreserving normalizations.",
    :var-type "function",
-   :line 139,
+   :line 142,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([base uri]),
    :name "resolve",
@@ -78,43 +67,7 @@
    :doc
    "Resolve a URI reference against a base URI by removing dot segments.  The\nApache HttpClient version is used instead of the resolve method on URI due\nto a bug in the Java standard library.\n\nSee <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4708535>",
    :var-type "function",
-   :line 129,
-   :file "src/url_normalizer/core.clj"}
-  {:arglists ([arg]),
-   :name "to-uri",
-   :namespace "url-normalizer.core",
-   :source-url nil,
-   :deprecated "0.1.0",
-   :raw-source-url nil,
-   :wiki-url
-   "/url-normalizer.core-api.html#url-normalizer.core/to-uri",
-   :doc "DEPRECATED: Prefer as-uri.",
-   :var-type "function",
-   :line 195,
-   :file "src/url_normalizer/core.clj"}
-  {:arglists ([arg]),
-   :name "to-url",
-   :namespace "url-normalizer.core",
-   :source-url nil,
-   :deprecated "0.1.0",
-   :raw-source-url nil,
-   :wiki-url
-   "/url-normalizer.core-api.html#url-normalizer.core/to-url",
-   :doc "DEPRECATED: Prefer as-url.",
-   :var-type "function",
-   :line 201,
-   :file "src/url_normalizer/core.clj"}
-  {:arglists ([a b]),
-   :name "url-equal?",
-   :namespace "url-normalizer.core",
-   :source-url nil,
-   :deprecated "0.1.0",
-   :raw-source-url nil,
-   :wiki-url
-   "/url-normalizer.core-api.html#url-normalizer.core/url-equal?",
-   :doc "DEPRECATED: Prefer equivalent?",
-   :var-type "function",
-   :line 219,
+   :line 132,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([context f]),
    :name "with-normalization-context",
@@ -125,7 +78,7 @@
    "/url-normalizer.core-api.html#url-normalizer.core/with-normalization-context",
    :doc "Evaluates a function with *context* bound to context",
    :var-type "function",
-   :line 189,
+   :line 192,
    :file "src/url_normalizer/core.clj"}
   {:arglists ([path ctx]),
    :name "add-trailing-slash",
@@ -273,7 +226,7 @@
    :doc
    "An unsafe normalization that removes an empty query:\n\nhttp://example.com/? -> http://example.com/\nhttp://example.com? -> http://example.com",
    :var-type "function",
-   :line 236,
+   :line 239,
    :file "src/url_normalizer/utils.clj"}
   {:arglists ([user-info ctx]),
    :name "remove-empty-user-info",
@@ -297,7 +250,7 @@
    :doc
    "An unsafe normalization that removes the fragment.  The URI will still refer\nto the same resource so sometimes the fragment is not needed:\n\nremove-fragment:\nhttp://example.com/#foo -> http://example.com/\n\nremove-fragment and keep-hashbang-fragment:\nhttp://twitter.com/#foo -> http://twitter.com/#foo\nhttp://twitter.com/#!/user -> http://twitter.com/#!/user\n\nSee <http://code.google.com/web/ajaxcrawling/docs/getting-started.html>\nSee <http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch>",
    :var-type "function",
-   :line 245,
+   :line 257,
    :file "src/url_normalizer/utils.clj"}
   {:arglists ([host ctx]),
    :name "remove-ip",
@@ -310,6 +263,18 @@
    "An unsafe normalization that removes the IP:\n\nhttp://192.0.32.10 -> http://example.com",
    :var-type "function",
    :line 121,
+   :file "src/url_normalizer/utils.clj"}
+  {:arglists ([query ctx]),
+   :name "remove-query",
+   :namespace "url-normalizer.utils",
+   :source-url nil,
+   :raw-source-url nil,
+   :wiki-url
+   "/url-normalizer.utils-api.html#url-normalizer.utils/remove-query",
+   :doc
+   "An unsafe normalization that removes entire query:\n\nhttp://example.com/?foo=bar -> http://example.com/\nhttp://example.com? -> http://example.com",
+   :var-type "function",
+   :line 248,
    :file "src/url_normalizer/utils.clj"}
   {:arglists ([host ctx]),
    :name "remove-trailing-dot-in-host",
@@ -356,7 +321,7 @@
    :doc
    "An unsafe normalization that sorts the query keys and values:\n\nhttp://example.com/?c&a&b -> http://example.com/a&b&c",
    :var-type "function",
-   :line 224,
+   :line 227,
    :file "src/url_normalizer/utils.clj"}
   {:file "src/url_normalizer/utils.clj",
    :raw-source-url nil,

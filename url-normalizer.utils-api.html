@@ -84,6 +84,8 @@ namespace.
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-ip">remove-ip</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#url-normalizer.utils/remove-query">remove-query</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-trailing-dot-in-host">remove-trailing-dot-in-host</a>
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a href="#url-normalizer.utils/remove-www">remove-www</a>
@@ -323,6 +325,20 @@ See &lt;<a href="http://www.tbray.org/ongoing/When/201x/2011/02/09/Hash-Blecch">
   <pre id="var-docstr">An unsafe normalization that removes the IP:
 
 <a href="http://192.0.32.10">http://192.0.32.10</a> -&gt; <a href="http://example.com">http://example.com</a></pre>
+  
+  
+  
+</div><div id="var-entry">
+  <br />
+  <hr />
+  <h2 id="url-normalizer.utils/remove-query">remove-query</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (remove-query query ctx)
+</pre>
+  <pre id="var-docstr">An unsafe normalization that removes entire query:
+
+<a href="http://example.com/?foo=bar">http://example.com/?foo=bar</a> -&gt; <a href="http://example.com/">http://example.com/</a>
+<a href="http://example.com">http://example.com</a>? -&gt; <a href="http://example.com">http://example.com</a></pre>
   
   
   
