@@ -197,23 +197,20 @@
 
 (deftest test-pace
   (doseq [[a b] pace-tests]
-    (is (url-equal? a b))
     (is (equivalent? a b {:remove-empty-user-info? true}))))
 
 (deftest test-rfc2396bis
   (doseq [[a b] rfc2396bis-tests]
-    (is (url-equal? a b))
     (is (equivalent? a b))))
 
 (deftest test-rfc1808
   (doseq [[a b] rfc1808-tests]
-    (is (url-equal? a b))
     (is (equivalent? a b {:remove-fragment? true
                           :remove-trailing-dot-in-host? true}))))
 
 (deftest ^{:failing true} test-rfc1808-failing
   (doseq [[a b] rfc1808-failing-tests]
-    (is (url-equal? a b))
+    (is (equal? a b))
     (is (equivalent? a b {:remove-fragment? true
                           :remove-trailing-dot-in-host? true}))))
 
