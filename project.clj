@@ -3,7 +3,7 @@
   :min-lein-version "2.0.0"
   :warn-on-reflection true
   :dependencies
-    [[org.clojure/clojure "1.3.0"]
+    [[org.clojure/clojure "1.4.0"]
      [org.apache.abdera/abdera-i18n "1.1.1" :exclusions
        [commons-codec
         geronimo-activation]]
