@@ -2,6 +2,8 @@
   :description "Normalizes and standardizes URLs in a consistent manner."
   :min-lein-version "2.0.0"
   :warn-on-reflection true
+  :repositories
+    [["clojars" {:sign-releases false}]]
   :dependencies
     [[org.clojure/clojure "1.4.0"]
      [org.flatland/ordered "1.4.0"]
