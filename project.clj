@@ -14,8 +14,6 @@
   :dev-dependencies
     [[backtype/autodoc "0.9.0-SNAPSHOT" :exclusions
        [org.clojure/clojure]]
-     [lein-clojars "0.7.0" :exclusions
-       [org.clojure/clojure]]
      [robert/hooke "1.1.2" :exclusions
        [org.clojure/clojure]]]
   :test-selectors
