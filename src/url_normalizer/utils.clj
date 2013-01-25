@@ -2,6 +2,8 @@
   "Utilities and specific normalizations."
   (:require
     [clojure.string :as s])
+  (:use
+    [flatland.ordered.map])
   (:import
     [java.net InetAddress URI URLEncoder]))
 
@@ -218,10 +220,8 @@
   (if (and (:remove-duplicate-query-keys? ctx)
            (not (s/blank? query)))
     (let [entries (map #(s/split % #"=") (s/split query #"&"))
-          query-map (apply merge (cons {} entries))
-          ks (map first entries)
-          ordered-query-map (conj {} (select-keys query-map ks))]
-      (s/join "&" (map #(s/join "=" %) ordered-query-map)))
+          query-map (into (ordered-map) entries)]
+      (s/join "&" (map #(s/join "=" %) query-map)))
     query))
 
 (defn sort-query-keys
