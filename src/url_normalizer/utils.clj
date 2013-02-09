@@ -156,7 +156,7 @@
   http://example.com:8080 -> http://example.com/"
   [scheme port ctx]
   (if-not (and (:remove-default-port? ctx)
-               (= port (get default-port scheme)))
+               (= port (get default-port (s/lower-case scheme))))
     port))
 
 (defn normalize-percent-encoding

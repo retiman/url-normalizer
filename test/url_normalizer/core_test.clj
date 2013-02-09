@@ -384,3 +384,10 @@
                     {:remove-duplicate-query-keys? true
                      :sort-query-keys? true})
          (as-uri "http://example.net/?A=4&a=3&b=2"))))
+
+(deftest test-removes-default-port-with-mixed-case-scheme
+  ^{:doc "Fixes issue #9"}
+  (is (= (normalize "http://example.com:80/")
+         (as-uri "http://example.com/")))
+  (is (= (normalize "hTtP://example.com:80/")
+         (as-uri "http://example.com/"))))
