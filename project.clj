@@ -1,4 +1,4 @@
-(defproject url-normalizer "0.5.3"
+(defproject url-normalizer "0.5.3-1"
   :description "Normalizes and standardizes URLs in a consistent manner."
   :url "https://github.com/retiman/url-normalizer"
   :license {:name "Eclipse Public License - v 1.0"
