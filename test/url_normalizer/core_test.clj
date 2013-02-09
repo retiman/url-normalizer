@@ -390,4 +390,12 @@
   (is (= (normalize "http://example.com:80/")
          (as-uri "http://example.com/")))
   (is (= (normalize "hTtP://example.com:80/")
+         (as-uri "http://example.com/")))
+  (is (= (normalize "https://example.com:443/")
+         (as-uri "https://example.com/")))
+  (is (= (normalize "hTtPs://example.com:443/"
+                    {:force-http? true})
+         (as-uri "http://example.com/")))
+  (is (= (normalize "https://example.com:443/"
+                    {:force-http? true})
          (as-uri "http://example.com/"))))
