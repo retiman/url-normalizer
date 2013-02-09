@@ -380,6 +380,7 @@
            "!foo"))))
 
 (deftest test-sort-and-remove-duplicate-query-key
+  ^{:doc "Fixes issue #8"}
   (is (= (normalize "http://example.net/?a=1&b=2&a=3&A=4"
                     {:remove-duplicate-query-keys? true
                      :sort-query-keys? true})
